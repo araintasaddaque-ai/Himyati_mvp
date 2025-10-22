@@ -9,7 +9,22 @@
 <body>
     <div class="container">rgrtrtrty
         <h1>Himyati Cyber Compliance Assessment</h1>
-        
+        <div style="background-color: #e9ecef; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+            <label for="country-select" style="font-weight: bold;">Select Primary Jurisdiction:</label>
+            <select id="country-select" style="width: 100%; padding: 8px; margin-bottom: 15px;" onchange="loadFramework()">
+                <option value="BH">Bahrain (NCSC / PDPL)</option>
+                <option value="KSA">Saudi Arabia (NCA / PDPL)</option>
+                <option value="QATAR">Qatar (NIA / PDPL)</option>
+                </select>
+            
+            <label for="tier-select" style="font-weight: bold;">Select Subscription Tier:</label>
+            <select id="tier-select" style="width: 100%; padding: 8px;" onchange="updateTierBenefits()">
+                <option value="basic">Basic (Compliance Checklist only) - $99/mo</option>
+                <option value="premium">Premium (AI Policy Gen + Fast Delivery) - $199/mo</option>
+                <option value="audit">Audit Ready (Premium + Expert Verification) - $499/mo</option>
+            </select>
+            <p id="tier-benefit-note" style="font-size: 0.9em; margin-top: 10px; color: #007bff;">Current: Checklist only.</p>
+        </div>
         <div id="score-dashboard" style="text-align: center; margin: 30px; padding: 20px; border: 2px solid #ccc;">
             <h2>Compliance Score: <span id="current-score">--</span>%</h2>
             <p>Risk Status: <span id="risk-status">Calculating...</span></p>
