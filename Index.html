@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Himyati Compliance Score Engine</title>
+    <link rel="stylesheet" href="styles.css"> 
+</head>
+<body>
+    <div class="container">
+        <h1>Himyati Cyber Compliance Assessment</h1>
+        
+        <div id="score-dashboard" style="text-align: center; margin: 30px; padding: 20px; border: 2px solid #ccc;">
+            <h2>Compliance Score: <span id="current-score">--</span>%</h2>
+            <p>Risk Status: <span id="risk-status">Calculating...</span></p>
+        </div>
+
+        <form id="compliance-form">
+            <h2>1. User Access & Identity (Risk Weight: 5)</h2>
+            <p>Check the box if the control is **IN PLACE**.</p>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="control_mfa" name="control_mfa" data-weight="5">
+                <label for="control_mfa">Multi-Factor Authentication (MFA) is enabled for all admin accounts.</label>
+            </div>
+
+            <div class="checklist-item">
+                <input type="checkbox" id="control_password" name="control_password" data-weight="4">
+                <label for="control_password">A Strong Password Policy is enforced (min 12 characters, no reuse).</label>
+            </div>
+
+            <h2 style="margin-top: 30px;">2. Data Backup & Recovery (Risk Weight: 4)</h2>
+             <div class="checklist-item">
+                <input type="checkbox" id="control_backup" name="control_backup" data-weight="4">
+                <label for="control_backup">Critical data is backed up to a tested, off-site cloud location.</label>
+            </div>
+
+            <h2 style="margin-top: 30px;">3. Employee Awareness (Risk Weight: 3)</h2>
+             <div class="checklist-item">
+                <input type="checkbox" id="control_training" name="control_training" data-weight="3">
+                <label for="control_training">All employees received anti-phishing training in the last 6 months.</label>
+            </div>
+
+            <button type="button" onclick="calculateScore()">Calculate Compliance Score</button>
+        </form>
+    </div>
+
+    <script src="app.js"></script>
+    <style>
+        /* Basic CSS to make it readable */
+        .container { max-width: 600px; margin: 50px auto; padding: 20px; border: 1px solid #ddd; }
+        .checklist-item { margin-bottom: 10px; }
+        .checklist-item input { margin-right: 10px; }
+        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; cursor: pointer; margin-top: 20px; }
+    </style>
+</body>
+</html>
