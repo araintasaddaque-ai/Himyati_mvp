@@ -4,83 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Himyati Compliance Score Engine</title>
-    <link rel="stylesheet" href="styles.css"> 
+    <style>
+        /* Basic CSS for readability and professional look */
+        body { font-family: Arial, sans-serif; background-color: #f4f7f6; color: #333; line-height: 1.6; margin: 20px; }
+        .container { max-width: 600px; margin: 50px auto; padding: 30px; border: 1px solid #ddd; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h1 { color: #007bff; text-align: center; margin-bottom: 20px; }
+        h2 { color: #28a745; margin-top: 25px; font-size: 1.2em; border-bottom: 1px dashed #ccc; padding-bottom: 5px; }
+        .checklist-item { margin-bottom: 10px; display: flex; align-items: center; }
+        .checklist-item input { margin-right: 10px; min-width: 20px; min-height: 20px; cursor: pointer; }
+        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 20px; width: 100%; font-size: 1.1em; transition: background-color 0.3s; }
+        button:hover { background-color: #0056b3; }
+        #score-dashboard { border: 2px solid #007bff; background-color: #e9f7ff; }
+    </style>
 </head>
 <body>
-    <div class="container">rgrtrtrty
-        <h1>Himyati Cyber Compliance Assessment</h1>
+    <div class="container">
+        <h1>Himyati Cyber Compliance Assessment (MVP)</h1>
+
         <div style="background-color: #e9ecef; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
             <label for="country-select" style="font-weight: bold;">Select Primary Jurisdiction:</label>
-            <select id="country-select" style="width: 100%; padding: 8px; margin-bottom: 15px;" onchange="loadFramework()">
+            <select id="country-select" style="width: 100%; padding: 8px; margin-bottom: 15px;" onchange="loadFramework(); calculateScore()">
                 <option value="BH">Bahrain (NCSC / PDPL)</option>
                 <option value="KSA">Saudi Arabia (NCA / PDPL)</option>
                 <option value="QATAR">Qatar (NIA / PDPL)</option>
-                </select>
+            </select>
             
             <label for="tier-select" style="font-weight: bold;">Select Subscription Tier:</label>
-            <select id="tier-select" style="width: 100%; padding: 8px;" onchange="updateTierBenefits()">
-                <option value="basic">Basic (Compliance Checklist only) - $99/mo</option>
-                <option value="premium">Premium (AI Policy Gen + Fast Delivery) - $199/mo</option>
+            <select id="tier-select" style="width: 100%; padding: 8px;" onchange="updateTierBenefits(); calculateScore()">
+                <option value="basic">Basic (Checklist only) - $99/mo</option>
+                <option value="premium">Premium (AI Policy Gen + Fast Track) - $199/mo</option>
                 <option value="audit">Audit Ready (Premium + Expert Verification) - $499/mo</option>
             </select>
-            <p id="tier-benefit-note" style="font-size: 0.9em; margin-top: 10px; color: #007bff;">Current: Checklist only.</p>
+            <p id="tier-benefit-note" style="font-size: 0.9em; margin-top: 10px; color: #007bff;"></p>
         </div>
-        <div id="score-dashboard" style="text-align: center; margin: 30px; padding: 20px; border: 2px solid #ccc;">
-            <h2>Compliance Score: <span id="current-score">--</span>%</h2>
-            <p>Risk Status: <span id="risk-status">Calculating...</span></p>
+
+        <div id="score-dashboard" style="text-align: center; margin: 30px; padding: 20px; border-radius: 8px;">
+            <h2>Compliance Score: <span id="current-score" style="font-size: 2em;">--</span>%</h2>
+            <p style="font-weight: bold;">Risk Status: <span id="risk-status">Calculating...</span></p>
         </div>
 
         <form id="compliance-form">
-            <h2>1. User Access & Identity (Risk Weight: 5)</h2>
-            <p>Check the box if the control is **IN PLACE**.</p>
-            
-            <div class="checklist-item">
-                <input type="checkbox" id="control_mfa" name="control_mfa" data-weight="5">
-                <label for="control_mfa">Multi-Factor Authentication (MFA) is enabled for all admin accounts.</label>
-            </div>
+            </form>
 
-            <div class="checklist-item">
-                <input type="checkbox" id="control_password" name="control_password" data-weight="4">
-                <label for="control_password">A Strong Password Policy is enforced (min 12 characters, no reuse).</label>
-            </div>
-
-            <h2 style="margin-top: 30px;">2. Data Backup & Recovery (Risk Weight: 4)</h2>
-             <div class="checklist-item">
-                <input type="checkbox" id="control_backup" name="control_backup" data-weight="4">
-                <label for="control_backup">Critical data is backed up to a tested, off-site cloud location.</label>
-            </div>
-
-            <h2 style="margin-top: 30px;">3. Employee Awareness (Risk Weight: 3)</h2>
-             <div class="checklist-item">
-                <input type="checkbox" id="control_training" name="control_training" data-weight="3">
-                <label for="control_training">All employees received anti-phishing training in the last 6 months.</label>
-            </div>
-
-            <button type="button" onclick="calculateScore()">Calculate Compliance Score</button>
-        </form>
-    </div>
-<div id="remediation-report" style="margin-top: 40px; padding-top: 20px; border-top: 1px dashed #ccc; display: none;">
+        <div id="remediation-report" style="margin-top: 40px; padding-top: 20px; border-top: 1px dashed #ccc; display: none;">
             <h2>Remediation Roadmap & Policy Actions</h2>
             <div id="gap-list">
-                <p>No critical gaps found. Excellent!</p>
-            </div>
-            
-            <h3 style="margin-top: 20px;">Automated Policy Generation</h3>
-            <button type="button" onclick="generatePolicy('Password')" style="background-color: #28a745; margin-bottom: 10px;">
-                🔑 Generate Password Policy (English/Arabic)
-            </button>
-            <button type="button" onclick="generatePolicy('MFA')" style="background-color: #28a745;">
-                🔒 Generate MFA Enforcement Policy (English/Arabic)
-            </button>
-            <p id="policy-status" style="margin-top: 15px; font-style: italic;"></p>
-        </div>
-    <script src="app.js"></script>
-    <style>
-        /* Basic CSS to make it readable */
-        .container { max-width: 600px; margin: 50px auto; padding: 20px; border: 1px solid #ddd; }
-        .checklist-item { margin-bottom: 10px; }
-        .checklist-item input { margin-right: 10px; }
-        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; cursor: pointer; margin-top: 20px; }
-    </style>
-</body>
-</html>
