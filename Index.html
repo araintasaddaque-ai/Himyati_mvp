@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Himyati Compliance Score Engine - Final Professional Policy Output</title>
     <style>
-        /* CSS STYLES */
+        /* BASE STYLES */
         body { font-family: Arial, sans-serif; background-color: #f4f7f6; color: #333; line-height: 1.6; margin: 20px; }
         .container { max-width: 800px; margin: 50px auto; padding: 30px; border: 1px solid #ddd; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         h1 { color: #007bff; text-align: center; margin-bottom: 20px; }
@@ -16,11 +16,20 @@
         button:hover { background-color: #0056b3; }
         #score-dashboard { border: 2px solid #007bff; background-color: #e9f7ff; }
 
+        /* ARABIC FONT AND RTL STYLES */
+        .arabic-font { 
+            font-family: 'Droid Arabic Kufi', 'Droid Arabic Naskh', 'Tahoma', sans-serif;
+        }
+        .rtl-text { 
+            direction: rtl; 
+            text-align: right; 
+        }
+
         /* PROFESSIONAL POLICY STYLES */
         .policy-output { 
             background-color: #ffffff; 
-            border: 1px solid #ddd; 
-            padding: 25px; 
+            border: 1px solid #007bff; /* Blue border for official look */
+            padding: 30px; 
             margin-top: 25px; 
             box-shadow: 0 0 10px rgba(0,0,0,0.05);
             font-size: 0.95em;
@@ -28,15 +37,26 @@
         .policy-header { 
             text-align: center; 
             color: #004085; 
-            font-size: 1.5em; 
+            font-size: 1.6em; /* Slightly larger title */
             margin-bottom: 15px; 
             border-bottom: 3px double #007bff; 
             padding-bottom: 10px;
         }
         .policy-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .policy-table th, .policy-table td { border: 1px solid #ccc; padding: 10px; text-align: left; }
-        .policy-table th { background-color: #f1f1f1; font-weight: bold; color: #333; }
-        .rtl-text { direction: rtl; text-align: right; }
+        .policy-table th, .policy-table td { 
+            border: 1px solid #ccc; 
+            padding: 10px; 
+            text-align: left; 
+            vertical-align: top;
+        }
+        .policy-table th { 
+            background-color: #f1f1f1; 
+            font-weight: bold; 
+            color: #333; 
+        }
+        .policy-table .rtl-text { /* Ensure AR text is right-aligned in tables */
+            text-align: right;
+        }
     </style>
 </head>
 <body>
@@ -75,10 +95,10 @@
             
             <h3 style="margin-top: 20px;">Automated Policy Generation</h3>
             <button type="button" onclick="generatePolicy('Password')" style="background-color: #28a745; margin-bottom: 10px;">
-                🔑 Generate Password Policy
+                🔑 Generate Password Policy (Password)
             </button>
             <button type="button" onclick="generatePolicy('MFA')" style="background-color: #28a745;">
-                🔒 Generate MFA Enforcement Policy
+                🔒 Generate MFA Enforcement Policy (MFA)
             </button>
             <p id="policy-status" style="margin-top: 15px; font-style: italic;"></p>
             <div id="policy-preview" class="policy-output" style="display: none;"></div>
@@ -118,11 +138,11 @@
         const POLICY_CONTENT = {
             'Password': {
                 'title_en': "Mandatory Password Policy (NCSC Alignment)",
-                'title_ar': "سياسة كلمات المرور الإلزامية (تماشيًا مع المركز الوطني للأمن السيبراني)",
+                'title_ar': "سياسة كلمات المرور الإلزامية (تماشيًا مع متطلبات الأمن السيبراني)",
                 'details': [
-                    { en: "Minimum Length", ar: "الحد الأدنى للطول", req_en: "12 characters minimum", req_ar: "12 حرف كحد أدنى" },
+                    { en: "Minimum Length", ar: "الحد الأدنى للطول", req_en: "12 characters minimum (Recommended: 16)", req_ar: "12 حرف كحد أدنى (الموصى به: 16)" },
                     { en: "Complexity", ar: "التعقيد", req_en: "Must include Uppercase, Lowercase, Number, and Symbol.", req_ar: "يجب أن يتضمن أحرفًا كبيرة وصغيرة وأرقامًا ورموزًا." },
-                    { en: "Rotation", ar: "التغيير الدوري", req_en: "Required every 90 days for privileged accounts.", req_ar: "مطلوب كل 90 يومًا للحسابات ذات الامتيازات." },
+                    { en: "Rotation", ar: "التغيير الدوري", req_en: "Required every 90 days for privileged accounts. (NCSC Essential)", req_ar: "مطلوب كل 90 يومًا للحسابات ذات الامتيازات. (أساسي بحسب المركز الوطني للأمن السيبراني)" },
                     { en: "Storage", ar: "التخزين", req_en: "Passwords must never be written down or shared.", req_ar: "يجب عدم تدوين كلمات المرور أو مشاركتها مطلقًا." }
                 ]
             },
@@ -130,10 +150,10 @@
                 'title_en': "Multi-Factor Authentication (MFA) Enforcement Policy",
                 'title_ar': "سياسة تطبيق المصادقة متعددة العوامل",
                 'details': [
-                    { en: "Scope", ar: "النطاق", req_en: "Mandatory for all remote access and cloud services (Email, CRM).", req_ar: "إلزامي لجميع الوصول عن بعد والخدمات السحابية (البريد الإلكتروني، إدارة علاقات العملاء)." },
-                    { en: "Enforcement", ar: "التنفيذ", req_en: "Non-compliant users will be locked out after 7 days of notification.", req_ar: "سيتم حظر المستخدمين غير الملتزمين بعد 7 أيام من الإخطار." },
-                    { en: "Exemptions", ar: "الاستثناءات", req_en: "No exceptions for Admin, Executive, or Finance Accounts.", req_ar: "لا يُسمح بأي استثناءات للحسابات الإدارية أو التنفيذية أو المالية." },
-                    { en: "Method", ar: "طريقة التطبيق", req_en: "Must use authenticator apps (e.g., Google Authenticator, Microsoft Authenticator).", req_ar: "يجب استخدام تطبيقات المصادقة (مثل مصادق جوجل، مصادق مايكروسوفت)." }
+                    { en: "Scope", ar: "النطاق", req_en: "Mandatory for all access to cloud services (Email, CRM, Accounting).", req_ar: "إلزامي لجميع الوصول عن بعد والخدمات السحابية (البريد الإلكتروني، إدارة علاقات العملاء، المحاسبة)." },
+                    { en: "Exemptions", ar: "الاستثناءات", req_en: "No exceptions are permitted for administrative or executive accounts.", req_ar: "لا يُسمح بأي استثناءات للحسابات الإدارية أو التنفيذية." },
+                    { en: "Method", ar: "طريقة التطبيق", req_en: "Must use authenticator apps (e.g., Google Authenticator, Microsoft Authenticator).", req_ar: "يجب استخدام تطبيقات المصادقة (مثل مصادق جوجل، مصادق مايكروسوفت)." },
+                    { en: "Non-Compliance", ar: "عدم الامتثال", req_en: "Access will be blocked for non-compliant users after 7 days of notification.", req_ar: "سيتم حظر الوصول للمستخدمين غير الملتزمين بعد 7 أيام من الإخطار." }
                 ]
             }
         };
@@ -290,11 +310,11 @@
                 
                 // 1. Build the professional table structure
                 let tableHTML = `
-                    <table class="policy-table">
+                    <table class="policy-table arabic-font">
                         <thead>
                             <tr>
-                                <th>Control Aspect (EN)</th>
-                                <th class="rtl-text">متطلب التحكم (AR)</th>
+                                <th style="width: 25%;">Control Aspect (EN)</th>
+                                <th class="rtl-text" style="width: 25%;">متطلب التحكم (AR)</th>
                                 <th>Requirement (EN)</th>
                                 <th class="rtl-text">المتطلب (AR)</th>
                             </tr>
@@ -326,18 +346,18 @@
                 `;
 
                 policyPreview.innerHTML = `
-                    <div class="policy-header">
+                    <div class="policy-header arabic-font">
                         ${content.title_en} | ${content.title_ar}
-                        <div style="font-size: 0.7em; color: #6c757d;">Document Version 1.0 - Approved by Himyati AI - ${new Date().toLocaleDateString()}</div>
+                        <div style="font-size: 0.5em; color: #6c757d; margin-top: 5px;">Document Version 1.0 - Approved by Himyati AI - ${new Date().toLocaleDateString()}</div>
                     </div>
                     
-                    <p style="font-weight: bold;">1. Objective (الهدف):</p>
-                    <p style="margin-left: 20px;">This policy outlines the mandatory technical and governance controls required to secure organizational data in compliance with the relevant ${country} mandates. <span class="rtl-text" style="display: block;">تحدد هذه السياسة الضوابط الإلزامية المطلوبة لتأمين بيانات المنظمة وفقاً لمتطلبات ${country}.</span></p>
+                    <p class="arabic-font"><strong>1. Objective (الهدف):</strong></p>
+                    <p style="margin-left: 20px; font-style: italic;">This policy outlines the mandatory technical and governance controls required to secure organizational data in compliance with the relevant ${country} mandates. <span class="rtl-text" style="display: block;">تحدد هذه السياسة الضوابط الإلزامية المطلوبة لتأمين بيانات المنظمة وفقاً لمتطلبات ${country}.</span></p>
 
-                    <p style="font-weight: bold; margin-top: 20px;">2. Core Requirements (المتطلبات الأساسية):</p>
+                    <p class="arabic-font" style="font-weight: bold; margin-top: 20px;">2. Core Requirements (المتطلبات الأساسية):</p>
                     ${tableHTML}
                     
-                    <div style="margin-top: 30px; text-align: right; font-style: italic; color: #004085; border-top: 1px solid #ddd; padding-top: 10px;">
+                    <div class="arabic-font" style="margin-top: 30px; text-align: right; font-style: italic; color: #004085; border-top: 1px solid #ddd; padding-top: 10px;">
                         *هذا المستند جاهز للتوقيع والتطبيق.*
                     </div>
                 `;
