@@ -1,3 +1,4 @@
+console.log("Himyati APP.JS Loaded Successfully.");
 // app.js
 
 // --- 1. MULTI-JURISDICTION FRAMEWORK DEFINITION ---
