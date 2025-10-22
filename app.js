@@ -1,31 +1,39 @@
 // app.js
 
+// Function 1: Calculates the Compliance Score and Renders the Report to the UI
 function calculateScore() {
-    // 1. Initialize variables
-    let totalRiskWeight = 0;   // The maximum possible score (if everything is compliant)
-    let achievedComplianceWeight = 0; // The score achieved by the user
-    let nonCompliantControls = []; // To list the gaps for the remediation report
+    let totalRiskWeight = 0;
+    let achievedComplianceWeight = 0;
+    let nonCompliantControls = [];
 
-    // Get the form element containing all the controls
     const form = document.getElementById('compliance-form');
-    // Select ALL elements with the attribute data-weight (our compliance controls)
     const controls = form.querySelectorAll('[data-weight]');
+    
+    // Reset status area
+    document.getElementById('policy-status').textContent = '';
 
     // 2. Loop through each control
     controls.forEach(control => {
         const weight = parseInt(control.getAttribute('data-weight'));
-        totalRiskWeight += weight; // Sum up the maximum possible weight (Max Score)
+        totalRiskWeight += weight;
 
-        // 3. Check if the control is compliant (i.e., checkbox is checked)
-        if (control.checked) {
-            achievedComplianceWeight += weight; // Add the weight to the achieved score
-        } else {
-            // Control is NOT compliant; record the gap
+        if (!control.checked) {
+            // Control is NOT compliant; record the gap and assign action (simulated)
+            let actionText = '';
+            if (control.id === 'control_mfa' || control.id === 'control_password') {
+                actionText = 'Action: Use AI Policy Generator below!';
+            } else {
+                actionText = 'Action: [Suggest Local IT Partner]';
+            }
+            
             nonCompliantControls.push({
                 id: control.id,
                 label: control.nextElementSibling.textContent,
-                weight: weight
+                weight: weight,
+                action: actionText
             });
+        } else {
+            achievedComplianceWeight += weight;
         }
     });
 
@@ -35,7 +43,7 @@ function calculateScore() {
         complianceScore = Math.round((achievedComplianceWeight / totalRiskWeight) * 100);
     }
 
-    // 5. Determine Risk Status based on the score
+    // 5. Determine Risk Status and Color
     let riskStatus = '';
     let statusColor = '';
     if (complianceScore >= 75) {
@@ -49,23 +57,49 @@ function calculateScore() {
         statusColor = 'red';
     }
 
-    // 6. Update the Score Dashboard (DOM manipulation)
+    // 6. Update the Score Dashboard
     document.getElementById('current-score').textContent = complianceScore;
-    
     const riskStatusElement = document.getElementById('risk-status');
     riskStatusElement.textContent = riskStatus;
     riskStatusElement.style.color = statusColor;
     
-    // 7. Optional: Display the Remediation Roadmap (Console Log for now)
-    console.log(`--- Himyati Remediation Roadmap ---`);
-    console.log(`Calculated Score: ${complianceScore}%`);
+    // 7. Render the Remediation Roadmap to the UI
+    const reportSection = document.getElementById('remediation-report');
+    const gapList = document.getElementById('gap-list');
+    gapList.innerHTML = ''; // Clear previous results
+
     if (nonCompliantControls.length > 0) {
-        console.log(`Non-Compliant Items (${nonCompliantControls.length} Gaps):`);
-        nonCompliantControls.sort((a, b) => b.weight - a.weight); // Sort by highest risk first
+        // Sort by highest risk first (descending order)
+        nonCompliantControls.sort((a, b) => b.weight - a.weight); 
+        
         nonCompliantControls.forEach(gap => {
-            console.log(`[Risk ${gap.weight}] ${gap.label}`);
+            const gapItem = document.createElement('p');
+            gapItem.innerHTML = `<strong>[Risk ${gap.weight}] ${gap.label}</strong><br><span style="color: #c82333;">${gap.action}</span>`;
+            gapList.appendChild(gapItem);
         });
+        reportSection.style.display = 'block'; // Show the report section
     } else {
-        console.log("Congratulations! No compliance gaps found.");
+        gapList.innerHTML = '<p style="color: green; font-weight: bold;">Congratulations! All essential controls are in place. Your business is Audit Ready!</p>';
+        // Show the report section even if compliant, but hide policy generation if not needed
+        reportSection.style.display = 'block'; 
+        document.querySelector('h3').style.display = 'none'; 
+        document.querySelectorAll('button[onclick^="generatePolicy"]').forEach(btn => btn.style.display = 'none');
     }
+}
+
+// Function 2: Simulates the AI Policy Generation (The Core Disruption)
+function generatePolicy(policyType) {
+    const policyStatus = document.getElementById('policy-status');
+    policyStatus.style.color = 'blue';
+    policyStatus.textContent = `Generating ${policyType} Policy... Please wait. (Simulating API call to LLM...)`;
+
+    // Simulated network delay using setTimeout (3 seconds)
+    setTimeout(() => {
+        policyStatus.style.color = 'green';
+        policyStatus.innerHTML = `
+            ✅ **SUCCESS!** Your Custom **${policyType} Enforcement Policy** is ready.<br>
+            <small>Automatically drafted based on Bahrain NCSC standards and translated to Arabic.</small>
+            <br><a href="#" style="color: #007bff; font-weight: bold;">[DOWNLOAD: Policy-v1.0-AR.pdf]</a>
+        `;
+    }, 3000); // 3-second delay
 }

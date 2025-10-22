@@ -44,7 +44,21 @@
             <button type="button" onclick="calculateScore()">Calculate Compliance Score</button>
         </form>
     </div>
-
+<div id="remediation-report" style="margin-top: 40px; padding-top: 20px; border-top: 1px dashed #ccc; display: none;">
+            <h2>Remediation Roadmap & Policy Actions</h2>
+            <div id="gap-list">
+                <p>No critical gaps found. Excellent!</p>
+            </div>
+            
+            <h3 style="margin-top: 20px;">Automated Policy Generation</h3>
+            <button type="button" onclick="generatePolicy('Password')" style="background-color: #28a745; margin-bottom: 10px;">
+                🔑 Generate Password Policy (English/Arabic)
+            </button>
+            <button type="button" onclick="generatePolicy('MFA')" style="background-color: #28a745;">
+                🔒 Generate MFA Enforcement Policy (English/Arabic)
+            </button>
+            <p id="policy-status" style="margin-top: 15px; font-style: italic;"></p>
+        </div>
     <script src="app.js"></script>
     <style>
         /* Basic CSS to make it readable */
