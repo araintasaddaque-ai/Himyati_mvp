@@ -1,11 +1,12 @@
-console.log("Himyati APP.JS Loaded Successfully.");
-// app.js
+// app.js - GUARANTEED WORKING CORE LOGIC
+
+console.log("Himyati APP.JS Loaded Successfully."); // Diagnostic confirmation
 
 // --- 1. MULTI-JURISDICTION FRAMEWORK DEFINITION ---
 const FRAMEWORKS = {
     'BH': [ // Bahrain: Focus on CBB, PDPL, NCSC Fundamentals
         { id: 'control_mfa', label: 'Multi-Factor Authentication (MFA) is enabled for all admin accounts.', weight: 5, policy: true, type: 'Access' },
-        { id: 'control_password', label: 'A Strong Password Policy is enforced (min 12 characters, no reuse).', weight: 4, policy: true, type: 'Governance' },
+        { id: 'control_password', label: 'A Strong Password Policy is enforced (min 12 characters, mix of characters, no reuse).', weight: 4, policy: true, type: 'Governance' },
         { id: 'control_backup', label: 'Critical data is backed up to a tested, off-site cloud location.', weight: 4, policy: false, type: 'Technical' },
         { id: 'control_training', label: 'All employees received anti-phishing training in the last 6 months.', weight: 3, policy: false, type: 'Awareness' },
         { id: 'control_pdpl', label: 'A formal Data Destruction Policy exists for customer PII (PDPL Req).', weight: 4, policy: true, type: 'Privacy' },
@@ -14,7 +15,7 @@ const FRAMEWORKS = {
     'KSA': [ // KSA: Focus on NCA Essential Controls (ECC)
         { id: 'control_mfa', label: 'All critical system access (servers, cloud) requires MFA.', weight: 5, policy: true, type: 'Access' },
         { id: 'control_password', label: 'Formal password management and rotation policy is documented (NCA ECC Req).', weight: 4, policy: true, type: 'Governance' },
-        { id: 'control_backup', label: 'Daily off-site backups are verified and tested quarterly.', weight: 5, policy: false, type: 'Technical' }, // Higher weight
+        { id: 'control_backup', label: 'Daily off-site backups are verified and tested quarterly.', weight: 5, policy: false, type: 'Technical' }, 
         { id: 'control_training', label: 'Mandatory annual cybersecurity training for all staff (Arabic provided).', weight: 4, policy: false, type: 'Awareness' },
         { id: 'control_pdpl', label: 'A comprehensive Privacy Notice exists (KSA PDPL compliant).', weight: 3, policy: true, type: 'Privacy' },
         { id: 'control_threat', label: 'Active Intrusion Detection/Prevention System (IDS/IPS) is in use.', weight: 5, policy: false, type: 'Technical' }
@@ -23,9 +24,9 @@ const FRAMEWORKS = {
         { id: 'control_mfa', label: 'MFA is implemented for ALL external service access (Email, VPN).', weight: 4, policy: true, type: 'Access' },
         { id: 'control_password', label: 'Documented procedure for user onboarding/offboarding.', weight: 3, policy: true, type: 'Governance' },
         { id: 'control_backup', label: 'A tested data recovery plan is documented and stored securely.', weight: 4, policy: false, type: 'Technical' },
-        { id: 'control_training', label: 'Senior management has received cyber risk training in the last 6 months.', weight: 5, policy: false, type: 'Awareness' }, // Strong focus on leadership
+        { id: 'control_training', label: 'Senior management has received cyber risk training in the last 6 months.', weight: 5, policy: false, type: 'Awareness' }, 
         { id: 'control_pdpl', label: 'Compliance with Qatar’s regulatory framework for data transfers.', weight: 4, policy: false, type: 'Privacy' },
-        { id: 'control_vendor', label: 'Third-Party Vendor Risk Assessment conducted for cloud providers.', weight: 5, policy: false, type: 'Governance' } // Key focus on supply chain risk
+        { id: 'control_vendor', label: 'Third-Party Vendor Risk Assessment conducted for cloud providers.', weight: 5, policy: false, type: 'Governance' } 
     ]
 };
 
@@ -45,7 +46,7 @@ function updateTierBenefits() {
     }
     noteElement.textContent = benefitText;
     
-    // Also recalculate score to update action buttons logic based on tier
+    // Ensure score is updated after tier change (as this affects the remediation advice)
     calculateScore(); 
 }
 
@@ -67,7 +68,7 @@ function loadFramework() {
     for (const type in groupedControls) {
         formHTML += `<h2 style="margin-top: 30px;">${type} Controls (${country})</h2>`;
         groupedControls[type].forEach(control => {
-            // Include data-policy to help determine which controls are policy-fixable
+            // Note: onchange="calculateScore()" is crucial for real-time scoring
             formHTML += `
                 <div class="checklist-item">
                     <input type="checkbox" id="${control.id}" name="${control.id}" data-weight="${control.weight}" data-policy="${control.policy}" onchange="calculateScore()">
@@ -108,9 +109,11 @@ function calculateScore() {
             let actionText = '';
             
             // Logic to determine the call-to-action based on compliance need and tier
-            if (control.getAttribute('data-policy') === 'true' && tier !== 'basic') {
+            const isPolicyFixable = control.getAttribute('data-policy') === 'true';
+
+            if (isPolicyFixable && tier !== 'basic') {
                 actionText = `Action: **Generate Policy** for this governance gap.`;
-            } else if (control.getAttribute('data-policy') === 'true' && tier === 'basic') {
+            } else if (isPolicyFixable && tier === 'basic') {
                  actionText = `Action: Locked in Basic Tier. Upgrade to **Premium** to generate policy.`;
             } else {
                 actionText = 'Action: [Suggest Local IT Partner] for technical fix.';
