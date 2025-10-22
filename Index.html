@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Himyati Compliance Score Engine</title>
+    <title>Himyati Compliance Score Engine - Final Fix</title>
     <style>
-        /* Basic CSS for readability and professional look */
+        /* CSS STYLES (FROM ORIGINAL CODE) */
         body { font-family: Arial, sans-serif; background-color: #f4f7f6; color: #333; line-height: 1.6; margin: 20px; }
         .container { max-width: 600px; margin: 50px auto; padding: 30px; border: 1px solid #ddd; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         h1 { color: #007bff; text-align: center; margin-bottom: 20px; }
@@ -49,3 +49,117 @@
         <div id="remediation-report" style="margin-top: 40px; padding-top: 20px; border-top: 1px dashed #ccc; display: none;">
             <h2>Remediation Roadmap & Policy Actions</h2>
             <div id="gap-list">
+                </div>
+            
+            <h3 style="margin-top: 20px;">Automated Policy Generation</h3>
+            <button type="button" onclick="generatePolicy('Password')" style="background-color: #28a745; margin-bottom: 10px;">
+                🔑 Generate Password Policy (English/Arabic)
+            </button>
+            <button type="button" onclick="generatePolicy('MFA')" style="background-color: #28a745;">
+                🔒 Generate MFA Enforcement Policy (English/Arabic)
+            </button>
+            <p id="policy-status" style="margin-top: 15px; font-style: italic;"></p>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. MULTI-JURISDICTION FRAMEWORK DEFINITION ---
+        const FRAMEWORKS = {
+            'BH': [ // Bahrain: Focus on CBB, PDPL, NCSC Fundamentals
+                { id: 'control_mfa', label: 'Multi-Factor Authentication (MFA) is enabled for all admin accounts.', weight: 5, policy: true, type: 'Access' },
+                { id: 'control_password', label: 'A Strong Password Policy is enforced (min 12 characters, mix of characters, no reuse).', weight: 4, policy: true, type: 'Governance' },
+                { id: 'control_backup', label: 'Critical data is backed up to a tested, off-site cloud location.', weight: 4, policy: false, type: 'Technical' },
+                { id: 'control_training', label: 'All employees received anti-phishing training in the last 6 months.', weight: 3, policy: false, type: 'Awareness' },
+                { id: 'control_pdpl', label: 'A formal Data Destruction Policy exists for customer PII (PDPL Req).', weight: 4, policy: true, type: 'Privacy' },
+                { id: 'control_segregation', label: 'Admin network is fully segregated from guest/public Wi-Fi.', weight: 3, policy: false, type: 'Technical' }
+            ],
+            'KSA': [ // KSA: Focus on NCA Essential Controls (ECC)
+                { id: 'control_mfa', label: 'All critical system access (servers, cloud) requires MFA.', weight: 5, policy: true, type: 'Access' },
+                { id: 'control_password', label: 'Formal password management and rotation policy is documented (NCA ECC Req).', weight: 4, policy: true, type: 'Governance' },
+                { id: 'control_backup', label: 'Daily off-site backups are verified and tested quarterly.', weight: 5, policy: false, type: 'Technical' }, 
+                { id: 'control_training', label: 'Mandatory annual cybersecurity training for all staff (Arabic provided).', weight: 4, policy: false, type: 'Awareness' },
+                { id: 'control_pdpl', label: 'A comprehensive Privacy Notice exists (KSA PDPL compliant).', weight: 3, policy: true, type: 'Privacy' },
+                { id: 'control_threat', label: 'Active Intrusion Detection/Prevention System (IDS/IPS) is in use.', weight: 5, policy: false, type: 'Technical' }
+            ],
+            'QATAR': [ // Qatar: Focus on NIA Policy
+                { id: 'control_mfa', label: 'MFA is implemented for ALL external service access (Email, VPN).', weight: 4, policy: true, type: 'Access' },
+                { id: 'control_password', label: 'Documented procedure for user onboarding/offboarding.', weight: 3, policy: true, type: 'Governance' },
+                { id: 'control_backup', label: 'A tested data recovery plan is documented and stored securely.', weight: 4, policy: false, type: 'Technical' },
+                { id: 'control_training', label: 'Senior management has received cyber risk training in the last 6 months.', weight: 5, policy: false, type: 'Awareness' }, 
+                { id: 'control_pdpl', label: 'Compliance with Qatar’s regulatory framework for data transfers.', weight: 4, policy: false, type: 'Privacy' },
+                { id: 'control_vendor', label: 'Third-Party Vendor Risk Assessment conducted for cloud providers.', weight: 5, policy: false, type: 'Governance' } 
+            ]
+        };
+
+        // --- 2. UI UPDATE FUNCTIONS ---
+
+        function updateTierBenefits() {
+            const tier = document.getElementById('tier-select').value;
+            const noteElement = document.getElementById('tier-benefit-note');
+            let benefitText = '';
+
+            if (tier === 'basic') {
+                benefitText = 'Current: Checklist access only. AI Policy Generation is locked. 🔒';
+            } else if (tier === 'premium') {
+                benefitText = 'Current: AI Policy Generation and Automated Reminders UNLOCKED. 🔑';
+            } else if (tier === 'audit') {
+                benefitText = 'Current: ALL Premium features UNLOCKED + Final Report Expert Verification. ⭐';
+            }
+            noteElement.textContent = benefitText;
+            
+            // Ensure score is updated after tier change (as this affects the remediation advice)
+            calculateScore(); 
+        }
+
+        function loadFramework() {
+            const country = document.getElementById('country-select').value;
+            const currentFramework = FRAMEWORKS[country];
+            const form = document.getElementById('compliance-form');
+            
+            // Group controls by type for cleaner display
+            const groupedControls = currentFramework.reduce((acc, control) => {
+                acc[control.type] = acc[control.type] || [];
+                acc[control.type].push(control);
+                return acc;
+            }, {});
+            
+            let formHTML = '';
+            
+            // Inject new controls into the form
+            for (const type in groupedControls) {
+                formHTML += `<h2 style="margin-top: 30px;">${type} Controls (${country})</h2>`;
+                groupedControls[type].forEach(control => {
+                    // Include data-policy to help determine which controls are policy-fixable
+                    formHTML += `
+                        <div class="checklist-item">
+                            <input type="checkbox" id="${control.id}" name="${control.id}" data-weight="${control.weight}" data-policy="${control.policy}" onchange="calculateScore()">
+                            <label for="${control.id}">${control.label}</label>
+                        </div>
+                    `;
+                });
+            }
+            
+            form.innerHTML = formHTML;
+
+            // Reset score and report visibility
+            document.getElementById('current-score').textContent = '0';
+            document.getElementById('risk-status').textContent = 'Calculating...';
+            document.getElementById('remediation-report').style.display = 'none';
+        }
+
+        // --- 3. CORE SCORING & REPORTING LOGIC ---
+
+        function calculateScore() {
+            const country = document.getElementById('country-select').value;
+            const tier = document.getElementById('tier-select').value;
+            let totalRiskWeight = 0;
+            let achievedComplianceWeight = 0;
+            let nonCompliantControls = [];
+
+            const form = document.getElementById('compliance-form');
+            const controls = form.querySelectorAll('[data-weight]');
+            
+            document.getElementById('policy-status').textContent = '';
+
+            // 2. Loop through each control to calculate score and identify gaps
+            controls.forEach(control =>
