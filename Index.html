@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Himyati Compliance Score Engine - FINAL FIX</title>
+    <title>Himyati Compliance Score Engine - Final Professional Policy Output</title>
     <style>
         /* CSS STYLES */
         body { font-family: Arial, sans-serif; background-color: #f4f7f6; color: #333; line-height: 1.6; margin: 20px; }
-        .container { max-width: 600px; margin: 50px auto; padding: 30px; border: 1px solid #ddd; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .container { max-width: 800px; margin: 50px auto; padding: 30px; border: 1px solid #ddd; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         h1 { color: #007bff; text-align: center; margin-bottom: 20px; }
         h2 { color: #28a745; margin-top: 25px; font-size: 1.2em; border-bottom: 1px dashed #ccc; padding-bottom: 5px; }
         .checklist-item { margin-bottom: 10px; display: flex; align-items: center; }
@@ -15,6 +15,28 @@
         button { padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 20px; width: 100%; font-size: 1.1em; transition: background-color 0.3s; }
         button:hover { background-color: #0056b3; }
         #score-dashboard { border: 2px solid #007bff; background-color: #e9f7ff; }
+
+        /* PROFESSIONAL POLICY STYLES */
+        .policy-output { 
+            background-color: #ffffff; 
+            border: 1px solid #ddd; 
+            padding: 25px; 
+            margin-top: 25px; 
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            font-size: 0.95em;
+        } 
+        .policy-header { 
+            text-align: center; 
+            color: #004085; 
+            font-size: 1.5em; 
+            margin-bottom: 15px; 
+            border-bottom: 3px double #007bff; 
+            padding-bottom: 10px;
+        }
+        .policy-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .policy-table th, .policy-table td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        .policy-table th { background-color: #f1f1f1; font-weight: bold; color: #333; }
+        .rtl-text { direction: rtl; text-align: right; }
     </style>
 </head>
 <body>
@@ -29,7 +51,7 @@
                 <option value="QATAR">Qatar (NIA / PDPL)</option>
             </select>
             
-            <label for="tier-select" style="font-weight: bold;">Select Subscription Tier:</label>
+            <label for="tier-select" style="font-weight: bold;">Select Subscription Tier (Free Test Mode):</label>
             <select id="tier-select" style="width: 100%; padding: 8px;" onchange="updateTierBenefits(); calculateScore()">
                 <option value="basic">Basic (Checklist only) - $99/mo</option>
                 <option value="premium">Premium (AI Policy Gen + Fast Track) - $199/mo</option>
@@ -53,12 +75,13 @@
             
             <h3 style="margin-top: 20px;">Automated Policy Generation</h3>
             <button type="button" onclick="generatePolicy('Password')" style="background-color: #28a745; margin-bottom: 10px;">
-                🔑 Generate Password Policy (English/Arabic)
+                🔑 Generate Password Policy
             </button>
             <button type="button" onclick="generatePolicy('MFA')" style="background-color: #28a745;">
-                🔒 Generate MFA Enforcement Policy (English/Arabic)
+                🔒 Generate MFA Enforcement Policy
             </button>
             <p id="policy-status" style="margin-top: 15px; font-style: italic;"></p>
+            <div id="policy-preview" class="policy-output" style="display: none;"></div>
         </div>
     </div>
 
@@ -90,8 +113,32 @@
                 { id: 'control_vendor', label: 'Third-Party Vendor Risk Assessment conducted for cloud providers.', weight: 5, policy: false, type: 'Governance' } 
             ]
         };
+        
+        // --- 2. ENHANCED POLICY CONTENT (SIMULATED AI OUTPUT) ---
+        const POLICY_CONTENT = {
+            'Password': {
+                'title_en': "Mandatory Password Policy (NCSC Alignment)",
+                'title_ar': "سياسة كلمات المرور الإلزامية (تماشيًا مع المركز الوطني للأمن السيبراني)",
+                'details': [
+                    { en: "Minimum Length", ar: "الحد الأدنى للطول", req_en: "12 characters minimum", req_ar: "12 حرف كحد أدنى" },
+                    { en: "Complexity", ar: "التعقيد", req_en: "Must include Uppercase, Lowercase, Number, and Symbol.", req_ar: "يجب أن يتضمن أحرفًا كبيرة وصغيرة وأرقامًا ورموزًا." },
+                    { en: "Rotation", ar: "التغيير الدوري", req_en: "Required every 90 days for privileged accounts.", req_ar: "مطلوب كل 90 يومًا للحسابات ذات الامتيازات." },
+                    { en: "Storage", ar: "التخزين", req_en: "Passwords must never be written down or shared.", req_ar: "يجب عدم تدوين كلمات المرور أو مشاركتها مطلقًا." }
+                ]
+            },
+            'MFA': {
+                'title_en': "Multi-Factor Authentication (MFA) Enforcement Policy",
+                'title_ar': "سياسة تطبيق المصادقة متعددة العوامل",
+                'details': [
+                    { en: "Scope", ar: "النطاق", req_en: "Mandatory for all remote access and cloud services (Email, CRM).", req_ar: "إلزامي لجميع الوصول عن بعد والخدمات السحابية (البريد الإلكتروني، إدارة علاقات العملاء)." },
+                    { en: "Enforcement", ar: "التنفيذ", req_en: "Non-compliant users will be locked out after 7 days of notification.", req_ar: "سيتم حظر المستخدمين غير الملتزمين بعد 7 أيام من الإخطار." },
+                    { en: "Exemptions", ar: "الاستثناءات", req_en: "No exceptions for Admin, Executive, or Finance Accounts.", req_ar: "لا يُسمح بأي استثناءات للحسابات الإدارية أو التنفيذية أو المالية." },
+                    { en: "Method", ar: "طريقة التطبيق", req_en: "Must use authenticator apps (e.g., Google Authenticator, Microsoft Authenticator).", req_ar: "يجب استخدام تطبيقات المصادقة (مثل مصادق جوجل، مصادق مايكروسوفت)." }
+                ]
+            }
+        };
 
-        // --- 2. UI UPDATE FUNCTIONS ---
+        // --- 3. UI UPDATE FUNCTIONS ---
 
         function updateTierBenefits() {
             const tier = document.getElementById('tier-select').value;
@@ -115,7 +162,6 @@
             const currentFramework = FRAMEWORKS[country];
             const form = document.getElementById('compliance-form');
             
-            // Group controls by type for cleaner display
             const groupedControls = currentFramework.reduce((acc, control) => {
                 acc[control.type] = acc[control.type] || [];
                 acc[control.type].push(control);
@@ -124,12 +170,10 @@
             
             let formHTML = '';
             
-            // Inject new controls into the form
             formHTML += '<p style="font-size: 0.9em; color: #555;">Check the box if the control is **IN PLACE**.</p>';
             for (const type in groupedControls) {
                 formHTML += `<h2 style="margin-top: 30px;">${type} Controls (${country})</h2>`;
                 groupedControls[type].forEach(control => {
-                    // Include data-policy to help determine which controls are policy-fixable
                     formHTML += `
                         <div class="checklist-item">
                             <input type="checkbox" id="${control.id}" name="${control.id}" data-weight="${control.weight}" data-policy="${control.policy}" onchange="calculateScore()">
@@ -141,13 +185,12 @@
             
             form.innerHTML = formHTML;
 
-            // Reset score and report visibility
             document.getElementById('current-score').textContent = '0';
             document.getElementById('risk-status').textContent = 'Calculating...';
             document.getElementById('remediation-report').style.display = 'none';
         }
 
-        // --- 3. CORE SCORING & REPORTING LOGIC ---
+        // --- 4. CORE SCORING & REPORTING LOGIC ---
 
         function calculateScore() {
             const country = document.getElementById('country-select').value;
@@ -160,22 +203,20 @@
             const controls = form.querySelectorAll('[data-weight]');
             
             document.getElementById('policy-status').textContent = '';
+            document.getElementById('policy-preview').style.display = 'none';
 
-            // 2. Loop through each control to calculate score and identify gaps
+
             controls.forEach(control => {
                 const weight = parseInt(control.getAttribute('data-weight'));
                 totalRiskWeight += weight;
 
                 if (!control.checked) {
                     let actionText = '';
-                    
-                    // Logic to determine the call-to-action based on compliance need and tier
                     const isPolicyFixable = control.getAttribute('data-policy') === 'true';
 
-                    if (isPolicyFixable && tier !== 'basic') {
-                        actionText = `Action: **Generate Policy** for this governance gap.`;
-                    } else if (isPolicyFixable && tier === 'basic') {
-                         actionText = `Action: Locked in Basic Tier. Upgrade to **Premium** to generate policy.`;
+                    // Policy generation is FREE in this test mode
+                    if (isPolicyFixable) {
+                        actionText = `Action: **Generate Policy** for this governance gap. (Free Test Mode)`;
                     } else {
                         actionText = 'Action: [Suggest Local IT Partner] for technical fix.';
                     }
@@ -191,13 +232,11 @@
                 }
             });
 
-            // 4. Calculate the Final Compliance Score
             let complianceScore = 0;
             if (totalRiskWeight > 0) {
                 complianceScore = Math.round((achievedComplianceWeight / totalRiskWeight) * 100);
             }
 
-            // 5. Determine Risk Status and Color
             let riskStatus = '';
             let statusColor = '';
             if (complianceScore >= 85) {
@@ -211,13 +250,11 @@
                 statusColor = 'red';
             }
 
-            // 6. Update the Score Dashboard (DOM manipulation)
             document.getElementById('current-score').textContent = complianceScore;
             const riskStatusElement = document.getElementById('risk-status');
             riskStatusElement.textContent = riskStatus;
             riskStatusElement.style.color = statusColor;
             
-            // 7. Render the Remediation Roadmap to the UI
             const reportSection = document.getElementById('remediation-report');
             const gapList = document.getElementById('gap-list');
             gapList.innerHTML = ''; 
@@ -236,44 +273,84 @@
             }
         }
 
-        // --- 4. AI FEATURE SIMULATION ---
+        // --- 5. AI FEATURE SIMULATION (PROFESSIONALLY FORMATTED) ---
 
         function generatePolicy(policyType) {
-            const tier = document.getElementById('tier-select').value;
             const country = document.getElementById('country-select').value;
             const policyStatus = document.getElementById('policy-status');
-
-            if (tier === 'basic') {
-                policyStatus.style.color = 'red';
-                policyStatus.innerHTML = `❌ **ACCESS DENIED.** Policy Generation requires the **Premium** or **Audit Ready** subscription tier. Please upgrade.`;
-                return;
-            }
+            const policyPreview = document.getElementById('policy-preview');
 
             policyStatus.style.color = 'blue';
             policyStatus.textContent = `Generating ${policyType} Policy for ${country}... (Simulating 3-second LLM processing...)`;
+            policyPreview.style.display = 'none';
 
             // Simulated network delay using setTimeout (3 seconds)
             setTimeout(() => {
+                const content = POLICY_CONTENT[policyType];
+                
+                // 1. Build the professional table structure
+                let tableHTML = `
+                    <table class="policy-table">
+                        <thead>
+                            <tr>
+                                <th>Control Aspect (EN)</th>
+                                <th class="rtl-text">متطلب التحكم (AR)</th>
+                                <th>Requirement (EN)</th>
+                                <th class="rtl-text">المتطلب (AR)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                content.details.forEach(detail => {
+                    tableHTML += `
+                        <tr>
+                            <td>${detail.en}</td>
+                            <td class="rtl-text">${detail.ar}</td>
+                            <td>${detail.req_en}</td>
+                            <td class="rtl-text">${detail.req_ar}</td>
+                        </tr>
+                    `;
+                });
+
+                tableHTML += `
+                        </tbody>
+                    </table>
+                `;
+                
+                // 2. Assemble the final professional document preview
                 policyStatus.style.color = 'green';
                 policyStatus.innerHTML = `
                     ✅ **SUCCESS!** Your Custom **${policyType} Enforcement Policy** is ready for **${country}**.<br>
-                    <small>Leveraging AI for rapid drafting and Arabic translation.</small>
-                    <br><a href="#" style="color: #007bff; font-weight: bold;">[DOWNLOAD: Policy-${policyType}-v1.0-AR.pdf]</a>
+                    <a href="#" style="color: #007bff; font-weight: bold;">[DOWNLOAD: Policy-${policyType}-v1.0-AR.pdf - SIMULATED PDF]</a>
                 `;
+
+                policyPreview.innerHTML = `
+                    <div class="policy-header">
+                        ${content.title_en} | ${content.title_ar}
+                        <div style="font-size: 0.7em; color: #6c757d;">Document Version 1.0 - Approved by Himyati AI - ${new Date().toLocaleDateString()}</div>
+                    </div>
+                    
+                    <p style="font-weight: bold;">1. Objective (الهدف):</p>
+                    <p style="margin-left: 20px;">This policy outlines the mandatory technical and governance controls required to secure organizational data in compliance with the relevant ${country} mandates. <span class="rtl-text" style="display: block;">تحدد هذه السياسة الضوابط الإلزامية المطلوبة لتأمين بيانات المنظمة وفقاً لمتطلبات ${country}.</span></p>
+
+                    <p style="font-weight: bold; margin-top: 20px;">2. Core Requirements (المتطلبات الأساسية):</p>
+                    ${tableHTML}
+                    
+                    <div style="margin-top: 30px; text-align: right; font-style: italic; color: #004085; border-top: 1px solid #ddd; padding-top: 10px;">
+                        *هذا المستند جاهز للتوقيع والتطبيق.*
+                    </div>
+                `;
+                policyPreview.style.display = 'block';
+
             }, 3000); 
         }
 
-        // --- CRUCIAL: Initial loading function to fix startup issue ---
-        // We use DOMContentLoaded to ensure the HTML is fully parsed before the script runs
+        // Initial page load function to ensure checklist appears
         document.addEventListener('DOMContentLoaded', function() {
-            // Diagnostic check (optional, but helpful for debugging)
-            // console.log("DOM Loaded. Initializing Himyati MVP.");
-            
             loadFramework(); 
             updateTierBenefits(); 
-            // Calculate score is called inside updateTierBenefits and loadFramework for immediate feedback
         });
-
     </script>
 </body>
 </html>
