@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Himyati Compliance Score Engine - Final Fix</title>
+    <title>Himyati Compliance Score Engine - FINAL FIX</title>
     <style>
-        /* CSS STYLES (FROM ORIGINAL CODE) */
+        /* CSS STYLES */
         body { font-family: Arial, sans-serif; background-color: #f4f7f6; color: #333; line-height: 1.6; margin: 20px; }
         .container { max-width: 600px; margin: 50px auto; padding: 30px; border: 1px solid #ddd; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         h1 { color: #007bff; text-align: center; margin-bottom: 20px; }
@@ -107,7 +107,6 @@
             }
             noteElement.textContent = benefitText;
             
-            // Ensure score is updated after tier change (as this affects the remediation advice)
             calculateScore(); 
         }
 
@@ -126,6 +125,7 @@
             let formHTML = '';
             
             // Inject new controls into the form
+            formHTML += '<p style="font-size: 0.9em; color: #555;">Check the box if the control is **IN PLACE**.</p>';
             for (const type in groupedControls) {
                 formHTML += `<h2 style="margin-top: 30px;">${type} Controls (${country})</h2>`;
                 groupedControls[type].forEach(control => {
@@ -162,4 +162,118 @@
             document.getElementById('policy-status').textContent = '';
 
             // 2. Loop through each control to calculate score and identify gaps
-            controls.forEach(control =>
+            controls.forEach(control => {
+                const weight = parseInt(control.getAttribute('data-weight'));
+                totalRiskWeight += weight;
+
+                if (!control.checked) {
+                    let actionText = '';
+                    
+                    // Logic to determine the call-to-action based on compliance need and tier
+                    const isPolicyFixable = control.getAttribute('data-policy') === 'true';
+
+                    if (isPolicyFixable && tier !== 'basic') {
+                        actionText = `Action: **Generate Policy** for this governance gap.`;
+                    } else if (isPolicyFixable && tier === 'basic') {
+                         actionText = `Action: Locked in Basic Tier. Upgrade to **Premium** to generate policy.`;
+                    } else {
+                        actionText = 'Action: [Suggest Local IT Partner] for technical fix.';
+                    }
+                    
+                    nonCompliantControls.push({
+                        id: control.id,
+                        label: control.nextElementSibling.textContent,
+                        weight: weight,
+                        action: actionText
+                    });
+                } else {
+                    achievedComplianceWeight += weight;
+                }
+            });
+
+            // 4. Calculate the Final Compliance Score
+            let complianceScore = 0;
+            if (totalRiskWeight > 0) {
+                complianceScore = Math.round((achievedComplianceWeight / totalRiskWeight) * 100);
+            }
+
+            // 5. Determine Risk Status and Color
+            let riskStatus = '';
+            let statusColor = '';
+            if (complianceScore >= 85) {
+                riskStatus = 'Optimal - Audit Ready';
+                statusColor = 'green';
+            } else if (complianceScore >= 50) {
+                riskStatus = 'Medium Risk - Minor Gaps';
+                statusColor = 'orange';
+            } else {
+                riskStatus = 'CRITICAL RISK - IMMEDIATE ACTION REQUIRED';
+                statusColor = 'red';
+            }
+
+            // 6. Update the Score Dashboard (DOM manipulation)
+            document.getElementById('current-score').textContent = complianceScore;
+            const riskStatusElement = document.getElementById('risk-status');
+            riskStatusElement.textContent = riskStatus;
+            riskStatusElement.style.color = statusColor;
+            
+            // 7. Render the Remediation Roadmap to the UI
+            const reportSection = document.getElementById('remediation-report');
+            const gapList = document.getElementById('gap-list');
+            gapList.innerHTML = ''; 
+
+            if (nonCompliantControls.length > 0) {
+                nonCompliantControls.sort((a, b) => b.weight - a.weight); 
+                nonCompliantControls.forEach(gap => {
+                    const gapItem = document.createElement('p');
+                    gapItem.innerHTML = `<strong>[Risk ${gap.weight}] ${gap.label}</strong><br><span style="color: #c82333;">${gap.action}</span>`;
+                    gapList.appendChild(gapItem);
+                });
+                reportSection.style.display = 'block';
+            } else {
+                gapList.innerHTML = '<p style="color: green; font-weight: bold;">Congratulations! All essential controls are in place. Your business is Audit Ready! 🎉</p>';
+                reportSection.style.display = 'block';
+            }
+        }
+
+        // --- 4. AI FEATURE SIMULATION ---
+
+        function generatePolicy(policyType) {
+            const tier = document.getElementById('tier-select').value;
+            const country = document.getElementById('country-select').value;
+            const policyStatus = document.getElementById('policy-status');
+
+            if (tier === 'basic') {
+                policyStatus.style.color = 'red';
+                policyStatus.innerHTML = `❌ **ACCESS DENIED.** Policy Generation requires the **Premium** or **Audit Ready** subscription tier. Please upgrade.`;
+                return;
+            }
+
+            policyStatus.style.color = 'blue';
+            policyStatus.textContent = `Generating ${policyType} Policy for ${country}... (Simulating 3-second LLM processing...)`;
+
+            // Simulated network delay using setTimeout (3 seconds)
+            setTimeout(() => {
+                policyStatus.style.color = 'green';
+                policyStatus.innerHTML = `
+                    ✅ **SUCCESS!** Your Custom **${policyType} Enforcement Policy** is ready for **${country}**.<br>
+                    <small>Leveraging AI for rapid drafting and Arabic translation.</small>
+                    <br><a href="#" style="color: #007bff; font-weight: bold;">[DOWNLOAD: Policy-${policyType}-v1.0-AR.pdf]</a>
+                `;
+            }, 3000); 
+        }
+
+        // --- CRUCIAL: Initial loading function to fix startup issue ---
+        // We use DOMContentLoaded to ensure the HTML is fully parsed before the script runs
+        document.addEventListener('DOMContentLoaded', function() {
+            // Diagnostic check (optional, but helpful for debugging)
+            // console.log("DOM Loaded. Initializing Himyati MVP.");
+            
+            loadFramework(); 
+            updateTierBenefits(); 
+            // Calculate score is called inside updateTierBenefits and loadFramework for immediate feedback
+        });
+
+    </script>
+</body>
+</html>
