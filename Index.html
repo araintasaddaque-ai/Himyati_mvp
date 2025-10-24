@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Himyati Official Compliance Dashboard (SME Focus)</title>
+    <title>Himyati Official Compliance Dashboard (Smart Policy Generation)</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         /* CORE UI/UX STYLES */
@@ -39,18 +39,31 @@
             padding: 15px 10px;
             text-align: center;
             cursor: pointer;
-            background-color: #f8f9fa;
             border: none;
             border-right: 1px solid #eee;
             font-weight: 600;
             transition: background-color 0.3s, color 0.3s;
         }
+        /* Color Coding for Tabs */
+        .tab-button[data-tab="it-cyber"] { background-color: #e6f7ff; color: #007bff; }
+        .tab-button[data-tab="data-admin"] { background-color: #fff0e6; color: #ff8c00; }
+        .tab-button[data-tab="hr-compliance"] { background-color: #e6ffe6; color: #28a745; }
+        .tab-button[data-tab="financial"] { background-color: #f7e6ff; color: #8a2be2; }
+        
+        /* Active Tab State */
         .tab-button.active {
-            background-color: #ffffff;
-            color: #007bff;
-            border-bottom: 3px solid #007bff;
+            background-color: #ffffff !important; 
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            border-bottom: 3px solid transparent !important; /* Managed by JS/class add */
             margin-bottom: -1px;
+            position: relative;
+            z-index: 10;
         }
+        .tab-button[data-tab="it-cyber"].active { border-bottom: 3px solid #007bff !important; }
+        .tab-button[data-tab="data-admin"].active { border-bottom: 3px solid #ff8c00 !important; }
+        .tab-button[data-tab="hr-compliance"].active { border-bottom: 3px solid #28a745 !important; }
+        .tab-button[data-tab="financial"].active { border-bottom: 3px solid #8a2be2 !important; }
+        
         .tab-content { padding: 25px; display: none; }
         .tab-content.active { display: block; }
 
@@ -64,7 +77,7 @@
         #risk-status { font-weight: bold; font-size: 1.2em; }
         #current-score { font-size: 3em !important; font-weight: 800 !important; display: block; }
         
-        /* POLICY OUTPUT STYLES */
+        /* POLICY OUTPUT STYLES (Retained Professional Structure) */
         .policy-output { 
             background-color: #ffffff; 
             border: 2px solid #007bff; 
@@ -97,9 +110,9 @@
             font-weight: bold;
         }
         .signature-block {
-            margin-top: 70px; /* Increased space for formality */
+            margin-top: 70px; 
             padding-top: 30px;
-            border-top: 2px solid #ccc; /* Solid line for formal separation */
+            border-top: 2px solid #ccc; 
             display: flex;
             justify-content: space-between;
         }
@@ -120,12 +133,13 @@
             margin-top: 20px;
             font-size: 0.9em;
         }
-        .policy-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        .policy-table th, .policy-table td { 
-            border: 1px solid #ccc; 
-            padding: 10px; 
-            vertical-align: top;
-            font-size: 0.9em;
+        .context-question {
+            background-color: #fff8e1;
+            border: 1px solid #ffc107;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -135,7 +149,7 @@
 
         <div style="padding: 0 25px; background-color: #e9ecef; border-bottom: 1px solid #ccc;">
             <label for="country-select" style="font-weight: bold;">Select Primary Jurisdiction:</label>
-            <select id="country-select" style="width: 100%; padding: 8px; margin-bottom: 15px;" onchange="loadFramework(); calculateScore(); setActiveTab('it-cyber')">
+            <select id="country-select" style="width: 100%; padding: 8px; margin-bottom: 15px;" onchange="setActiveTab(currentActiveTab); calculateScore()">
                 <option value="BH">Bahrain (NCSC / PDPL)</option>
                 <option value="KSA" selected>Saudi Arabia (NCA / PDPL)</option>
                 <option value="QATAR">Qatar (NIA / PDPL)</option>
@@ -151,10 +165,10 @@
         </div>
 
         <div class="tabs">
-            <button class="tab-button active" onclick="setActiveTab('it-cyber')">IT / Cyber Security</button>
-            <button class="tab-button" onclick="setActiveTab('data-admin')">Data / Admin</button>
-            <button class="tab-button" onclick="setActiveTab('hr-compliance')">HR / Employment</button>
-            <button class="tab-button" onclick="setActiveTab('financial')">Financial / Tax</button>
+            <button class="tab-button active" data-tab="it-cyber" onclick="setActiveTab('it-cyber')">IT / Cyber Security</button>
+            <button class="tab-button" data-tab="data-admin" onclick="setActiveTab('data-admin')">Data / Admin</button>
+            <button class="tab-button" data-tab="hr-compliance" onclick="setActiveTab('hr-compliance')">HR / Employment</button>
+            <button class="tab-button" data-tab="financial" onclick="setActiveTab('financial')">Financial / Tax</button>
         </div>
 
         <form id="compliance-form">
@@ -164,20 +178,10 @@
             <h2>Remediation Roadmap & Policy Actions</h2>
             <div id="gap-list"></div>
             
-            <h3 style="margin-top: 20px;">Automated Policy Generation (All Policies are Free)</h3>
+            <h3 style="margin-top: 20px;">Automated Policy Generation (Click a Tab to see relevant policies)</h3>
             
-            <button type="button" onclick="generatePolicy('Password')" style="background-color: #28a745; margin-bottom: 10px;">
-                🔑 Generate Password Policy (Password)
-            </button>
-            <button type="button" onclick="generatePolicy('MFA')" style="background-color: #28a745; margin-bottom: 10px;">
-                🔒 Generate MFA Enforcement Policy (MFA)
-            </button>
-            <button type="button" onclick="generatePolicy('Incident')" style="background-color: #dc3545; margin-bottom: 10px;">
-                🚨 Generate Incident Response Policy (High Risk)
-            </button>
-            <button type="button" onclick="generatePolicy('DataClass')" style="background-color: #17a2b8; margin-bottom: 10px;">
-                🏷️ Generate Data Classification Policy (PDPL Focus)
-            </button>
+            <div id="policy-buttons-container">
+                </div>
 
             <p id="policy-status" style="margin-top: 15px; font-style: italic;"></p>
             <div id="policy-preview" class="policy-output" style="display: none;"></div>
@@ -188,13 +192,34 @@
         // --- 1. CORE DATA AND FRAMEWORK DEFINITION ---
         const CATEGORIES = {
             'it-cyber': ['Access', 'Technical'],
-            'data-admin': ['Governance', 'Privacy'],
+            'data-admin': ['Governance', 'Privacy', 'Awareness'],
             'hr-compliance': ['HR'],
             'financial': ['Financial']
         };
 
+        const POLICY_MAPPING = {
+            'it-cyber': [
+                { type: 'Password', label: '🔑 Generate Password Policy', color: '#007bff' },
+                { type: 'MFA', label: '🔒 Generate MFA Enforcement Policy', color: '#007bff' },
+                { type: 'SecConfig', label: '🖥️ Generate Secure Configuration Policy', color: '#007bff' }
+            ],
+            'data-admin': [
+                { type: 'Incident', label: '🚨 Generate Incident Response Policy', color: '#dc3545' },
+                { type: 'DataClass', label: '🏷️ Generate Data Classification Policy', color: '#17a2b8' },
+                { type: 'Retention', label: '📄 Generate Data Retention Policy', color: '#ffc107' }
+            ],
+            'hr-compliance': [
+                { type: 'Leave', label: '📅 Generate Annual Leave/Attendance Policy', color: '#28a745' },
+                { type: 'Code', label: '⚖️ Generate Employee Code of Conduct', color: '#28a745' }
+            ],
+            'financial': [
+                { type: 'FinanceDoc', label: '🧾 Generate Financial Record Keeping Policy', color: '#8a2be2' },
+                { type: 'AML', label: '💰 Generate AML/CFT Reporting Policy', color: '#8a2be2' }
+            ]
+        };
+
         const FRAMEWORKS = {
-            'BH': [ // Bahrain: NCSC, PDPL, CBB
+            'BH': [ 
                 { id: 'control_mfa', label: 'MFA enabled for all remote/admin access.', weight: 5, policy: true, type: 'Access', tab: 'it-cyber' },
                 { id: 'control_password', label: 'Strong Password Policy (min 12 chars) is enforced.', weight: 4, policy: true, type: 'Access', tab: 'it-cyber' },
                 { id: 'control_backup', label: 'Critical data is backed up off-site (tested).', weight: 4, policy: false, type: 'Technical', tab: 'it-cyber' },
@@ -206,7 +231,7 @@
                 { id: 'control_finance_audit', label: 'Audited Financial Statements (IFRS) are ready for submission.', weight: 5, policy: false, type: 'Financial', tab: 'financial' },
                 { id: 'control_finance_vat', label: 'VAT registration and compliance (10% standard rate).', weight: 3, policy: false, type: 'Financial', tab: 'financial' }
             ],
-            'KSA': [ // KSA: NCA Essential Controls (ECC), PDPL
+            'KSA': [ 
                 { id: 'control_mfa', label: 'MFA for all critical system access (servers, cloud).', weight: 5, policy: true, type: 'Access', tab: 'it-cyber' },
                 { id: 'control_password', label: 'Formal password management/rotation documented (NCA ECC Req).', weight: 4, policy: true, type: 'Access', tab: 'it-cyber' },
                 { id: 'control_threat', label: 'Active Intrusion Detection/Prevention System (IDS/IPS) in use.', weight: 5, policy: false, type: 'Technical', tab: 'it-cyber' },
@@ -218,7 +243,7 @@
                 { id: 'control_finance_audit', label: 'Audited Financial Statements (IFRS/IFRS for SMEs) ready.', weight: 5, policy: false, type: 'Financial', tab: 'financial' },
                 { id: 'control_finance_tax', label: 'Corporate Income Tax (CIT) documents prepared (if applicable).', weight: 4, policy: false, type: 'Financial', tab: 'financial' }
             ],
-            'QATAR': [ // Qatar: NIA, PDPL (Draft), Local Laws
+            'QATAR': [ 
                 { id: 'control_mfa', label: 'MFA is enforced for ALL external service access (Email, VPN).', weight: 4, policy: true, type: 'Access', tab: 'it-cyber' },
                 { id: 'control_password', label: 'Documented procedure for user onboarding/offboarding.', weight: 3, policy: true, type: 'Access', tab: 'it-cyber' },
                 { id: 'control_backup', label: 'A tested data recovery plan is documented and stored securely.', weight: 4, policy: false, type: 'Technical', tab: 'it-cyber' },
@@ -232,82 +257,150 @@
             ]
         };
         
-        // --- 2. POLICY CONTENT (SIMULATED AI OUTPUT) ---
+        // --- 2. EXPANDED POLICY CONTENT (SIMULATED AI OUTPUT) ---
         const POLICY_CONTENT = {
             'Password': {
                 'title_en': "Mandatory Password Policy", 'title_ar': "سياسة كلمات المرور الإلزامية",
-                'details': [
-                    { en: "Minimum Length", ar: "الحد الأدنى للطول", req_en: "12 characters minimum (Recommended: 16)", req_ar: "١٢ حرف كحد أدنى (الموصى به: ١٦)" },
-                    { en: "Complexity", ar: "التعقيد", req_en: "Must include Uppercase, Lowercase, Number, and Symbol.", req_ar: "يجب أن تتضمن أحرفاً كبيرة وصغيرة وأرقاماً ورموزاً." },
-                    { en: "Rotation", ar: "التغيير الدوري", req_en: "Required every 90 days for privileged accounts.", req_ar: "مطلوب كل ٩٠ يوماً للحسابات ذات الامتيازات." },
-                    { en: "Storage", ar: "التخزين", req_en: "Passwords must be secured using a dedicated manager.", req_ar: "يجب تأمين كلمات المرور باستخدام برنامج إدارة مخصص." }
-                ],
-                'background': {
-                    'ref_en': "Best Practice: NIST SP 800-63B guidelines and NCA Essential Controls.",
-                    'ref_ar': "أفضل الممارسات: إرشادات NIST SP 800-63B والضوابط الأساسية للهيئة الوطنية للأمن السيبراني (NCA).",
-                    'example_en': "Pattern Suggestion: Use a dedicated password vault (e.g., local server or cloud solution) to store hashed credentials.",
-                    'example_ar': "نمط مقترح: استخدام قبو كلمات مرور مخصص (مثل خادم محلي أو حل سحابي) لتخزين بيانات الاعتماد المجزأة."
-                }
+                'details': [ /* ... details */ ],
+                'background': { /* ... background */ },
+                'context_q': "What is the maximum number of password reuse attempts allowed in your system?",
+                'context_a_default': "Maximum 5 reuse attempts."
             },
             'MFA': {
                 'title_en': "Multi-Factor Authentication (MFA) Enforcement Policy", 'title_ar': "سياسة تطبيق المصادقة متعددة العوامل",
+                'details': [ /* ... details */ ],
+                'background': { /* ... background */ },
+                'context_q': "Which MFA method will you prioritize (App Token, SMS, or Hardware Key)?",
+                'context_a_default': "App Token (e.g., Google Authenticator) for security."
+            },
+            'SecConfig': {
+                'title_en': "Secure Configuration and Hardening Policy", 'title_ar': "سياسة التكوين الآمن وتقوية الأنظمة",
                 'details': [
-                    { en: "Scope", ar: "النطاق", req_en: "Mandatory for all access to cloud services (Email, VPN, Accounting).", req_ar: "إلزامي لجميع الوصول عن بعد والخدمات السحابية (البريد الإلكتروني، الحسابات)." },
-                    { en: "Exemptions", ar: "الاستثناءات", req_en: "No exceptions are permitted for administrative or executive accounts.", req_ar: "لا يُسمح بأي استثناءات للحسابات الإدارية أو التنفيذية." },
-                    { en: "Method", ar: "طريقة التطبيق", req_en: "Must use authenticator apps or hardware tokens.", req_ar: "يجب استخدام تطبيقات المصادقة أو رموز الأجهزة الصلبة." },
-                    { en: "Non-Compliance", ar: "عدم الامتثال", req_en: "Access will be blocked for non-compliant users after 7 days of notification.", req_ar: "سيتم حظر الوصول للمستخدمين غير الملتزمين بعد ٧ أيام من الإخطار." }
+                    { en: "Default Accounts", ar: "الحسابات الافتراضية", req_en: "All default system accounts must be disabled or renamed immediately.", req_ar: "يجب تعطيل أو إعادة تسمية جميع حسابات النظام الافتراضية على الفور." },
+                    { en: "Patch Management", ar: "إدارة التحديثات", req_en: "Critical security patches must be applied within 7 days of release.", req_ar: "يجب تطبيق التحديثات الأمنية الهامة في غضون ٧ أيام من الإصدار." },
+                    { en: "Service Disablement", ar: "تعطيل الخدمات", req_en: "Disable all unnecessary network services and protocols (e.g., FTP, Telnet).", req_ar: "تعطيل جميع خدمات وبروتوكولات الشبكة غير الضرورية (مثل FTP، Telnet)." }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: CIS Controls, Mitigates 80% of targeted attacks (Microsoft).",
-                    'ref_ar': "أفضل الممارسات: ضوابط CIS، تخفف ٨٠٪ من الهجمات المستهدفة (مايكروسوفت).",
-                    'example_en': "Pattern Suggestion: Prioritize implementation on administrative, financial, and external (VPN) access points immediately.",
-                    'example_ar': "نمط مقترح: إعطاء الأولوية للتطبيق الفوري على نقاط الوصول الإدارية والمالية والخارجية (VPN)."
-                }
+                    'ref_en': "Best Practice: CIS Benchmarks and Vendor Hardening Guides (e.g., Microsoft).",
+                    'ref_ar': "أفضل الممارسات: معايير CIS وأدلة تقوية الأنظمة الخاصة بالموردين.",
+                    'example_en': "Pattern Suggestion: Use automated configuration management tools (e.g., Group Policy/Ansible) to enforce a baseline configuration.",
+                    'example_ar': "نمط مقترح: استخدام أدوات إدارة التكوين المؤتمتة لفرض تكوين أساسي ثابت."
+                },
+                'context_q': "What is the longest acceptable downtime for a critical service during patching?",
+                'context_a_default': "4 hours maximum downtime."
             },
             'Incident': {
                 'title_en': "Mandatory Incident Response & Notification Policy", 'title_ar': "سياسة الاستجابة للحوادث والإبلاغ الإلزامي",
-                'details': [
-                    { en: "Notification Timeline", ar: "إطار الإبلاغ الزمني", req_en: "Report breaches to the regulator within 72 hours of discovery.", req_ar: "الإبلاغ عن الاختراقات للجهة الرقابية خلال ٧٢ ساعة من الاكتشاف." },
-                    { en: "Response Team", ar: "فريق الاستجابة", req_en: "A designated Incident Response Team (IRT) must be established and trained.", req_ar: "يجب إنشاء وتدريب فريق استجابة للحوادث (IRT) مُعيّن." },
-                    { en: "Communication Plan", ar: "خطة الاتصال", req_en: "Pre-approved templates for notifying affected data subjects.", req_ar: "وجود نماذج اتصال مُعتمدة مسبقاً لإخطار أصحاب البيانات المتأثرين." },
-                    { en: "Forensics", ar: "التحقيق الجنائي", req_en: "Preservation of all logs and evidence for forensic analysis.", req_ar: "الاحتفاظ بجميع السجلات والأدلة للتحليل الجنائي." }
-                ],
-                'background': {
-                    'ref_en': "Best Practice: NCA NCA-IRP and NCA-ECC-1:2018 (Incident Response and Recovery).",
-                    'ref_ar': "أفضل الممارسات: NCA NCA-IRP و NCA-ECC-1:2018 (الاستجابة والتعافي من الحوادث).",
-                    'example_en': "Pattern Suggestion: Conduct a mandatory annual simulated breach test (tabletop exercise) with management.",
-                    'example_ar': "نمط مقترح: إجراء اختبار اختراق سنوي إلزامي محاكاة (تمرين على الطاولة) بمشاركة الإدارة العليا."
-                }
+                'details': [ /* ... details */ ],
+                'background': { /* ... background */ },
+                'context_q': "Who is the primary regulatory body to receive the 72-hour breach notification?",
+                'context_a_default': "National Cybersecurity Authority (NCA)."
             },
             'DataClass': {
                 'title_en': "Data Classification and Handling Policy (PDPL Ready)", 'title_ar': "سياسة تصنيف ومعالجة البيانات (جاهزة لـ PDPL)",
+                'details': [ /* ... details */ ],
+                'background': { /* ... background */ },
+                'context_q': "Do you handle special category data (health, religious affiliation, biometrics)?",
+                'context_a_default': "Yes, limited health data (employee sick leave)."
+            },
+            'Retention': {
+                'title_en': "Data Retention and Destruction Policy", 'title_ar': "سياسة الاحتفاظ بالبيانات وإتلافها",
                 'details': [
-                    { en: "Classification Tiers", ar: "مستويات التصنيف", req_en: "Data must be tagged: Public, Internal, Confidential, and Highly Sensitive.", req_ar: "يجب تصنيف البيانات: عامة، داخلية، سرية، وشديدة الحساسية." },
-                    { en: "Handling of PII", ar: "معالجة البيانات الشخصية", req_en: "PII must be encrypted both in transit and at rest.", req_ar: "يجب تشفير بيانات تحديد الهوية الشخصية (PII) أثناء النقل والتخزين." },
-                    { en: "Access Control", ar: "التحكم بالوصول", req_en: "Access to Sensitive data requires explicit management approval.", req_ar: "يتطلب الوصول إلى البيانات السرية/الحساسة موافقة إدارية صريحة." },
-                    { en: "Disposal Method", ar: "طريقة الإتلاف", req_en: "Secure digital shredding or physical destruction is required.", req_ar: "يتطلب إتلاف رقمي آمن أو إتلاف مادي." }
+                    { en: "Financial Data", ar: "البيانات المالية", req_en: "Minimum 7 years retention as required by FTA/ZATCA.", req_ar: "الاحتفاظ بها لمدة ٧ سنوات كحد أدنى وفقاً لمتطلبات هيئة الزكاة والضريبة والجمارك." },
+                    { en: "Customer PII", ar: "بيانات تحديد الهوية الشخصية للعملاء", req_en: "Destroyed immediately upon withdrawal of consent, unless legally required otherwise.", req_ar: "تُتلف فور سحب الموافقة، ما لم تتطلب القوانين خلاف ذلك." },
+                    { en: "Employment Records", ar: "سجلات التوظيف", req_en: "Retained for 5 years after the employee's final separation date.", req_ar: "يتم الاحتفاظ بها لمدة ٥ سنوات بعد تاريخ انتهاء خدمة الموظف." }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: PDPL Article 10 (Lawfulness of Processing) and ISO 27001 Annex A.8.2.",
-                    'ref_ar': "أفضل الممارسات: المادة ١٠ من PDPL (مشروعية المعالجة) و الملحق A.8.2 من ISO 27001.",
-                    'example_en': "Pattern Suggestion: Implement Data Loss Prevention (DLP) tools to enforce classification and prevent unauthorized PII movement.",
-                    'example_ar': "نمط مقترح: تطبيق أدوات منع فقدان البيانات (DLP) لفرض التصنيف ومنع نقل بيانات تحديد الهوية الشخصية غير المصرح به."
-                }
+                    'ref_en': "Best Practice: PDPL, Financial Reporting Standards, and Local Labour Law.",
+                    'ref_ar': "أفضل الممارسات: قانون حماية البيانات الشخصية، ومعايير التقارير المالية، وقانون العمل المحلي.",
+                    'example_en': "Pattern Suggestion: Implement automated system deletion rules for non-essential data exceeding the 5-year limit.",
+                    'example_ar': "نمط مقترح: تطبيق قواعد حذف النظام المؤتمتة للبيانات غير الضرورية التي تتجاوز الحد الأقصى البالغ ٥ سنوات."
+                },
+                'context_q': "What is the primary legal obligation that dictates your longest data retention period?",
+                'context_a_default': "Tax compliance (7 years)."
+            },
+            'Leave': {
+                'title_en': "Annual Leave and Attendance Policy", 'title_ar': "سياسة الإجازات السنوية والحضور",
+                'details': [
+                    { en: "Annual Leave Minimum", ar: "الحد الأدنى للإجازة السنوية", req_en: "Minimum 21 days paid leave (standard GCC law) for staff with >1 year service.", req_ar: "حد أدنى ٢١ يوماً إجازة مدفوعة الأجر (قانون العمل الخليجي القياسي) للموظفين الذين أكملوا سنة." },
+                    { en: "Sick Leave Reporting", ar: "الإبلاغ عن الإجازات المرضية", req_en: "Employees must report illness within 24 hours and provide a medical certificate after 3 days.", req_ar: "يجب على الموظفين الإبلاغ عن المرض خلال ٢٤ ساعة وتقديم شهادة طبية بعد ٣ أيام." },
+                    { en: "Hajj/Umrah Leave", ar: "إجازة الحج/العمرة", req_en: "Mandatory one-time 10-15 day paid leave for eligible Muslim staff.", req_ar: "إجازة مدفوعة الأجر إلزامية لمرة واحدة تتراوح بين ١٠-١٥ يوماً للموظفين المسلمين المؤهلين." }
+                ],
+                'background': {
+                    'ref_en': "Best Practice: GCC Unified Labour Law and local Ministry of Human Resources regulations.",
+                    'ref_ar': "أفضل الممارسات: قانون العمل الخليجي الموحد وأنظمة وزارة الموارد البشرية المحلية.",
+                    'example_en': "Pattern Suggestion: Use an HRIS system to track all leave accrual and usage to ensure compliance and avoid disputes.",
+                    'example_ar': "نمط مقترح: استخدام نظام معلومات الموارد البشرية لتتبع جميع استحقاقات واستخدام الإجازات لضمان الامتثال وتجنب النزاعات."
+                },
+                'context_q': "What is your company's policy on carrying over unused annual leave (max days)?",
+                'context_a_default': "Max 5 days can be carried over to the next year."
+            },
+            'Code': {
+                'title_en': "Employee Code of Conduct Policy", 'title_ar': "سياسة مدونة سلوك الموظفين",
+                'details': [
+                    { en: "Confidentiality", ar: "السرية", req_en: "Employees must sign a non-disclosure agreement (NDA) and protect all company IP/Trade Secrets.", req_ar: "يجب على الموظفين توقيع اتفاقية عدم إفصاح وحماية جميع الملكية الفكرية/الأسرار التجارية للشركة." },
+                    { en: "Social Media", ar: "وسائل التواصل الاجتماعي", req_en: "Personal social media use must not compromise the company's reputation or disclose sensitive information.", req_ar: "يجب ألا يضر الاستخدام الشخصي لوسائل التواصل الاجتماعي بسمعة الشركة أو يكشف عن معلومات حساسة." },
+                    { en: "Gifts/Bribes", ar: "الهدايا/الرشاوى", req_en: "Employees must report any gift over a specified local value to HR.", req_ar: "يجب على الموظفين إبلاغ الموارد البشرية عن أي هدية تتجاوز قيمة محلية محددة." }
+                ],
+                'background': {
+                    'ref_en': "Best Practice: Anti-Corruption Laws and Corporate Governance Standards (C-level).",
+                    'ref_ar': "أفضل الممارسات: قوانين مكافحة الفساد ومعايير حوكمة الشركات (للمستوى التنفيذي).",
+                    'example_en': "Pattern Suggestion: Provide mandatory ethics training focused on local cultural expectations regarding conflicts of interest.",
+                    'example_ar': "نمط مقترح: توفير تدريب إلزامي على الأخلاقيات يركز على التوقعات الثقافية المحلية فيما يتعلق بتضارب المصالح."
+                },
+                'context_q': "What is the monetary limit for gifts that an employee can accept without reporting to HR?",
+                'context_a_default': "SAR 500 (or equivalent)."
+            },
+            'FinanceDoc': {
+                'title_en': "Financial Record Keeping and Audit Policy", 'title_ar': "سياسة حفظ السجلات المالية والتدقيق",
+                'details': [
+                    { en: "IFRS Standard", ar: "معيار التقارير المالية الدولي", req_en: "Financial statements must comply with IFRS for SMEs or Full IFRS.", req_ar: "يجب أن تتوافق البيانات المالية مع IFRS للمنشآت الصغيرة والمتوسطة أو IFRS الكامل." },
+                    { en: "Retention Period", ar: "فترة الاحتفاظ", req_en: "All accounting records must be kept for a minimum of 7 years.", req_ar: "يجب الاحتفاظ بجميع السجلات المحاسبية لمدة ٧ سنوات كحد أدنى." },
+                    { en: "Accrual Basis", ar: "أساس الاستحقاق", req_en: "Accounting records must be maintained using the accrual basis method.", req_ar: "يجب الاحتفاظ بالسجلات المحاسبية باستخدام طريقة أساس الاستحقاق." }
+                ],
+                'background': {
+                    'ref_en': "Best Practice: International Financial Reporting Standards (IFRS) and ZATCA regulations.",
+                    'ref_ar': "أفضل الممارسات: معايير التقارير المالية الدولية (IFRS) وأنظمة هيئة الزكاة والضريبة والجمارك.",
+                    'example_en': "Pattern Suggestion: Automate VAT filing and reconciliation using certified accounting software to minimize manual errors.",
+                    'example_ar': "نمط مقترح: أتمتة إيداع ضريبة القيمة المضافة والمطابقة باستخدام برامج محاسبية معتمدة لتقليل الأخطاء اليدوية."
+                },
+                'context_q': "What is the end date of your company's fiscal year (e.g., Dec 31st)?",
+                'context_a_default': "December 31st."
+            },
+            'AML': {
+                'title_en': "AML/CFT Reporting and Due Diligence Policy", 'title_ar': "سياسة مكافحة غسل الأموال وتمويل الإرهاب والتبليغ",
+                'details': [
+                    { en: "Customer Due Diligence (CDD)", ar: "العناية الواجبة للعملاء", req_en: "Mandatory verification of customer identity and beneficial ownership for all transactions over local threshold.", req_ar: "التحقق الإلزامي من هوية العميل والملكية المستفيدة لجميع المعاملات التي تتجاوز الحد المحلي." },
+                    { en: "Suspicious Activity Report (SAR)", ar: "تقرير النشاط المشبوه", req_en: "Any suspicious transaction must be reported to the Financial Intelligence Unit (FIU) immediately.", req_ar: "يجب إبلاغ وحدة المعلومات المالية فوراً عن أي معاملة مشبوهة." },
+                    { en: "Training", ar: "التدريب", req_en: "Mandatory annual training for all employees handling customer funds or transactions.", req_ar: "تدريب سنوي إلزامي لجميع الموظفين الذين يتعاملون مع أموال العملاء أو معاملاتهم." }
+                ],
+                'background': {
+                    'ref_en': "Best Practice: FATF recommendations and local Financial Intelligence Unit (FIU) mandates.",
+                    'ref_ar': "أفضل الممارسات: توصيات FATF وتفويضات وحدة المعلومات المالية المحلية.",
+                    'example_en': "Pattern Suggestion: Implement automated transaction monitoring software that flags large or unusual transfers.",
+                    'example_ar': "نمط مقترح: تطبيق برامج آلية لمراقبة المعاملات التي تحدد التحويلات الكبيرة أو غير العادية."
+                },
+                'context_q': "What is your primary system for submitting Suspicious Activity Reports (e.g., goAML)?",
+                'context_a_default': "goAML portal."
             }
         };
 
+
         // --- 3. UI/UX AND FRAMEWORK MANAGEMENT ---
-        let currentActiveTab = 'it-cyber';
+        let currentActiveTab = 'it-cyber'; // Default to this tab
 
         function setActiveTab(tabId) {
-            // Update buttons
+            // 1. Update Buttons
             document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`.tab-button[onclick="setActiveTab('${tabId}')"`).classList.add('active');
+            const activeBtn = document.querySelector(`.tab-button[data-tab="${tabId}"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
 
-            // Load content for the active tab
+            // 2. Load Checklist Content and Policy Buttons
             currentActiveTab = tabId;
             loadFramework(); 
-            // The score is calculated implicitly by loadFramework calling calculateScore
+            generatePolicyButtons(tabId);
         }
 
         function loadFramework() {
@@ -321,7 +414,6 @@
             let formHTML = `<div class="tab-content active" id="${currentActiveTab}-content">`;
             formHTML += `<p style="font-size: 0.9em; color: #555;">Check the box if the control is **IN PLACE** for the **${currentActiveTab.toUpperCase()}** category.</p>`;
             
-            // Group controls by type (Access, Technical, HR, Financial, etc.) within the active tab
             const groupedControls = controlsInActiveTab.reduce((acc, control) => {
                 acc[control.type] = acc[control.type] || [];
                 acc[control.type].push(control);
@@ -345,6 +437,25 @@
             calculateScore(); 
         }
 
+        function generatePolicyButtons(tabId) {
+            const container = document.getElementById('policy-buttons-container');
+            container.innerHTML = '';
+            const policies = POLICY_MAPPING[tabId];
+
+            if (policies) {
+                policies.forEach(policy => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.setAttribute('onclick', `generatePolicy('${policy.type}')`);
+                    btn.textContent = policy.label;
+                    btn.style.backgroundColor = policy.color;
+                    btn.style.marginBottom = '10px';
+                    container.appendChild(btn);
+                });
+            }
+        }
+
+
         // --- 4. CORE SCORING & REPORTING LOGIC ---
 
         function calculateScore() {
@@ -353,7 +464,6 @@
             let achievedComplianceWeight = 0;
             let nonCompliantControls = [];
 
-            // Iterate over ALL controls in the framework, regardless of the active tab
             const allControls = FRAMEWORKS[country];
             
             allControls.forEach(control => {
@@ -364,13 +474,9 @@
                 totalRiskWeight += weight;
 
                 if (!isChecked) {
-                    let actionText = '';
-                    const isPolicyFixable = control.policy;
-
-                    if (isPolicyFixable) {
+                    let actionText = 'Action: [Suggest Local IT Partner] for technical fix.';
+                    if (control.policy) {
                         actionText = `Action: **Generate Policy** for this governance gap. (Currently Free)`;
-                    } else {
-                        actionText = 'Action: [Suggest Local IT Partner] for technical fix.';
                     }
                     
                     nonCompliantControls.push({
@@ -384,7 +490,6 @@
                     achievedComplianceWeight += weight;
                 }
                 
-                // Save state to localStorage to persist across tab switches
                 if (controlElement) {
                     localStorage.setItem(control.id, controlElement.checked);
                 }
@@ -427,16 +532,22 @@
             const country = document.getElementById('country-select').value;
             const policyStatus = document.getElementById('policy-status');
             const policyPreview = document.getElementById('policy-preview');
+            const content = POLICY_CONTENT[policyType];
+
+            // 1. Ask Contextual Question (SIMULATION)
+            const userInput = prompt(`Himyati AI Consultation Required:\n\n[QUESTION]: ${content.context_q}\n\n[DEFAULT ANSWER]: ${content.context_a_default}\n\nPlease enter your specific answer or click OK to use the default.`);
+            
+            const contextAnswer = userInput === null || userInput === "" ? content.context_a_default : userInput;
+
 
             policyStatus.style.color = 'blue';
-            policyStatus.textContent = `Generating ${policyType} Policy for ${country}... (Simulating 3-second LLM processing...)`;
+            policyStatus.textContent = `Generating ${policyType} Policy for ${country}... (Context Used: ${contextAnswer}) (Simulating 3-second LLM processing...)`;
             policyPreview.style.display = 'none';
 
             // Simulated network delay using setTimeout (3 seconds)
             setTimeout(() => {
-                const content = POLICY_CONTENT[policyType];
                 
-                // 1. Build the professional table structure
+                // 2. Build the professional table structure
                 let tableHTML = `
                     <p class="section-title">2.1 Core Requirements | المتطلبات الأساسية</p>
                     <table class="policy-table">
@@ -467,10 +578,12 @@
                     </table>
                 `;
                 
-                // 2. Build the Background and Reference Section
+                // 3. Build the Background and Reference Section
                 const backgroundHTML = `
                     <p class="section-title">3. Background, References, and Suggested Patterns | الخلفية والمراجع والأنماط المقترحة</p>
                     <div class="background-section">
+                        <p><strong>CONTEXTUAL INPUT:</strong> <span style="color: #dc3545; font-weight: bold;">${content.context_q}</span> ➡️ **Answer Used:** ${contextAnswer}</p>
+                        <hr style="margin: 10px 0;">
                         <p><strong>Reference / Mandate:</strong> ${content.background.ref_en}</p>
                         <p class="arabic-text"><strong>المرجع / المندوب:</strong> ${content.background.ref_ar}</p>
                         <hr style="margin: 10px 0; border-top: 1px dotted #ccc;">
@@ -479,7 +592,7 @@
                     </div>
                 `;
 
-                // 3. Build the Signature Block
+                // 4. Build the Signature Block
                 const signatureHTML = `
                     <p class="section-title">4. Approvals and Authorization | الموافقات والتفويض</p>
                     <div class="signature-block">
@@ -498,7 +611,7 @@
                     </div>
                 `;
                 
-                // 4. Pro-Forma Official Introduction
+                // 5. Pro-Forma Official Introduction
                 const proFormaIntro = `
                     <p class="section-title" style="border: none; margin-top: 5px;">OFFICIAL POLICY DOCUMENT PRO-FORMA</p>
                     <div class="background-section">
@@ -512,14 +625,13 @@
                     </div>
                 `;
 
-                // 5. Assemble the final professional document preview
+                // 6. Assemble the final professional document preview
                 policyStatus.style.color = 'green';
                 policyStatus.innerHTML = `
                     ✅ **SUCCESS!** Your Custom **${policyType} Enforcement Policy** is ready for **${country}**.<br>
                     <a href="#" style="color: #007bff; font-weight: bold;">[DOWNLOAD: Policy-${policyType}-v1.0-AR.pdf - SIMULATED PDF]</a>
                 `;
 
-                // Main Policy Content
                 policyPreview.innerHTML = `
                     <div class="policy-header">
                         ${content.title_en} | <span class="arabic-text">${content.title_ar}</span>
@@ -542,9 +654,7 @@
 
         // Initial page load function to ensure the correct tab is active and framework loads
         document.addEventListener('DOMContentLoaded', function() {
-            // Clear old local storage state that conflicts with new data structures
-            // This is crucial for a major version update to prevent visual bugs
-            // Note: In a real app, this would be handled by versioning the DB schema.
+            // Clear old local storage state for a major version update
             for (let i = 0; i < localStorage.length; i++) {
                 const key = localStorage.key(i);
                 if (key.startsWith('control_')) {
@@ -554,11 +664,11 @@
 
             // Set the initial active tab and load the framework for the default country (KSA)
             const defaultTab = 'it-cyber';
-            setActiveTab(defaultTab);
+            // Set the initial country selection (KSA is default in HTML)
             document.getElementById('country-select').value = 'KSA';
             
-            // Highlight the default tab button
-            document.querySelector(`.tab-button[onclick="setActiveTab('${defaultTab}')"]`).classList.add('active');
+            // Initial call to set the default tab and load controls/buttons
+            setActiveTab(defaultTab);
         });
     </script>
 </body>
