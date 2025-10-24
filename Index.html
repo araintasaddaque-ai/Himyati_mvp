@@ -54,7 +54,7 @@
         .tab-button.active {
             background-color: #ffffff !important; 
             box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-            border-bottom: 3px solid transparent !important; /* Managed by JS/class add */
+            border-bottom: 3px solid transparent !important; 
             margin-bottom: -1px;
             position: relative;
             z-index: 10;
@@ -141,6 +141,37 @@
             border-radius: 8px;
             font-weight: bold;
         }
+        /* *** CORE TABLE FIXES FOR ALIGNMENT AND CLARITY *** */
+        .policy-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 15px; 
+            border: 1px solid #ddd; /* Ensure table boundary is visible */
+        }
+        .policy-table th, .policy-table td { 
+            border: 1px solid #eee; /* Light borders for interior cells */
+            padding: 10px; 
+            vertical-align: top;
+            font-size: 0.9em;
+        }
+        .policy-table th { 
+            background-color: #e9ecef; /* Header color */
+            font-weight: 700; 
+            color: #333; 
+        }
+        .policy-table tr:nth-child(even) { /* Zebra striping for better readability */
+            background-color: #f7f7f7;
+        }
+        /* Specific Column Alignment Rules (The Core Fix) */
+        .policy-table td:nth-child(2n-1) { /* English Content (Aspect & Requirement) */
+             text-align: left;
+             direction: ltr;
+        }
+        .policy-table td:nth-child(2n) { /* Arabic Content (Aspect & Requirement) */
+             text-align: right;
+             direction: rtl;
+             font-family: 'Tajawal', sans-serif; /* Ensure Arabic font is used */
+        }
     </style>
 </head>
 <body>
@@ -219,7 +250,7 @@
         };
 
         const FRAMEWORKS = {
-            'BH': [ 
+            'BH': [ // Bahrain: NCSC, PDPL, CBB
                 { id: 'control_mfa', label: 'MFA enabled for all remote/admin access.', weight: 5, policy: true, type: 'Access', tab: 'it-cyber' },
                 { id: 'control_password', label: 'Strong Password Policy (min 12 chars) is enforced.', weight: 4, policy: true, type: 'Access', tab: 'it-cyber' },
                 { id: 'control_backup', label: 'Critical data is backed up off-site (tested).', weight: 4, policy: false, type: 'Technical', tab: 'it-cyber' },
@@ -231,7 +262,7 @@
                 { id: 'control_finance_audit', label: 'Audited Financial Statements (IFRS) are ready for submission.', weight: 5, policy: false, type: 'Financial', tab: 'financial' },
                 { id: 'control_finance_vat', label: 'VAT registration and compliance (10% standard rate).', weight: 3, policy: false, type: 'Financial', tab: 'financial' }
             ],
-            'KSA': [ 
+            'KSA': [ // KSA: NCA Essential Controls (ECC), PDPL
                 { id: 'control_mfa', label: 'MFA for all critical system access (servers, cloud).', weight: 5, policy: true, type: 'Access', tab: 'it-cyber' },
                 { id: 'control_password', label: 'Formal password management/rotation documented (NCA ECC Req).', weight: 4, policy: true, type: 'Access', tab: 'it-cyber' },
                 { id: 'control_threat', label: 'Active Intrusion Detection/Prevention System (IDS/IPS) in use.', weight: 5, policy: false, type: 'Technical', tab: 'it-cyber' },
@@ -261,17 +292,31 @@
         const POLICY_CONTENT = {
             'Password': {
                 'title_en': "Mandatory Password Policy", 'title_ar': "سياسة كلمات المرور الإلزامية",
-                'details': [ /* ... details */ ],
-                'background': { /* ... background */ },
-                'context_q': "What is the maximum number of password reuse attempts allowed in your system?",
-                'context_a_default': "Maximum 5 reuse attempts."
+                'details': [
+                    { en: "Minimum Length", ar: "الحد الأدنى للطول", req_en: "12 characters minimum (Recommended: 16)", req_ar: "١٢ حرف كحد أدنى (الموصى به: ١٦)" },
+                    { en: "Complexity", ar: "التعقيد", req_en: "Must include Uppercase, Lowercase, Number, and Symbol.", req_ar: "يجب أن تتضمن أحرفاً كبيرة وصغيرة وأرقاماً ورموزاً." },
+                    { en: "Rotation", ar: "التغيير الدوري", req_en: "Required every 90 days for privileged accounts.", req_ar: "مطلوب كل ٩٠ يوماً للحسابات ذات الامتيازات." },
+                    { en: "Storage", ar: "التخزين", req_en: "Passwords must be secured using a dedicated manager.", req_ar: "يجب تأمين كلمات المرور باستخدام برنامج إدارة مخصص.", },
+                ],
+                'background': {
+                    'ref_en': "Best Practice: NIST SP 800-63B guidelines and NCA Essential Controls.", 'ref_ar': "أفضل الممارسات: إرشادات NIST SP 800-63B والضوابط الأساسية للهيئة الوطنية للأمن السيبراني (NCA).",
+                    'example_en': "Pattern Suggestion: Use a dedicated password vault (e.g., local server or cloud solution) to store hashed credentials.", 'example_ar': "نمط مقترح: استخدام قبو كلمات مرور مخصص (مثل خادم محلي أو حل سحابي) لتخزين بيانات الاعتماد المجزأة."
+                },
+                'context_q': "What is the maximum number of password reuse attempts allowed in your system?", 'context_a_default': "Maximum 5 reuse attempts."
             },
             'MFA': {
                 'title_en': "Multi-Factor Authentication (MFA) Enforcement Policy", 'title_ar': "سياسة تطبيق المصادقة متعددة العوامل",
-                'details': [ /* ... details */ ],
-                'background': { /* ... background */ },
-                'context_q': "Which MFA method will you prioritize (App Token, SMS, or Hardware Key)?",
-                'context_a_default': "App Token (e.g., Google Authenticator) for security."
+                'details': [
+                    { en: "Scope", ar: "النطاق", req_en: "Mandatory for all access to cloud services (Email, VPN, Accounting).", req_ar: "إلزامي لجميع الوصول عن بعد والخدمات السحابية (البريد الإلكتروني، الحسابات)." },
+                    { en: "Exemptions", ar: "الاستثناءات", req_en: "No exceptions are permitted for administrative or executive accounts.", req_ar: "لا يُسمح بأي استثناءات للحسابات الإدارية أو التنفيذية." },
+                    { en: "Method", ar: "طريقة التطبيق", req_en: "Must use authenticator apps or hardware tokens.", req_ar: "يجب استخدام تطبيقات المصادقة أو رموز الأجهزة الصلبة." },
+                    { en: "Non-Compliance", ar: "عدم الامتثال", req_en: "Access will be blocked for non-compliant users after 7 days of notification.", req_ar: "سيتم حظر الوصول للمستخدمين غير الملتزمين بعد ٧ أيام من الإخطار." }
+                ],
+                'background': {
+                    'ref_en': "Best Practice: CIS Controls, Mitigates 80% of targeted attacks (Microsoft).", 'ref_ar': "أفضل الممارسات: ضوابط CIS، تخفف ٨٠٪ من الهجمات المستهدفة (مايكروسوفت).",
+                    'example_en': "Pattern Suggestion: Prioritize implementation on administrative, financial, and external (VPN) access points immediately.", 'example_ar': "نمط مقترح: إعطاء الأولوية للتطبيق الفوري على نقاط الوصول الإدارية والمالية والخارجية (VPN)."
+                },
+                'context_q': "Which MFA method will you prioritize (App Token, SMS, or Hardware Key)?", 'context_a_default': "App Token (e.g., Google Authenticator) for security."
             },
             'SecConfig': {
                 'title_en': "Secure Configuration and Hardening Policy", 'title_ar': "سياسة التكوين الآمن وتقوية الأنظمة",
@@ -281,27 +326,38 @@
                     { en: "Service Disablement", ar: "تعطيل الخدمات", req_en: "Disable all unnecessary network services and protocols (e.g., FTP, Telnet).", req_ar: "تعطيل جميع خدمات وبروتوكولات الشبكة غير الضرورية (مثل FTP، Telnet)." }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: CIS Benchmarks and Vendor Hardening Guides (e.g., Microsoft).",
-                    'ref_ar': "أفضل الممارسات: معايير CIS وأدلة تقوية الأنظمة الخاصة بالموردين.",
-                    'example_en': "Pattern Suggestion: Use automated configuration management tools (e.g., Group Policy/Ansible) to enforce a baseline configuration.",
-                    'example_ar': "نمط مقترح: استخدام أدوات إدارة التكوين المؤتمتة لفرض تكوين أساسي ثابت."
+                    'ref_en': "Best Practice: CIS Benchmarks and Vendor Hardening Guides (e.g., Microsoft).", 'ref_ar': "أفضل الممارسات: معايير CIS وأدلة تقوية الأنظمة الخاصة بالموردين.",
+                    'example_en': "Pattern Suggestion: Use automated configuration management tools (e.g., Group Policy/Ansible) to enforce a baseline configuration.", 'example_ar': "نمط مقترح: استخدام أدوات إدارة التكوين المؤتمتة لفرض تكوين أساسي ثابت."
                 },
-                'context_q': "What is the longest acceptable downtime for a critical service during patching?",
-                'context_a_default': "4 hours maximum downtime."
+                'context_q': "What is the longest acceptable downtime for a critical service during patching?", 'context_a_default': "4 hours maximum downtime."
             },
             'Incident': {
                 'title_en': "Mandatory Incident Response & Notification Policy", 'title_ar': "سياسة الاستجابة للحوادث والإبلاغ الإلزامي",
-                'details': [ /* ... details */ ],
-                'background': { /* ... background */ },
-                'context_q': "Who is the primary regulatory body to receive the 72-hour breach notification?",
-                'context_a_default': "National Cybersecurity Authority (NCA)."
+                'details': [
+                    { en: "Notification Timeline", ar: "إطار الإبلاغ الزمني", req_en: "Report breaches to the regulator within 72 hours of discovery.", req_ar: "الإبلاغ عن الاختراقات للجهة الرقابية خلال ٧٢ ساعة من الاكتشاف." },
+                    { en: "Response Team", ar: "فريق الاستجابة", req_en: "A designated Incident Response Team (IRT) must be established and trained.", req_ar: "يجب إنشاء وتدريب فريق استجابة للحوادث (IRT) مُعيّن." },
+                    { en: "Communication Plan", ar: "خطة الاتصال", req_en: "Pre-approved templates for notifying affected data subjects.", req_ar: "وجود نماذج اتصال مُعتمدة مسبقاً لإخطار أصحاب البيانات المتأثرين." },
+                    { en: "Forensics", ar: "التحقيق الجنائي", req_en: "Preservation of all logs and evidence for forensic analysis.", req_ar: "الاحتفاظ بجميع السجلات والأدلة للتحليل الجنائي." }
+                ],
+                'background': {
+                    'ref_en': "Best Practice: NCA NCA-IRP and NCA-ECC-1:2018 (Incident Response and Recovery).", 'ref_ar': "أفضل الممارسات: NCA NCA-IRP و NCA-ECC-1:2018 (الاستجابة والتعافي من الحوادث).",
+                    'example_en': "Pattern Suggestion: Conduct a mandatory annual simulated breach test (tabletop exercise) with management.", 'example_ar': "نمط مقترح: إجراء اختبار اختراق سنوي إلزامي محاكاة (تمرين على الطاولة) بمشاركة الإدارة العليا."
+                },
+                'context_q': "Who هو the primary regulatory body to receive the 72-hour breach notification?", 'context_a_default': "National Cybersecurity Authority (NCA)."
             },
             'DataClass': {
                 'title_en': "Data Classification and Handling Policy (PDPL Ready)", 'title_ar': "سياسة تصنيف ومعالجة البيانات (جاهزة لـ PDPL)",
-                'details': [ /* ... details */ ],
-                'background': { /* ... background */ },
-                'context_q': "Do you handle special category data (health, religious affiliation, biometrics)?",
-                'context_a_default': "Yes, limited health data (employee sick leave)."
+                'details': [
+                    { en: "Classification Tiers", ar: "مستويات التصنيف", req_en: "Data must be tagged: Public, Internal, Confidential, and Highly Sensitive.", req_ar: "يجب تصنيف البيانات: عامة، داخلية، سرية، وشديدة الحساسية." },
+                    { en: "Handling of PII", ar: "معالجة البيانات الشخصية", req_en: "PII must be encrypted both in transit and at rest.", req_ar: "يجب تشفير بيانات تحديد الهوية الشخصية (PII) أثناء النقل والتخزين." },
+                    { en: "Access Control", ar: "التحكم بالوصول", req_en: "Access to Sensitive data requires explicit management approval.", req_ar: "يتطلب الوصول إلى البيانات السرية/الحساسة موافقة إدارية صريحة." },
+                    { en: "Disposal Method", ar: "طريقة الإتلاف", req_en: "Secure digital shredding or physical destruction is required.", req_ar: "يتطلب إتلاف رقمي آمن أو إتلاف مادي." }
+                ],
+                'background': {
+                    'ref_en': "Best Practice: PDPL Article 10 (Lawfulness of Processing) and ISO 27001 Annex A.8.2.", 'ref_ar': "أفضل الممارسات: المادة ١٠ من PDPL (مشروعية المعالجة) و الملحق A.8.2 من ISO 27001.",
+                    'example_en': "Pattern Suggestion: Implement Data Loss Prevention (DLP) tools to enforce classification and prevent unauthorized PII movement.", 'example_ar': "نمط مقترح: تطبيق أدوات منع فقدان البيانات (DLP) لفرض التصنيف ومنع نقل بيانات تحديد الهوية الشخصية غير المصرح به."
+                },
+                'context_q': "Do you handle special category data (health, religious affiliation, biometrics)?", 'context_a_default': "Yes, limited health data (employee sick leave)."
             },
             'Retention': {
                 'title_en': "Data Retention and Destruction Policy", 'title_ar': "سياسة الاحتفاظ بالبيانات وإتلافها",
@@ -311,13 +367,10 @@
                     { en: "Employment Records", ar: "سجلات التوظيف", req_en: "Retained for 5 years after the employee's final separation date.", req_ar: "يتم الاحتفاظ بها لمدة ٥ سنوات بعد تاريخ انتهاء خدمة الموظف." }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: PDPL, Financial Reporting Standards, and Local Labour Law.",
-                    'ref_ar': "أفضل الممارسات: قانون حماية البيانات الشخصية، ومعايير التقارير المالية، وقانون العمل المحلي.",
-                    'example_en': "Pattern Suggestion: Implement automated system deletion rules for non-essential data exceeding the 5-year limit.",
-                    'example_ar': "نمط مقترح: تطبيق قواعد حذف النظام المؤتمتة للبيانات غير الضرورية التي تتجاوز الحد الأقصى البالغ ٥ سنوات."
+                    'ref_en': "Best Practice: PDPL, Financial Reporting Standards, and Local Labour Law.", 'ref_ar': "أفضل الممارسات: قانون حماية البيانات الشخصية، ومعايير التقارير المالية، وقانون العمل المحلي.",
+                    'example_en': "Pattern Suggestion: Implement automated system deletion rules for non-essential data exceeding the 5-year limit.", 'example_ar': "نمط مقترح: تطبيق قواعد حذف النظام المؤتمتة للبيانات غير الضرورية التي تتجاوز الحد الأقصى البالغ ٥ سنوات."
                 },
-                'context_q': "What is the primary legal obligation that dictates your longest data retention period?",
-                'context_a_default': "Tax compliance (7 years)."
+                'context_q': "What is the primary legal obligation that dictates your longest data retention period?", 'context_a_default': "Tax compliance (7 years)."
             },
             'Leave': {
                 'title_en': "Annual Leave and Attendance Policy", 'title_ar': "سياسة الإجازات السنوية والحضور",
@@ -327,13 +380,10 @@
                     { en: "Hajj/Umrah Leave", ar: "إجازة الحج/العمرة", req_en: "Mandatory one-time 10-15 day paid leave for eligible Muslim staff.", req_ar: "إجازة مدفوعة الأجر إلزامية لمرة واحدة تتراوح بين ١٠-١٥ يوماً للموظفين المسلمين المؤهلين." }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: GCC Unified Labour Law and local Ministry of Human Resources regulations.",
-                    'ref_ar': "أفضل الممارسات: قانون العمل الخليجي الموحد وأنظمة وزارة الموارد البشرية المحلية.",
-                    'example_en': "Pattern Suggestion: Use an HRIS system to track all leave accrual and usage to ensure compliance and avoid disputes.",
-                    'example_ar': "نمط مقترح: استخدام نظام معلومات الموارد البشرية لتتبع جميع استحقاقات واستخدام الإجازات لضمان الامتثال وتجنب النزاعات."
+                    'ref_en': "Best Practice: GCC Unified Labour Law and local Ministry of Human Resources regulations.", 'ref_ar': "أفضل الممارسات: قانون العمل الخليجي الموحد وأنظمة وزارة الموارد البشرية المحلية.",
+                    'example_en': "Pattern Suggestion: Use an HRIS system to track all leave accrual and usage to ensure compliance and avoid disputes.", 'example_ar': "نمط مقترح: استخدام نظام معلومات الموارد البشرية لتتبع جميع استحقاقات واستخدام الإجازات لضمان الامتثال وتجنب النزاعات."
                 },
-                'context_q': "What is your company's policy on carrying over unused annual leave (max days)?",
-                'context_a_default': "Max 5 days can be carried over to the next year."
+                'context_q': "What is your company's policy on carrying over unused annual leave (max days)?", 'context_a_default': "Max 5 days can be carried over to the next year."
             },
             'Code': {
                 'title_en': "Employee Code of Conduct Policy", 'title_ar': "سياسة مدونة سلوك الموظفين",
@@ -343,13 +393,10 @@
                     { en: "Gifts/Bribes", ar: "الهدايا/الرشاوى", req_en: "Employees must report any gift over a specified local value to HR.", req_ar: "يجب على الموظفين إبلاغ الموارد البشرية عن أي هدية تتجاوز قيمة محلية محددة." }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: Anti-Corruption Laws and Corporate Governance Standards (C-level).",
-                    'ref_ar': "أفضل الممارسات: قوانين مكافحة الفساد ومعايير حوكمة الشركات (للمستوى التنفيذي).",
-                    'example_en': "Pattern Suggestion: Provide mandatory ethics training focused on local cultural expectations regarding conflicts of interest.",
-                    'example_ar': "نمط مقترح: توفير تدريب إلزامي على الأخلاقيات يركز على التوقعات الثقافية المحلية فيما يتعلق بتضارب المصالح."
+                    'ref_en': "Best Practice: Anti-Corruption Laws and Corporate Governance Standards (C-level).", 'ref_ar': "أفضل الممارسات: قوانين مكافحة الفساد ومعايير حوكمة الشركات (للمستوى التنفيذي).",
+                    'example_en': "Pattern Suggestion: Provide mandatory ethics training focused on local cultural expectations regarding conflicts of interest.", 'example_ar': "نمط مقترح: توفير تدريب إلزامي على الأخلاقيات يركز على التوقعات الثقافية المحلية فيما يتعلق بتضارب المصالح."
                 },
-                'context_q': "What is the monetary limit for gifts that an employee can accept without reporting to HR?",
-                'context_a_default': "SAR 500 (or equivalent)."
+                'context_q': "What is the monetary limit for gifts that an employee can accept without reporting to HR?", 'context_a_default': "SAR 500 (or equivalent)."
             },
             'FinanceDoc': {
                 'title_en': "Financial Record Keeping and Audit Policy", 'title_ar': "سياسة حفظ السجلات المالية والتدقيق",
@@ -359,13 +406,10 @@
                     { en: "Accrual Basis", ar: "أساس الاستحقاق", req_en: "Accounting records must be maintained using the accrual basis method.", req_ar: "يجب الاحتفاظ بالسجلات المحاسبية باستخدام طريقة أساس الاستحقاق." }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: International Financial Reporting Standards (IFRS) and ZATCA regulations.",
-                    'ref_ar': "أفضل الممارسات: معايير التقارير المالية الدولية (IFRS) وأنظمة هيئة الزكاة والضريبة والجمارك.",
-                    'example_en': "Pattern Suggestion: Automate VAT filing and reconciliation using certified accounting software to minimize manual errors.",
-                    'example_ar': "نمط مقترح: أتمتة إيداع ضريبة القيمة المضافة والمطابقة باستخدام برامج محاسبية معتمدة لتقليل الأخطاء اليدوية."
+                    'ref_en': "Best Practice: International Financial Reporting Standards (IFRS) and ZATCA regulations.", 'ref_ar': "أفضل الممارسات: معايير التقارير المالية الدولية (IFRS) وأنظمة هيئة الزكاة والضريبة والجمارك.",
+                    'example_en': "Pattern Suggestion: Automate VAT filing and reconciliation using certified accounting software to minimize manual errors.", 'example_ar': "نمط مقترح: أتمتة إيداع ضريبة القيمة المضافة والمطابقة باستخدام برامج محاسبية معتمدة لتقليل الأخطاء اليدوية."
                 },
-                'context_q': "What is the end date of your company's fiscal year (e.g., Dec 31st)?",
-                'context_a_default': "December 31st."
+                'context_q': "What is the end date of your company's fiscal year (e.g., Dec 31st)?", 'context_a_default': "December 31st."
             },
             'AML': {
                 'title_en': "AML/CFT Reporting and Due Diligence Policy", 'title_ar': "سياسة مكافحة غسل الأموال وتمويل الإرهاب والتبليغ",
@@ -375,19 +419,16 @@
                     { en: "Training", ar: "التدريب", req_en: "Mandatory annual training for all employees handling customer funds or transactions.", req_ar: "تدريب سنوي إلزامي لجميع الموظفين الذين يتعاملون مع أموال العملاء أو معاملاتهم." }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: FATF recommendations and local Financial Intelligence Unit (FIU) mandates.",
-                    'ref_ar': "أفضل الممارسات: توصيات FATF وتفويضات وحدة المعلومات المالية المحلية.",
-                    'example_en': "Pattern Suggestion: Implement automated transaction monitoring software that flags large or unusual transfers.",
-                    'example_ar': "نمط مقترح: تطبيق برامج آلية لمراقبة المعاملات التي تحدد التحويلات الكبيرة أو غير العادية."
+                    'ref_en': "Best Practice: FATF recommendations and local Financial Intelligence Unit (FIU) mandates.", 'ref_ar': "أفضل الممارسات: توصيات FATF وتفويضات وحدة المعلومات المالية المحلية.",
+                    'example_en': "Pattern Suggestion: Implement automated transaction monitoring software that flags large or unusual transfers.", 'example_ar': "نمط مقترح: تطبيق برامج آلية لمراقبة المعاملات التي تحدد التحويلات الكبيرة أو غير العادية."
                 },
-                'context_q': "What is your primary system for submitting Suspicious Activity Reports (e.g., goAML)?",
-                'context_a_default': "goAML portal."
+                'context_q': "What is your primary system for submitting Suspicious Activity Reports (e.g., goAML)?", 'context_a_default': "goAML portal."
             }
         };
 
 
         // --- 3. UI/UX AND FRAMEWORK MANAGEMENT ---
-        let currentActiveTab = 'it-cyber'; // Default to this tab
+        let currentActiveTab = 'it-cyber'; 
 
         function setActiveTab(tabId) {
             // 1. Update Buttons
