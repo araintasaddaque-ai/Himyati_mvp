@@ -298,7 +298,7 @@
             'PK': [ // Pakistan: PDPB, PTA, SECP, Provincial Labour Law
                 { id: 'control_mfa', label: 'MFA enabled for all admin accounts (e.g., SIS, Email).', weight: 5, policy: true, type: 'Access', tab: 'it-cyber' },
                 { id: 'control_password', label: 'Strong Password Policy (min 12 chars) is enforced.', weight: 4, policy: true, type: 'Access', tab: 'it-cyber' },
-                { id: 'control_securecode', label: 'Mandatory use of secure coding practices (WebDev).', weight: 4, policy: true, type: 'Technical', tab: 'it-cyber' },
+                { id: 'control_securecode', label: 'Mandatory use of secure coding practices (OWASP Top 10).', weight: 4, policy: true, type: 'Technical', tab: 'it-cyber' },
                 { id: 'control_backup', label: 'Critical data is backed up off-site and verified.', weight: 4, policy: false, type: 'Technical', tab: 'it-cyber' },
                 
                 { id: 'control_training', label: 'Annual anti-phishing training completed by staff (PTA/HEC mandate).', weight: 3, policy: false, type: 'Awareness', tab: 'data-admin' },
@@ -369,7 +369,6 @@
         };
         
         // --- 2. POLICY CONTENT (SIMULATED AI OUTPUT) ---
-        // (Policy content remains the same as previous step for brevity, focusing on the new tool)
         const POLICY_CONTENT = {
             'Password': {
                 'title_en': "Mandatory Password Policy", 'title_ar': "سياسة كلمات المرور الإلزامية",
@@ -381,7 +380,7 @@
                 ],
                 'background': {
                     'ref_en': "Best Practice: NIST SP 800-63B guidelines and National Cyber Security Framework (PK).", 'ref_ar': "أفضل الممارسات: إرشادات NIST SP 800-63B والإطار الوطني للأمن السيبراني (باكستان).",
-                    'example_en': "Pattern Suggestion: Use a dedicated password vault (e.g., local server or cloud solution) to store hashed credentials.", 'example_ar': "نمط مقترح: استخدام قبو كلمات مرور مخصص (مثل خادم محلي أو حل سحابي) لتخزين بيانات الاعتماد المجزأة."
+                    'example_en': "Pattern Suggestion: Use a dedicated password vault (e.g., local server or cloud solution) to store hashed credentials.", 'example_ar': "نمط مقترح: استخدام قبو كلمات مرور مخصص (مثل خادم محلي أو حل سحابي) لتخزين بيانات الاعتماد المجزأة)."
                 },
                 'context_q': "What is the maximum number of password reuse attempts allowed in your system?", 'context_a_default': "Maximum 5 reuse attempts."
             },
@@ -395,7 +394,7 @@
                 ],
                 'background': {
                     'ref_en': "Best Practice: PTA guidelines and Pakistan CERT recommendations.", 'ref_ar': "أفضل الممارسات: إرشادات هيئة تنظيم الاتصالات (PTA) وتوصيات فريق الاستجابة لحوادث الحاسوب الباكستاني (CERT).",
-                    'example_en': "Pattern Suggestion: Prioritize implementation on administrative, financial, and external (VPN) access points immediately.", 'example_ar': "نمط مقترح: إعطاء الأولوية للتطبيق الفوري على نقاط الوصول الإدارية والمالية والخارجية (VPN)."
+                    'example_en': "Pattern Suggestion: Prioritize implementation on administrative, financial, and external (VPN) access points immediately.", 'ref_ar': "نمط مقترح: إعطاء الأولوية للتطبيق الفوري على نقاط الوصول الإدارية والمالية والخارجية (VPN)."
                 },
                 'context_q': "Which MFA method will you prioritize (App Token, SMS, or Hardware Key)?", 'context_a_default': "App Token (e.g., Google Authenticator) for security."
             },
@@ -408,7 +407,7 @@
                 ],
                 'background': {
                     'ref_en': "Best Practice: HEC IT Policy directives and CERT guidelines.", 'ref_ar': "أفضل الممارسات: توجيهات سياسة تقنية المعلومات لهيئة التعليم العالي (HEC) وإرشادات فريق الاستجابة للحوادث.",
-                    'example_en': "Pattern Suggestion: Use automated configuration management tools (e.g., Group Policy/Ansible) to enforce a baseline configuration.", 'example_ar': "نمط مقترح: استخدام أدوات إدارة التكوين المؤتمتة لفرض تكوين أساسي ثابت."
+                    'example_en': "Pattern Suggestion: Use automated configuration management tools (e.g., Group Policy/Ansible) to enforce a baseline configuration.", 'ref_ar': "نمط مقترح: استخدام أدوات إدارة التكوين المؤتمتة لفرض تكوين أساسي ثابت."
                 },
                 'context_q': "What is the longest acceptable downtime for a critical service during patching?", 'context_a_default': "4 hours maximum downtime."
             },
@@ -421,7 +420,7 @@
                 ],
                 'background': {
                     'ref_en': "Best Practice: OWASP Secure Coding Practices and MUET Jamshoro MIS Department standards.", 'ref_ar': "أفضل الممارسات: ممارسات البرمجة الآمنة لـ OWASP ومعايير قسم نظم المعلومات الإدارية في جامعة MUET جامشورو.",
-                    'example_en': "Pattern Suggestion: Implement a robust input validation library and use prepared statements for all database queries.", 'example_ar': "نمط مقترح: تطبيق مكتبة قوية للتحقق من المدخلات واستخدام عبارات مُعدَّة مسبقاً لجميع استفسارات قاعدة البيانات."
+                    'example_en': "Pattern Suggestion: Implement a robust input validation library and use prepared statements for all database queries.", 'ref_ar': "نمط مقترح: تطبيق مكتبة قوية للتحقق من المدخلات واستخدام عبارات مُعدَّة مسبقاً لجميع استفسارات قاعدة البيانات."
                 },
                 'context_q': "Which web vulnerability (e.g., SQL Injection, XSS) will this policy explicitly prohibit?", 'context_a_default': "SQL Injection and Cross-Site Scripting (XSS)."
             },
@@ -431,11 +430,11 @@
                     { en: "Notification Timeline", ar: "إطار الإبلاغ الزمني", req_en: "Report breaches to the PTA/HEC within 48 hours of discovery.", req_ar: "الإبلاغ عن الاختراقات إلى هيئة تنظيم الاتصالات (PTA) أو هيئة التعليم العالي (HEC) خلال ٤٨ ساعة من الاكتشاف." },
                     { en: "Response Team", ar: "فريق الاستجابة", req_en: "A designated Incident Response Team (IRT) must be established and trained.", req_ar: "يجب إنشاء وتدريب فريق استجابة للحوادث (IRT) مُعيّن." },
                     { en: "Communication Plan", ar: "خطة الاتصال", req_en: "Pre-approved templates for notifying affected data subjects (PDPB Req).", req_ar: "وجود نماذج اتصال مُعتمدة مسبقاً لإخطار أصحاب البيانات المتأثرين (متطلبات PDPB)." },
-                    { en: "Forensics", ar: "التحقيق الجنائي", req_en: "Preservation of all logs and evidence for forensic analysis.", req_ar: "الاحتفاظ بجميع السجلات والأدلة للتحليل الجنائي." }
+                    { en: "Forensics", ar: "التحقيق الجنائي", req_en: "Preservation of all logs and evidence for forensic analysis.", req_ar: "الاحتفاظ بجميع السجلات والأدلة للتحقيق الجنائي." }
                 ],
                 'background': {
                     'ref_en': "Best Practice: PDPB 2023 guidelines and CERT-PK response procedures.", 'ref_ar': "أفضل الممارسات: إرشادات قانون حماية البيانات الشخصية (PDPB 2023) وإجراءات الاستجابة لفريق CERT-PK.",
-                    'example_en': "Pattern Suggestion: Conduct a mandatory annual simulated breach test (tabletop exercise) with management.", 'example_ar': "نمط مقترح: إجراء اختبار اختراق سنوي إلزامي محاكاة (تمرين على الطاولة) بمشاركة الإدارة العليا."
+                    'example_en': "Pattern Suggestion: Conduct a mandatory annual simulated breach test (tabletop exercise) with management.", 'ref_ar': "نمط مقترح: إجراء اختبار اختراق سنوي إلزامي محاكاة (تمرين على الطاولة) بمشاركة الإدارة العليا."
                 },
                 'context_q': "Who is the primary regulatory body to receive the incident notification (HEC or PTA)?", 'context_a_default': "HEC (Higher Education Commission)."
             },
@@ -449,7 +448,7 @@
                 ],
                 'background': {
                     'ref_en': "Best Practice: PDPB 2023 compliance guidelines and academic data standards.", 'ref_ar': "أفضل الممارسات: إرشادات الامتثال لقانون حماية البيانات الشخصية (PDPB 2023) ومعايير البيانات الأكاديمية.",
-                    'example_en': "Pattern Suggestion: Implement Data Loss Prevention (DLP) tools to enforce classification and prevent unauthorized PII movement.", 'example_ar': "نمط مقترح: تطبيق أدوات منع فقدان البيانات (DLP) لفرض التصنيف ومنع نقل بيانات تحديد الهوية الشخصية غير المصرح به."
+                    'example_en': "Pattern Suggestion: Implement Data Loss Prevention (DLP) tools to enforce classification and prevent unauthorized PII movement.", 'ref_ar': "نمط مقترح: تطبيق أدوات منع فقدان البيانات (DLP) لفرض التصنيف ومنع نقل بيانات تحديد الهوية الشخصية غير المصرح به."
                 },
                 'context_q': "Do you handle student academic records (which are considered sensitive PII)?", 'context_a_default': "Yes, we handle academic records (transcripts, results)."
             },
@@ -462,7 +461,7 @@
                 ],
                 'background': {
                     'ref_en': "Best Practice: FBR Income Tax Ordinance and Provincial Labour Law (Sindh/Punjab).", 'ref_ar': "أفضل الممارسات: قانون ضريبة الدخل لهيئة الإيرادات الفيدرالية (FBR) وقانون العمل الإقليمي (السند/البنجاب).",
-                    'example_en': "Pattern Suggestion: Implement automated system deletion rules for non-essential data exceeding the 5-year limit.", 'example_ar': "نمط مقترح: تطبيق قواعد حذف النظام المؤتمتة للبيانات غير الضرورية التي تتجاوز الحد الأقصى البالغ ٥ سنوات."
+                    'example_en': "Pattern Suggestion: Implement automated system deletion rules for non-essential data exceeding the 5-year limit.", 'ref_ar': "نمط مقترح: تطبيق قواعد حذف النظام المؤتمتة للبيانات غير الضرورية التي تتجاوز الحد الأقصى البالغ ٥ سنوات."
                 },
                 'context_q': "What is the primary legal obligation that dictates your longest data retention period?", 'context_a_default': "FBR Tax compliance (6 years)."
             },
@@ -475,7 +474,7 @@
                 ],
                 'background': {
                     'ref_en': "Best Practice: Prevention of Electronic Crimes Act (PECA) and HEC regulations.", 'ref_ar': "أفضل الممارسات: قانون منع الجرائم الإلكترونية (PECA) ولوائح هيئة التعليم العالي (HEC).",
-                    'example_en': "Pattern Suggestion: Require all new staff and students to sign the AUP acknowledgment form during the onboarding process.", 'example_ar': "نمط مقترح: مطالبة جميع الموظفين والطلاب الجدد بتوقيع نموذج الإقرار بالسياسة (AUP) أثناء عملية التوظيف."
+                    'example_en': "Pattern Suggestion: Require all new staff and students to sign the AUP acknowledgment form during the onboarding process.", 'ref_ar': "نمط مقترح: مطالبة جميع الموظفين والطلاب الجدد بتوقيع نموذج الإقرار بالسياسة (AUP) أثناء عملية التوظيف."
                 },
                 'context_q': "What is the consequence for a first-time violation of the AUP (e.g., Warning/Suspension)?", 'context_a_default': "Verbal warning and account suspension for 24 hours."
             },
@@ -488,7 +487,7 @@
                 ],
                 'background': {
                     'ref_en': "Best Practice: ITIL Service Operation processes and HEC MIS Governance Framework.", 'ref_ar': "أفضل الممارسات: عمليات تشغيل الخدمة ITIL وإطار حوكمة نظم المعلومات الإدارية (MIS) لهيئة التعليم العالي.",
-                    'example_en': "Pattern Suggestion: Implement an automated code deployment pipeline (CI/CD) that requires two separate approvals before pushing to live.", 'example_ar': "نمط مقترح: تطبيق خط أنابيب نشر الكود المؤتمت (CI/CD) الذي يتطلب موافقتين منفصلتين قبل النشر المباشر."
+                    'example_en': "Pattern Suggestion: Implement an automated code deployment pipeline (CI/CD) that requires two separate approvals before pushing to live.", 'ref_ar': "نمط مقترح: تطبيق خط أنابيب نشر الكود المؤتمت (CI/CD) الذي يتطلب موافقتين منفصلتين قبل النشر المباشر."
                 },
                 'context_q': "What is the minimum lead time (in hours) required for a non-critical change request?", 'context_a_default': "48 hours lead time."
             },
@@ -497,4 +496,421 @@
                 'details': [
                     { en: "Annual Leave Minimum", ar: "الحد الأدنى للإجازة السنوية", req_en: "Minimum 14 days paid leave (Provincial Labour Law) for staff with >1 year service.", req_ar: "حد أدنى ١٤ يوماً إجازة مدفوعة الأجر (قانون العمل الإقليمي) للموظفين الذين أكملوا سنة." },
                     { en: "Sick Leave Reporting", ar: "الإبلاغ عن الإجازات المرضية", req_en: "Employees must report illness within 24 hours and provide a medical certificate after 2 days.", req_ar: "يجب على الموظفين الإبلاغ عن المرض خلال ٢٤ ساعة وتقديم شهادة طبية بعد يومين." },
-                    { en: "Maternity Leave", ar: "إجازة الأمومة", req_en: "Mandatory paid
+                    { en: "Maternity Leave", ar: "إجازة الأمومة", req_en: "Mandatory paid maternity leave as per Provincial Labour Law.", req_ar: "إجازة أمومة مدفوعة الأجر إلزامية وفقاً لقانون العمل الإقليمي." }
+                ],
+                'background': {
+                    'ref_en': "Best Practice: Provincial Labour Laws (Sindh/Punjab) and HEC HR guidelines.", 'ref_ar': "أفضل الممارسات: قوانين العمل الإقليمية (السند/البنجاب) وإرشادات الموارد البشرية لهيئة التعليم العالي (HEC).",
+                    'example_en': "Pattern Suggestion: Use an HRIS system to track all leave accrual and usage to ensure compliance and avoid disputes.", 'ref_ar': "نمط مقترح: استخدام نظام معلومات الموارد البشرية لتتبع جميع استحقاقات واستخدام الإجازات لضمان الامتثال وتجنب النزاعات."
+                },
+                'context_q': "What is your company's policy on carrying over unused annual leave (max days)?", 'context_a_default': "Max 5 days can be carried over to the next year."
+            },
+            'Code': {
+                'title_en': "Employee Code of Conduct Policy", 'title_ar': "سياسة مدونة سلوك الموظفين",
+                'details': [
+                    { en: "Confidentiality", ar: "السرية", req_en: "Employees must sign a non-disclosure agreement (NDA) and protect all company IP/Trade Secrets.", req_ar: "يجب على الموظفين توقيع اتفاقية عدم إفصاح وحماية جميع الملكية الفكرية/الأسرار التجارية للشركة." },
+                    { en: "Social Media", ar: "وسائل التواصل الاجتماعي", req_en: "Personal social media use must not compromise the university's reputation or disclose sensitive information.", req_ar: "يجب ألا يضر الاستخدام الشخصي لوسائل التواصل الاجتماعي بسمعة الجامعة أو يكشف عن معلومات حساسة." },
+                    { en: "Gifts/Bribes", ar: "الهدايا/الرشاوى", req_en: "Employees must adhere to anti-bribery policies enforced by the university.", req_ar: "يجب على الموظفين الالتزام بسياسات مكافحة الرشوة المطبقة من قبل الجامعة." }
+                ],
+                'background': {
+                    'ref_en': "Best Practice: Pakistan Prevention of Corruption Act and HEC Ethics Guidelines.", 'ref_ar': "أفضل الممارسات: قانون مكافحة الفساد الباكستاني وإرشادات الأخلاقيات لهيئة التعليم العالي (HEC).",
+                    'example_en': "Pattern Suggestion: Provide mandatory ethics training focused on local cultural expectations regarding conflicts of interest.", 'ref_ar': "نمط مقترح: توفير تدريب إلزامي على الأخلاقيات يركز على التوقعات الثقافية المحلية فيما يتعلق بتضارب المصالح."
+                },
+                'context_q': "What is the monetary limit for gifts that an employee can accept without reporting to HR?", 'context_a_default': "PKR 5,000 (or equivalent)."
+            },
+            'FinanceDoc': {
+                'title_en': "Financial Record Keeping and Audit Policy", 'title_ar': "سياسة حفظ السجلات المالية والتدقيق",
+                'details': [
+                    { en: "IFRS Standard", ar: "معيار التقارير المالية الدولي", req_en: "Financial statements must comply with IFRS for SMEs or Full IFRS (SECP Req).", req_ar: "يجب أن تتوافق البيانات المالية مع IFRS للمنشآت الصغيرة والمتوسطة أو IFRS الكامل (متطلبات SECP)." },
+                    { en: "Retention Period", ar: "فترة الاحتفاظ", req_en: "All accounting records must be kept for a minimum of 6 years (FBR Req).", req_ar: "يجب الاحتفاظ بجميع السجلات المحاسبية لمدة ٦ سنوات كحد أدنى (متطلبات FBR)." },
+                    { en: "Accrual Basis", ar: "أساس الاستحقاق", req_en: "Accounting records must be maintained using the accrual basis method.", req_ar: "يجب الاحتفاظ بالسجلات المحاسبية باستخدام طريقة أساس الاستحقاق." }
+                ],
+                'background': {
+                    'ref_en': "Best Practice: International Financial Reporting Standards (IFRS) and FBR Income Tax Ordinance.", 'ref_ar': "أفضل الممارسات: معايير التقارير المالية الدولية (IFRS) وقانون ضريبة الدخل لهيئة الإيرادات الفيدرالية (FBR).",
+                    'example_en': "Pattern Suggestion: Automate Sales Tax filing and reconciliation using certified accounting software.", 'ref_ar': "نمط مقترح: أتمتة إيداع ضريبة المبيعات والمطابقة باستخدام برامج محاسبية معتمدة."
+                },
+                'context_q': "What is the end date of your company's fiscal year (e.g., June 30th)?", 'context_a_default': "June 30th."
+            },
+            'AML': {
+                'title_en': "AML/CFT Reporting and Due Diligence Policy", 'title_ar': "سياسة مكافحة غسل الأموال وتمويل الإرهاب والتبليغ",
+                'details': [
+                    { en: "Customer Due Diligence (CDD)", ar: "العناية الواجبة للعملاء", req_en: "Mandatory verification of identity and beneficial ownership for all transactions over local threshold.", req_ar: "التحقق الإلزامي من الهوية والملكية المستفيدة لجميع المعاملات التي تتجاوز الحد المحلي." },
+                    { en: "Suspicious Activity Report (SAR)", ar: "تقرير النشاط المشبوه", req_en: "Any suspicious transaction must be reported to the Financial Monitoring Unit (FMU) immediately.", req_ar: "يجب إبلاغ وحدة المراقبة المالية (FMU) فوراً عن أي معاملة مشبوهة." },
+                    { en: "Training", ar: "التدريب", req_en: "Mandatory annual training for all employees handling customer funds or transactions.", req_ar: "تدريب سنوي إلزامي لجميع الموظفين الذين يتعاملون مع أموال العملاء أو معاملاتهم." }
+                ],
+                'background': {
+                    'ref_en': "Best Practice: FATF recommendations and local Financial Monitoring Unit (FMU) mandates.", 'ref_ar': "أفضل الممارسات: توصيات FATF وتفويضات وحدة المراقبة المالية (FMU) المحلية.",
+                    'example_en': "Pattern Suggestion: Implement automated transaction monitoring software that flags large or unusual transfers.", 'ref_ar': "نمط مقترح: تطبيق برامج آلية لمراقبة المعاملات التي تحدد التحويلات الكبيرة أو غير العادية."
+                },
+                'context_q': "What is your primary system for submitting Suspicious Activity Reports (e.g., FMU Portal)?", 'context_a_default': "FMU Portal."
+            }
+        };
+
+        // --- 3. UI/UX AND FRAMEWORK MANAGEMENT ---
+        let currentActiveTab = 'it-cyber'; 
+
+        function setActiveTab(tabId) {
+            // 1. Update Buttons
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.querySelector(`.tab-button[data-tab="${tabId}"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
+
+            // 2. Load Checklist Content and Policy Buttons
+            currentActiveTab = tabId;
+            loadFramework(); 
+            generatePolicyButtons(tabId);
+        }
+
+        function loadFramework() {
+            const country = document.getElementById('country-select').value;
+            const framework = FRAMEWORKS[country];
+            const form = document.getElementById('compliance-form');
+            form.innerHTML = '';
+            
+            const controlsInActiveTab = framework.filter(control => control.tab === currentActiveTab);
+
+            let formHTML = `<div class="tab-content active" id="${currentActiveTab}-content">`;
+            formHTML += `<p style="font-size: 0.9em; color: #555;">Check the box if the control is **IN PLACE** for the **${currentActiveTab.toUpperCase()}** category.</p>`;
+            
+            const groupedControls = controlsInActiveTab.reduce((acc, control) => {
+                acc[control.type] = acc[control.type] || [];
+                acc[control.type].push(control);
+                return acc;
+            }, {});
+
+            for (const type in groupedControls) {
+                formHTML += `<h3>${type} Controls (${country})</h3>`;
+                groupedControls[type].forEach(control => {
+                    formHTML += `
+                        <div class="checklist-item">
+                            <input type="checkbox" id="${control.id}" name="${control.id}" data-weight="${control.weight}" data-policy="${control.policy}" data-tab="${control.tab}" onchange="calculateScore()" ${localStorage.getItem(control.id) === 'true' ? 'checked' : ''}>
+                            <label for="${control.id}">${control.label}</label>
+                        </div>
+                    `;
+                });
+            }
+            formHTML += '</div>';
+            
+            form.innerHTML = formHTML;
+            calculateScore(); 
+        }
+
+        function generatePolicyButtons(tabId) {
+            const container = document.getElementById('policy-buttons-container');
+            container.innerHTML = '';
+            const policies = POLICY_MAPPING[tabId];
+
+            if (policies) {
+                policies.forEach(policy => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.setAttribute('onclick', `generatePolicy('${policy.type}')`);
+                    btn.textContent = policy.label;
+                    btn.style.backgroundColor = policy.color;
+                    btn.style.marginBottom = '10px';
+                    container.appendChild(btn);
+                });
+            }
+        }
+
+
+        // --- 4. CORE SCORING & REPORTING LOGIC ---
+
+        function calculateScore() {
+            const country = document.getElementById('country-select').value;
+            let totalRiskWeight = 0;
+            let achievedComplianceWeight = 0;
+            let nonCompliantControls = [];
+
+            const allControls = FRAMEWORKS[country];
+            
+            allControls.forEach(control => {
+                const weight = parseInt(control.weight);
+                const controlElement = document.getElementById(control.id);
+                const isChecked = controlElement ? controlElement.checked : (localStorage.getItem(control.id) === 'true');
+                
+                totalRiskWeight += weight;
+
+                if (!isChecked) {
+                    let actionText = 'Action: [Suggest Local IT Partner] for technical fix.';
+                    if (control.policy) {
+                        actionText = `Action: **Generate Policy** for this governance gap. (Currently Free)`;
+                    }
+                    
+                    nonCompliantControls.push({
+                        id: control.id,
+                        label: control.label,
+                        weight: weight,
+                        action: actionText,
+                        tab: control.tab
+                    });
+                } else {
+                    achievedComplianceWeight += weight;
+                }
+                
+                if (controlElement) {
+                    localStorage.setItem(control.id, controlElement.checked);
+                }
+            });
+
+            // Calculate Score and Status
+            let complianceScore = (totalRiskWeight > 0) ? Math.round((achievedComplianceWeight / totalRiskWeight) * 100) : 0;
+            let riskStatus, statusColor;
+
+            if (complianceScore >= 85) { riskStatus = 'Optimal - Audit Ready'; statusColor = 'green'; } 
+            else if (complianceScore >= 50) { riskStatus = 'Medium Risk - Minor Gaps'; statusColor = 'orange'; } 
+            else { riskStatus = 'CRITICAL RISK - IMMEDIATE ACTION REQUIRED'; statusColor = 'red'; }
+
+            document.getElementById('current-score').textContent = complianceScore;
+            document.getElementById('risk-status').textContent = riskStatus;
+            document.getElementById('risk-status').style.color = statusColor;
+            
+            // Update Remediation Report (Gap List)
+            const reportSection = document.getElementById('remediation-report');
+            const gapList = document.getElementById('gap-list');
+            gapList.innerHTML = ''; 
+
+            if (nonCompliantControls.length > 0) {
+                nonCompliantControls.sort((a, b) => b.weight - a.weight); 
+                nonCompliantControls.forEach(gap => {
+                    const gapItem = document.createElement('p');
+                    gapItem.innerHTML = `<strong>[Risk ${gap.weight}] [${gap.tab.toUpperCase()}] ${gap.label}</strong><br><span style="color: #c82333;">${gap.action}</span>`;
+                    gapList.appendChild(gapItem);
+                });
+                reportSection.style.display = 'block';
+            } else {
+                gapList.innerHTML = '<p style="color: green; font-weight: bold;">Congratulations! All essential controls are in place. Your business is Audit Ready! 🎉</p>';
+                reportSection.style.display = 'block';
+            }
+        }
+
+        // --- 5. AI FEATURE SIMULATION (PROFESSIONALLY FORMATTED) ---
+
+        function generatePolicy(policyType) {
+            const country = document.getElementById('country-select').value;
+            const policyStatus = document.getElementById('policy-status');
+            const policyPreview = document.getElementById('policy-preview');
+            const content = POLICY_CONTENT[policyType];
+            const countryText = country === 'PK' ? 'Pakistan (PTA/HEC/FBR)' : country + ' (NCA/PDPL)';
+
+            // 1. Ask Contextual Question (SIMULATION)
+            const userInput = prompt(`Himyati AI Consultation Required:\n\n[QUESTION]: ${content.context_q}\n\n[DEFAULT ANSWER]: ${content.context_a_default}\n\nPlease enter your specific answer or click OK to use the default.`);
+            
+            const contextAnswer = userInput === null || userInput === "" ? content.context_a_default : userInput;
+
+
+            policyStatus.style.color = 'blue';
+            policyStatus.textContent = `Generating ${policyType} Policy for ${country}... (Context Used: ${contextAnswer}) (Simulating 3-second LLM processing...)`;
+            policyPreview.style.display = 'none';
+
+            // Simulated network delay using setTimeout (3 seconds)
+            setTimeout(() => {
+                
+                // 2. Build the professional table structure
+                let tableHTML = `
+                    <p class="section-title">2.1 Core Requirements | المتطلبات الأساسية</p>
+                    <table class="policy-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 20%;">Control Aspect (EN)</th>
+                                <th class="arabic-text" style="width: 25%;">المتعلق بالتحكم (AR)</th>
+                                <th style="width: 30%;">Requirement (EN)</th>
+                                <th class="arabic-text">المتطلب الأساسي (AR)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                content.details.forEach(detail => {
+                    tableHTML += `
+                        <tr>
+                            <td>${detail.en}</td>
+                            <td class="arabic-text">${detail.ar}</td>
+                            <td>${detail.req_en}</td>
+                            <td class="arabic-text">${detail.req_ar}</td>
+                        </tr>
+                    `;
+                });
+
+                tableHTML += `
+                        </tbody>
+                    </table>
+                `;
+                
+                // 3. Build the Background and Reference Section
+                const backgroundHTML = `
+                    <p class="section-title">3. Background, References, and Suggested Patterns | الخلفية والمراجع والأنماط المقترحة</p>
+                    <div class="background-section">
+                        <p><strong>CONTEXTUAL INPUT:</strong> <span style="color: #dc3545; font-weight: bold;">${content.context_q}</span> ➡️ **Answer Used:** ${contextAnswer}</p>
+                        <hr style="margin: 10px 0;">
+                        <p><strong>Reference / Mandate:</strong> ${content.background.ref_en}</p>
+                        <p class="arabic-text"><strong>المرجع / المندوب:</strong> ${content.background.ref_ar}</p>
+                        <hr style="margin: 10px 0; border-top: 1px dotted #ccc;">
+                        <p><strong>Suggested Implementation Pattern:</strong> ${content.background.example_en}</p>
+                        <p class="arabic-text"><strong>نمط التنفيذ المقترح:</strong> ${content.background.example_ar}</p>
+                    </div>
+                `;
+
+                // 4. Build the Signature Block
+                const signatureHTML = `
+                    <p class="section-title">4. Approvals and Authorization | الموافقات والتفويض</p>
+                    <div class="signature-block">
+                        <div class="signature-col arabic-text">
+                            <strong>Approved By (الموافقة من):</strong><br>
+                            Chief Executive Officer (الرئيس التنفيذي)
+                            <div class="signature-line"></div>
+                            Date (التاريخ):
+                        </div>
+                        <div class="signature-col arabic-text">
+                            <strong>Endorsed By (اعتماد):</strong><br>
+                            Head of Information Security (رئيس أمن المعلومات)
+                            <div class="signature-line"></div>
+                            Date (التاريخ):
+                        </div>
+                    </div>
+                `;
+                
+                // 5. Pro-Forma Official Introduction
+                const proFormaIntro = `
+                    <p class="section-title" style="border: none; margin-top: 5px;">OFFICIAL POLICY DOCUMENT PRO-FORMA</p>
+                    <div class="background-section">
+                        <p style="font-weight: bold; color: #007bff;">TO: ${countryText} Regulatory Authority & Internal Stakeholders</p>
+                        <p class="arabic-text" style="font-weight: bold; color: #007bff;">إلى: الهيئة التنظيمية في ${countryText} والجهات الداخلية المعنية</p>
+                        <hr style="margin: 10px 0;">
+                        <p><strong>SUBJECT:</strong> Implementation Plan for **${content.title_en}**</p>
+                        <p class="arabic-text"><strong>الموضوع:</strong> خطة التنفيذ لـ **${content.title_ar}**</p>
+                        <p style="margin-top: 10px; font-size: 0.9em; font-style: italic;">This document certifies our commitment as an organization to implementing and enforcing the mandatory controls outlined herein to achieve compliance and mitigate organizational risk. The policy is structured to meet **${country}**'s regulatory requirements as determined by the Himyati platform.</p>
+                        <p class="arabic-text" style="font-size: 0.9em; font-style: italic;">تشهد هذه الوثيقة بالتزام منظمتنا بتطبيق وتنفيذ الضوابط الإلزامية لتحقيق الامتثال وتخفيف المخاطر التشغيلية. تم إعداد هذه السياسة لتلبية المتطلبات التنظيمية في **${country}**، بالاعتماد على منصة حمايتي.</p>
+                    </div>
+                `;
+
+                // 6. Assemble the final professional document preview
+                policyStatus.style.color = 'green';
+                policyStatus.innerHTML = `
+                    ✅ **SUCCESS!** Your Custom **${policyType} Enforcement Policy** is ready for **${country}**.<br>
+                    <a href="#" style="color: #007bff; font-weight: bold;">[DOWNLOAD: Policy-${policyType}-v1.0-AR.pdf - SIMULATED PDF]</a>
+                `;
+
+                policyPreview.innerHTML = `
+                    <div class="policy-header">
+                        ${content.title_en} | <span class="arabic-text">${content.title_ar}</span>
+                        <div style="font-size: 0.5em; color: #6c757d; margin-top: 5px;" class="arabic-text">إصدار الوثيقة ١.٠ - معتمد من الذكاء الاصطناعي لحمايتي - ${new Date().toLocaleDateString('ar-EG')}</div>
+                    </div>
+
+                    ${proFormaIntro}
+
+                    <p class="section-title">1. Policy Statement & Scope | بيان ونطاق السياسة</p>
+                    <p style="margin-left: 20px; font-style: italic;">This policy outlines the mandatory technical and governance controls required to secure organizational data in compliance with the relevant ${country} mandates. <span class="arabic-text" style="display: block;">تحدد هذه السياسة الضوابط الإلزامية المطلوبة لتأمين بيانات المنظمة وفقاً لمتطلبات ${country}.</span></p>
+                    
+                    ${tableHTML}
+                    ${backgroundHTML}
+                    ${signatureHTML}
+                `;
+                policyPreview.style.display = 'block';
+
+            }, 3000); 
+        }
+
+        // --- 6. NEW SECURITY SCANNER LOGIC ---
+
+        function runSecurityScan() {
+            const vulnerability = document.getElementById('vulnerability-select').value;
+            const inputCode = document.getElementById('input-code').value.trim();
+            const outputDiv = document.getElementById('testing-output');
+
+            outputDiv.innerHTML = `<p style="color: blue; font-weight: bold;">Simulating scan for ${vulnerability.toUpperCase()}... Please wait.</p>`;
+
+            if (!inputCode) {
+                outputDiv.innerHTML = `<p style="color: red; font-weight: bold;">ERROR: Please paste code or a payload in the input field to run the scan.</p>`;
+                return;
+            }
+
+            // Simulate delay for realism
+            setTimeout(() => {
+                let resultHTML = '';
+
+                if (vulnerability === 'sqli') {
+                    // Check for common SQLi indicators
+                    if (inputCode.includes('SELECT') || inputCode.includes('UPDATE') || inputCode.includes("' OR '1'='1") || inputCode.includes('; --')) {
+                        resultHTML = `
+                            <p style="color: red; font-weight: bold;">🚨 VULNERABILITY DETECTED: SQL Injection (SQLi)</p>
+                            <p><strong>Input Code Snippet:</strong> ${inputCode}</p>
+                            <p><strong>Description:</strong> Your code appears to construct a database query using un-sanitized user input, which is the classic sign of SQLi vulnerability. An attacker can manipulate the query logic to steal or destroy data.</p>
+                            
+                            <p class="section-title">Remediation Steps (PHP/MySQL Example)</p>
+                            <p>The solution is to use <strong>Prepared Statements</strong> or <strong>Parameterized Queries</strong>. This forces the database to treat user input as data only, not as executable code.</p>
+                            
+                            <p><strong>Vulnerable Pattern:</strong></p>
+                            <div class="code-snippet">
+                            $username = $_POST['user'];<br>
+                            $query = "SELECT * FROM users WHERE username = '$username'"; ❌
+                            </div>
+
+                            <p><strong>Secure Pattern (Using PDO Prepared Statements):</strong></p>
+                            <div class="code-snippet" style="border-left: 3px solid green;">
+                            $username = $_POST['user'];<br>
+                            $stmt = $pdo->prepare('SELECT * FROM users WHERE username = ?');<br>
+                            $stmt->execute([$username]); ✅
+                            </div>
+                            <p><strong>Recommendation:</strong> Review your code (referencing the Secure Web Development Policy) and eliminate all instances of direct string concatenation for database inputs.</p>
+                        `;
+                    } else {
+                         resultHTML = `<p style="color: green; font-weight: bold;">✅ NO DIRECT SQL INJECTION VULNERABILITY FOUND in this specific snippet. Continue to use Prepared Statements to ensure security.</p>`;
+                    }
+                } 
+                
+                else if (vulnerability === 'xss') {
+                    // Check for common XSS indicators
+                    if (inputCode.includes('<script') || inputCode.includes('onerror=') || inputCode.includes('alert(') || inputCode.includes('<?php echo $_GET[')) {
+                        resultHTML = `
+                            <p style="color: red; font-weight: bold;">🚨 VULNERABILITY DETECTED: Cross-Site Scripting (XSS)</p>
+                            <p><strong>Input Code Snippet:</strong> ${inputCode}</p>
+                            <p><strong>Description:</strong> Your code allows un-sanitized user data to be rendered directly in the browser's HTML (DOM), enabling an attacker to execute malicious scripts in other users' sessions (e.g., stealing cookies).</p>
+                            
+                            <p class="section-title">Remediation Steps (PHP/HTML Example)</p>
+                            <p>The solution is <strong>Output Encoding</strong>. Before displaying any user-supplied variable in an HTML context, convert special characters (like < and >) into their harmless HTML entity equivalents.</p>
+                            
+                            <p><strong>Vulnerable Pattern:</strong></p>
+                            <div class="code-snippet">
+                            echo "Welcome, " . $_GET['name'] . "!"; ❌
+                            </div>
+
+                            <p><strong>Secure Pattern (Using PHP's htmlspecialchars):</strong></p>
+                            <div class="code-snippet" style="border-left: 3px solid green;">
+                            echo "Welcome, " . htmlspecialchars($_GET['name']); ✅
+                            </div>
+                            <p><strong>Recommendation:</strong> Use the appropriate output encoding function for every framework/language you use (e.g., <code style="font-weight: bold;">htmlspecialchars()</code> in PHP, templating engine auto-escaping in Django/Flask/Node).</p>
+                        `;
+                    } else {
+                        resultHTML = `<p style="color: green; font-weight: bold;">✅ NO DIRECT CROSS-SITE SCRIPTING VULNERABILITY FOUND in this specific snippet. Continue to encode all user-supplied data before rendering.</p>`;
+                    }
+                }
+
+                outputDiv.innerHTML = resultHTML;
+
+            }, 2000); 
+        }
+
+
+        // Initial page load function to ensure the correct tab is active and framework loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Clear old local storage state for a major version update
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('control_')) {
+                    localStorage.removeItem(key);
+                }
+            }
+
+            // Set the initial active tab and load the framework for the default country (PK)
+            const defaultTab = 'it-cyber';
+            // Set the initial country selection (PK is default in HTML)
+            document.getElementById('country-select').value = 'PK';
+            
+            // Initial call to set the default tab and load controls/buttons
+            setActiveTab(defaultTab);
+        });
+    </script>
+</body>
+</html>
