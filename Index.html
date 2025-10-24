@@ -3,40 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Himyati Compliance Score Engine - FREE Policy Testing MVP (ARABIC)</title>
+    <title>Himyati Official Compliance Dashboard (SME Focus)</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
-        /* BASE STYLES - ENGLISH/GENERAL */
+        /* CORE UI/UX STYLES */
         body { 
             font-family: Arial, sans-serif; 
-            background-color: #f4f7f6; 
+            background-color: #f0f3f6; 
             color: #333; 
             line-height: 1.6; 
-            margin: 20px; 
-            direction: ltr; /* Ensure the main page remains Left-to-Right */
-            text-align: left; 
+            margin: 0; 
+            direction: ltr;
         }
         .container { 
-            max-width: 850px; 
-            margin: 50px auto; 
-            padding: 30px; 
-            border: 1px solid #ddd; 
+            max-width: 900px; 
+            margin: 30px auto; 
+            padding: 0; 
             background-color: #fff; 
             border-radius: 12px; 
-            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
         }
-        h1 { color: #007bff; text-align: center; margin-bottom: 20px; font-weight: 800; }
-        h2 { color: #28a745; margin-top: 30px; font-size: 1.4em; border-bottom: 2px solid #28a745; padding-bottom: 8px; font-weight: 700; }
-        h3 { color: #004085; font-weight: 700; margin-top: 25px; }
-        .checklist-item { margin-bottom: 15px; display: flex; align-items: center; }
-        .checklist-item input { margin-right: 15px; min-width: 22px; min-height: 22px; cursor: pointer; }
-        button { padding: 12px 25px; background-color: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 25px; width: 100%; font-size: 1.2em; font-weight: 700; transition: background-color 0.3s; }
-        button:hover { background-color: #0056b3; }
-        #score-dashboard { border: 3px solid #007bff; background-color: #e9f7ff; border-radius: 8px; padding: 25px; }
+        h1 { color: #007bff; text-align: center; padding: 20px 0; margin: 0; background-color: #e6f0ff; border-bottom: 3px solid #007bff; }
+        h2 { color: #28aa28; margin-top: 20px; font-size: 1.3em; border-bottom: 2px solid #28a745; padding-bottom: 5px; font-weight: 700; }
+        h3 { color: #004085; font-weight: 700; margin-top: 20px; }
+        
+        /* TABS NAVIGATION */
+        .tabs { 
+            display: flex; 
+            border-bottom: 1px solid #ccc; 
+            background-color: #f8f9fa;
+        }
+        .tab-button {
+            flex-grow: 1;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            background-color: #f8f9fa;
+            border: none;
+            border-right: 1px solid #eee;
+            font-weight: 600;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .tab-button.active {
+            background-color: #ffffff;
+            color: #007bff;
+            border-bottom: 3px solid #007bff;
+            margin-bottom: -1px;
+        }
+        .tab-content { padding: 25px; display: none; }
+        .tab-content.active { display: block; }
+
+        /* CHECKLIST STYLES */
+        .checklist-item { margin-bottom: 10px; display: flex; align-items: flex-start; }
+        .checklist-item input { margin-top: 4px; margin-right: 15px; min-width: 18px; min-height: 18px; cursor: pointer; }
+        .checklist-item label { flex: 1; font-size: 0.95em; }
+
+        /* DASHBOARD & REPORTING */
+        #score-dashboard { border: 3px solid #007bff; background-color: #e9f7ff; border-radius: 8px; padding: 25px; text-align: center; margin-bottom: 20px; }
         #risk-status { font-weight: bold; font-size: 1.2em; }
         #current-score { font-size: 3em !important; font-weight: 800 !important; display: block; }
         
-        /* PROFESSIONAL POLICY STYLES - ARABIC ENHANCEMENT */
+        /* POLICY OUTPUT STYLES */
         .policy-output { 
             background-color: #ffffff; 
             border: 2px solid #007bff; 
@@ -44,43 +72,21 @@
             margin-top: 30px; 
             box-shadow: 0 0 15px rgba(0,0,0,0.1);
             font-size: 1em;
-            font-family: Arial, sans-serif; /* Default for policy text */
+            line-height: 1.8;
         } 
         .policy-header { 
             text-align: center; 
             color: #004085; 
             font-size: 1.8em; 
-            margin-bottom: 20px; 
+            margin-bottom: 10px; 
             border-bottom: 4px double #007bff; 
             padding-bottom: 15px;
             font-weight: 800;
         }
         .arabic-text { 
-            /* Targeting Arabic content for Right-to-Left (RTL) alignment */
             font-family: 'Tajawal', 'Droid Arabic Naskh', 'Tahoma', sans-serif; 
             direction: rtl; 
             text-align: right; 
-        }
-        .policy-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .policy-table th, .policy-table td { 
-            border: 1px solid #ccc; 
-            padding: 12px; 
-            vertical-align: top;
-            font-size: 0.9em;
-        }
-        .policy-table th { 
-            background-color: #f1f1f1; 
-            font-weight: 700; 
-            color: #333; 
-        }
-        /* Style specific columns for bi-directional text */
-        .policy-table td:nth-child(2n-1) { /* English Content */
-             text-align: left;
-             direction: ltr;
-        }
-        .policy-table td:nth-child(2n) { /* Arabic Content */
-             text-align: right;
-             direction: rtl;
         }
         .section-title {
             color: #004085; 
@@ -91,9 +97,9 @@
             font-weight: bold;
         }
         .signature-block {
-            margin-top: 50px;
-            padding-top: 20px;
-            border-top: 2px dashed #ccc;
+            margin-top: 70px; /* Increased space for formality */
+            padding-top: 30px;
+            border-top: 2px solid #ccc; /* Solid line for formal separation */
             display: flex;
             justify-content: space-between;
         }
@@ -105,45 +111,58 @@
         .signature-line {
             height: 1px;
             background-color: #333;
-            margin: 15px 0;
+            margin: 15px 0 5px 0;
         }
         .background-section {
             background-color: #f8f9fa;
             padding: 15px;
             border-radius: 6px;
             margin-top: 20px;
+            font-size: 0.9em;
+        }
+        .policy-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .policy-table th, .policy-table td { 
+            border: 1px solid #ccc; 
+            padding: 10px; 
+            vertical-align: top;
+            font-size: 0.9em;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Himyati Cyber Compliance Assessment (MVP)</h1>
+        <h1>Himyati: GCC Compliance Dashboard (SME Focus)</h1>
 
-        <div style="background-color: #e9ecef; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+        <div style="padding: 0 25px; background-color: #e9ecef; border-bottom: 1px solid #ccc;">
             <label for="country-select" style="font-weight: bold;">Select Primary Jurisdiction:</label>
-            <select id="country-select" style="width: 100%; padding: 8px; margin-bottom: 15px;" onchange="loadFramework(); calculateScore()">
+            <select id="country-select" style="width: 100%; padding: 8px; margin-bottom: 15px;" onchange="loadFramework(); calculateScore(); setActiveTab('it-cyber')">
                 <option value="BH">Bahrain (NCSC / PDPL)</option>
-                <option value="KSA">Saudi Arabia (NCA / PDPL)</option>
+                <option value="KSA" selected>Saudi Arabia (NCA / PDPL)</option>
                 <option value="QATAR">Qatar (NIA / PDPL)</option>
             </select>
-            
-            <p id="tier-benefit-note" style="font-size: 1em; margin-top: 10px; color: #dc3545; font-weight: bold; text-align: center;">
+            <p id="tier-benefit-note" style="font-size: 1em; color: #dc3545; font-weight: bold; text-align: center; padding-bottom: 10px;">
                 📣 TESTING PHASE: ALL PREMIUM FEATURES (POLICY GENERATION) ARE CURRENTLY FREE!
             </p>
         </div>
 
-        <div id="score-dashboard" style="text-align: center; margin: 30px; padding: 20px; border-radius: 8px;">
-            <h2>Compliance Score: <span id="current-score" style="font-size: 2em;">--</span>%</h2>
+        <div id="score-dashboard">
+            <h2>Overall Compliance Score: <span id="current-score" style="font-size: 2em;">--</span>%</h2>
             <p style="font-weight: bold;">Risk Status: <span id="risk-status">Calculating...</span></p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="setActiveTab('it-cyber')">IT / Cyber Security</button>
+            <button class="tab-button" onclick="setActiveTab('data-admin')">Data / Admin</button>
+            <button class="tab-button" onclick="setActiveTab('hr-compliance')">HR / Employment</button>
+            <button class="tab-button" onclick="setActiveTab('financial')">Financial / Tax</button>
         </div>
 
         <form id="compliance-form">
             </form>
 
-        <div id="remediation-report" style="margin-top: 40px; padding-top: 20px; border-top: 1px dashed #ccc; display: none;">
+        <div id="remediation-report" style="padding: 0 25px 25px 25px; margin-top: 20px; border-top: 1px dashed #ccc; display: none;">
             <h2>Remediation Roadmap & Policy Actions</h2>
-            <div id="gap-list">
-                </div>
+            <div id="gap-list"></div>
             
             <h3 style="margin-top: 20px;">Automated Policy Generation (All Policies are Free)</h3>
             
@@ -160,46 +179,63 @@
                 🏷️ Generate Data Classification Policy (PDPL Focus)
             </button>
 
-
             <p id="policy-status" style="margin-top: 15px; font-style: italic;"></p>
             <div id="policy-preview" class="policy-output" style="display: none;"></div>
         </div>
     </div>
 
     <script>
-        // --- 1. MULTI-JURISDICTION FRAMEWORK DEFINITION ---
+        // --- 1. CORE DATA AND FRAMEWORK DEFINITION ---
+        const CATEGORIES = {
+            'it-cyber': ['Access', 'Technical'],
+            'data-admin': ['Governance', 'Privacy'],
+            'hr-compliance': ['HR'],
+            'financial': ['Financial']
+        };
+
         const FRAMEWORKS = {
-            'BH': [ // Bahrain: Focus on CBB, PDPL, NCSC Fundamentals
-                { id: 'control_mfa', label: 'Multi-Factor Authentication (MFA) is enabled for all admin accounts.', weight: 5, policy: true, type: 'Access' },
-                { id: 'control_password', label: 'A Strong Password Policy is enforced (min 12 characters, mix of characters, no reuse).', weight: 4, policy: true, type: 'Governance' },
-                { id: 'control_backup', label: 'Critical data is backed up to a tested, off-site cloud location.', weight: 4, policy: false, type: 'Technical' },
-                { id: 'control_training', label: 'All employees received anti-phishing training in the last 6 months.', weight: 3, policy: false, type: 'Awareness' },
-                { id: 'control_pdpl', label: 'A formal Data Destruction Policy exists for customer PII (PDPL Req).', weight: 4, policy: true, type: 'Privacy' },
-                { id: 'control_segregation', label: 'Admin network is fully segregated from guest/public Wi-Fi.', weight: 3, policy: false, type: 'Technical' }
+            'BH': [ // Bahrain: NCSC, PDPL, CBB
+                { id: 'control_mfa', label: 'MFA enabled for all remote/admin access.', weight: 5, policy: true, type: 'Access', tab: 'it-cyber' },
+                { id: 'control_password', label: 'Strong Password Policy (min 12 chars) is enforced.', weight: 4, policy: true, type: 'Access', tab: 'it-cyber' },
+                { id: 'control_backup', label: 'Critical data is backed up off-site (tested).', weight: 4, policy: false, type: 'Technical', tab: 'it-cyber' },
+                { id: 'control_training', label: 'Annual anti-phishing training completed by all staff.', weight: 3, policy: false, type: 'Awareness', tab: 'data-admin' },
+                { id: 'control_pdpl_notice', label: 'Formal Privacy Notice is published (PDPL Ready).', weight: 4, policy: true, type: 'Privacy', tab: 'data-admin' },
+                { id: 'control_incident_plan', label: 'Documented Incident Response Plan exists.', weight: 5, policy: true, type: 'Governance', tab: 'data-admin' },
+                { id: 'control_hr_contracts', label: 'All employees have signed contracts (Local Labor Law).', weight: 4, policy: false, type: 'HR', tab: 'hr-compliance' },
+                { id: 'control_hr_wps', label: 'WPS records (or equivalent) are maintained for salaries.', weight: 3, policy: false, type: 'HR', tab: 'hr-compliance' },
+                { id: 'control_finance_audit', label: 'Audited Financial Statements (IFRS) are ready for submission.', weight: 5, policy: false, type: 'Financial', tab: 'financial' },
+                { id: 'control_finance_vat', label: 'VAT registration and compliance (10% standard rate).', weight: 3, policy: false, type: 'Financial', tab: 'financial' }
             ],
-            'KSA': [ // KSA: Focus on NCA Essential Controls (ECC)
-                { id: 'control_mfa', label: 'All critical system access (servers, cloud) requires MFA.', weight: 5, policy: true, type: 'Access' },
-                { id: 'control_password', label: 'Formal password management and rotation policy is documented (NCA ECC Req).', weight: 4, policy: true, type: 'Governance' },
-                { id: 'control_backup', label: 'Daily off-site backups are verified and tested quarterly.', weight: 5, policy: false, type: 'Technical' }, 
-                { id: 'control_training', label: 'Mandatory annual cybersecurity training for all staff (Arabic provided).', weight: 4, policy: false, type: 'Awareness' },
-                { id: 'control_pdpl', label: 'A comprehensive Privacy Notice exists (KSA PDPL compliant).', weight: 3, policy: true, type: 'Privacy' },
-                { id: 'control_threat', label: 'Active Intrusion Detection/Prevention System (IDS/IPS) is in use.', weight: 5, policy: false, type: 'Technical' }
+            'KSA': [ // KSA: NCA Essential Controls (ECC), PDPL
+                { id: 'control_mfa', label: 'MFA for all critical system access (servers, cloud).', weight: 5, policy: true, type: 'Access', tab: 'it-cyber' },
+                { id: 'control_password', label: 'Formal password management/rotation documented (NCA ECC Req).', weight: 4, policy: true, type: 'Access', tab: 'it-cyber' },
+                { id: 'control_threat', label: 'Active Intrusion Detection/Prevention System (IDS/IPS) in use.', weight: 5, policy: false, type: 'Technical', tab: 'it-cyber' },
+                { id: 'control_backup', label: 'Daily off-site backups verified and tested quarterly.', weight: 5, policy: false, type: 'Technical', tab: 'it-cyber' }, 
+                { id: 'control_data_class', label: 'Formal Data Classification Policy is documented.', weight: 4, policy: true, type: 'Privacy', tab: 'data-admin' },
+                { id: 'control_incident_plan', label: 'Incident Response Plan (IRT) defined (PDPL 72hr rule).', weight: 5, policy: true, type: 'Governance', tab: 'data-admin' },
+                { id: 'control_hr_contracts', label: 'All employment contracts are in compliance with Saudi Labor Law.', weight: 4, policy: false, type: 'HR', tab: 'hr-compliance' },
+                { id: 'control_hr_saudization', label: 'Saudization (Nitaqat) compliance target is met (Green/Platinum).', weight: 5, policy: false, type: 'HR', tab: 'hr-compliance' },
+                { id: 'control_finance_audit', label: 'Audited Financial Statements (IFRS/IFRS for SMEs) ready.', weight: 5, policy: false, type: 'Financial', tab: 'financial' },
+                { id: 'control_finance_tax', label: 'Corporate Income Tax (CIT) documents prepared (if applicable).', weight: 4, policy: false, type: 'Financial', tab: 'financial' }
             ],
-            'QATAR': [ // Qatar: Focus on NIA Policy
-                { id: 'control_mfa', label: 'MFA is implemented for ALL external service access (Email, VPN).', weight: 4, policy: true, type: 'Access' },
-                { id: 'control_password', label: 'Documented procedure for user onboarding/offboarding.', weight: 3, policy: true, type: 'Governance' },
-                { id: 'control_backup', label: 'A tested data recovery plan is documented and stored securely.', weight: 4, policy: false, type: 'Technical' },
-                { id: 'control_training', label: 'Senior management has received cyber risk training in the last 6 months.', weight: 5, policy: false, type: 'Awareness' }, 
-                { id: 'control_pdpl', label: 'Compliance with Qatar’s regulatory framework for data transfers.', weight: 4, policy: false, type: 'Privacy' },
-                { id: 'control_vendor', label: 'Third-Party Vendor Risk Assessment conducted for cloud providers.', weight: 5, policy: false, type: 'Governance' } 
+            'QATAR': [ // Qatar: NIA, PDPL (Draft), Local Laws
+                { id: 'control_mfa', label: 'MFA is enforced for ALL external service access (Email, VPN).', weight: 4, policy: true, type: 'Access', tab: 'it-cyber' },
+                { id: 'control_password', label: 'Documented procedure for user onboarding/offboarding.', weight: 3, policy: true, type: 'Access', tab: 'it-cyber' },
+                { id: 'control_backup', label: 'A tested data recovery plan is documented and stored securely.', weight: 4, policy: false, type: 'Technical', tab: 'it-cyber' },
+                { id: 'control_vendor', label: 'Third-Party Vendor Risk Assessment conducted for cloud providers.', weight: 5, policy: false, type: 'Governance', tab: 'data-admin' },
+                { id: 'control_pdpl_consent', label: 'Formal consent mechanism is used for PII collection.', weight: 4, policy: true, type: 'Privacy', tab: 'data-admin' },
+                { id: 'control_training', label: 'Senior management has received cyber risk training in the last 6 months.', weight: 5, policy: false, type: 'Awareness', tab: 'data-admin' }, 
+                { id: 'control_hr_contracts', label: 'All employees have residency and work permits (Sponsorship fully legal).', weight: 5, policy: false, type: 'HR', tab: 'hr-compliance' },
+                { id: 'control_hr_onboard', label: 'Clear, documented onboarding/offboarding procedures exist.', weight: 3, policy: false, type: 'HR', tab: 'hr-compliance' },
+                { id: 'control_finance_audit', label: 'Audited Financial Statements (IFRS) submitted to MOCI.', weight: 5, policy: false, type: 'Financial', tab: 'financial' },
+                { id: 'control_finance_tax', label: 'Corporate Tax (10% rate) filing completed (if non-Qatari owned).', weight: 4, policy: false, type: 'Financial', tab: 'financial' }
             ]
         };
         
-        // --- 2. ENHANCED POLICY CONTENT (SIMULATED AI OUTPUT) ---
+        // --- 2. POLICY CONTENT (SIMULATED AI OUTPUT) ---
         const POLICY_CONTENT = {
             'Password': {
-                'title_en': "Mandatory Password Policy",
-                'title_ar': "سياسة كلمات المرور الإلزامية",
+                'title_en': "Mandatory Password Policy", 'title_ar': "سياسة كلمات المرور الإلزامية",
                 'details': [
                     { en: "Minimum Length", ar: "الحد الأدنى للطول", req_en: "12 characters minimum (Recommended: 16)", req_ar: "١٢ حرف كحد أدنى (الموصى به: ١٦)" },
                     { en: "Complexity", ar: "التعقيد", req_en: "Must include Uppercase, Lowercase, Number, and Symbol.", req_ar: "يجب أن تتضمن أحرفاً كبيرة وصغيرة وأرقاماً ورموزاً." },
@@ -214,8 +250,7 @@
                 }
             },
             'MFA': {
-                'title_en': "Multi-Factor Authentication (MFA) Enforcement Policy",
-                'title_ar': "سياسة تطبيق المصادقة متعددة العوامل",
+                'title_en': "Multi-Factor Authentication (MFA) Enforcement Policy", 'title_ar': "سياسة تطبيق المصادقة متعددة العوامل",
                 'details': [
                     { en: "Scope", ar: "النطاق", req_en: "Mandatory for all access to cloud services (Email, VPN, Accounting).", req_ar: "إلزامي لجميع الوصول عن بعد والخدمات السحابية (البريد الإلكتروني، الحسابات)." },
                     { en: "Exemptions", ar: "الاستثناءات", req_en: "No exceptions are permitted for administrative or executive accounts.", req_ar: "لا يُسمح بأي استثناءات للحسابات الإدارية أو التنفيذية." },
@@ -229,11 +264,8 @@
                     'example_ar': "نمط مقترح: إعطاء الأولوية للتطبيق الفوري على نقاط الوصول الإدارية والمالية والخارجية (VPN)."
                 }
             },
-            
-            // --- INCIDENT RESPONSE POLICY ---
             'Incident': {
-                'title_en': "Mandatory Incident Response & Notification Policy",
-                'title_ar': "سياسة الاستجابة للحوادث والإبلاغ الإلزامي",
+                'title_en': "Mandatory Incident Response & Notification Policy", 'title_ar': "سياسة الاستجابة للحوادث والإبلاغ الإلزامي",
                 'details': [
                     { en: "Notification Timeline", ar: "إطار الإبلاغ الزمني", req_en: "Report breaches to the regulator within 72 hours of discovery.", req_ar: "الإبلاغ عن الاختراقات للجهة الرقابية خلال ٧٢ ساعة من الاكتشاف." },
                     { en: "Response Team", ar: "فريق الاستجابة", req_en: "A designated Incident Response Team (IRT) must be established and trained.", req_ar: "يجب إنشاء وتدريب فريق استجابة للحوادث (IRT) مُعيّن." },
@@ -247,11 +279,8 @@
                     'example_ar': "نمط مقترح: إجراء اختبار اختراق سنوي إلزامي محاكاة (تمرين على الطاولة) بمشاركة الإدارة العليا."
                 }
             },
-            
-            // --- DATA CLASSIFICATION POLICY ---
             'DataClass': {
-                'title_en': "Data Classification and Handling Policy (PDPL Ready)",
-                'title_ar': "سياسة تصنيف ومعالجة البيانات (جاهزة لـ PDPL)",
+                'title_en': "Data Classification and Handling Policy (PDPL Ready)", 'title_ar': "سياسة تصنيف ومعالجة البيانات (جاهزة لـ PDPL)",
                 'details': [
                     { en: "Classification Tiers", ar: "مستويات التصنيف", req_en: "Data must be tagged: Public, Internal, Confidential, and Highly Sensitive.", req_ar: "يجب تصنيف البيانات: عامة، داخلية، سرية، وشديدة الحساسية." },
                     { en: "Handling of PII", ar: "معالجة البيانات الشخصية", req_en: "PII must be encrypted both in transit and at rest.", req_ar: "يجب تشفير بيانات تحديد الهوية الشخصية (PII) أثناء النقل والتخزين." },
@@ -267,44 +296,53 @@
             }
         };
 
-        // --- 3. UI UPDATE FUNCTIONS (TIER-LESS) ---
+        // --- 3. UI/UX AND FRAMEWORK MANAGEMENT ---
+        let currentActiveTab = 'it-cyber';
 
-        function updateTierBenefits() {
-            // No tiers, so this is just a placeholder to run calculateScore
-            calculateScore(); 
+        function setActiveTab(tabId) {
+            // Update buttons
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.tab-button[onclick="setActiveTab('${tabId}')"`).classList.add('active');
+
+            // Load content for the active tab
+            currentActiveTab = tabId;
+            loadFramework(); 
+            // The score is calculated implicitly by loadFramework calling calculateScore
         }
 
         function loadFramework() {
             const country = document.getElementById('country-select').value;
-            const currentFramework = FRAMEWORKS[country];
+            const framework = FRAMEWORKS[country];
             const form = document.getElementById('compliance-form');
+            form.innerHTML = '';
             
-            const groupedControls = currentFramework.reduce((acc, control) => {
+            const controlsInActiveTab = framework.filter(control => control.tab === currentActiveTab);
+
+            let formHTML = `<div class="tab-content active" id="${currentActiveTab}-content">`;
+            formHTML += `<p style="font-size: 0.9em; color: #555;">Check the box if the control is **IN PLACE** for the **${currentActiveTab.toUpperCase()}** category.</p>`;
+            
+            // Group controls by type (Access, Technical, HR, Financial, etc.) within the active tab
+            const groupedControls = controlsInActiveTab.reduce((acc, control) => {
                 acc[control.type] = acc[control.type] || [];
                 acc[control.type].push(control);
                 return acc;
             }, {});
-            
-            let formHTML = '';
-            
-            formHTML += '<p style="font-size: 0.9em; color: #555;">Check the box if the control is **IN PLACE**.</p>';
+
             for (const type in groupedControls) {
-                formHTML += `<h2 style="margin-top: 30px;">${type} Controls (${country})</h2>`;
+                formHTML += `<h3>${type} Controls (${country})</h3>`;
                 groupedControls[type].forEach(control => {
                     formHTML += `
                         <div class="checklist-item">
-                            <input type="checkbox" id="${control.id}" name="${control.id}" data-weight="${control.weight}" data-policy="${control.policy}" onchange="calculateScore()">
+                            <input type="checkbox" id="${control.id}" name="${control.id}" data-weight="${control.weight}" data-policy="${control.policy}" data-tab="${control.tab}" onchange="calculateScore()" ${localStorage.getItem(control.id) === 'true' ? 'checked' : ''}>
                             <label for="${control.id}">${control.label}</label>
                         </div>
                     `;
                 });
             }
+            formHTML += '</div>';
             
             form.innerHTML = formHTML;
-
-            document.getElementById('current-score').textContent = '0';
-            document.getElementById('risk-status').textContent = 'Calculating...';
-            document.getElementById('remediation-report').style.display = 'none';
+            calculateScore(); 
         }
 
         // --- 4. CORE SCORING & REPORTING LOGIC ---
@@ -315,22 +353,20 @@
             let achievedComplianceWeight = 0;
             let nonCompliantControls = [];
 
-            const form = document.getElementById('compliance-form');
-            const controls = form.querySelectorAll('[data-weight]');
+            // Iterate over ALL controls in the framework, regardless of the active tab
+            const allControls = FRAMEWORKS[country];
             
-            document.getElementById('policy-status').textContent = '';
-            document.getElementById('policy-preview').style.display = 'none';
-
-
-            controls.forEach(control => {
-                const weight = parseInt(control.getAttribute('data-weight'));
+            allControls.forEach(control => {
+                const weight = parseInt(control.weight);
+                const controlElement = document.getElementById(control.id);
+                const isChecked = controlElement ? controlElement.checked : (localStorage.getItem(control.id) === 'true');
+                
                 totalRiskWeight += weight;
 
-                if (!control.checked) {
+                if (!isChecked) {
                     let actionText = '';
-                    const isPolicyFixable = control.getAttribute('data-policy') === 'true';
+                    const isPolicyFixable = control.policy;
 
-                    // Policy generation is now universally free for testing
                     if (isPolicyFixable) {
                         actionText = `Action: **Generate Policy** for this governance gap. (Currently Free)`;
                     } else {
@@ -339,38 +375,34 @@
                     
                     nonCompliantControls.push({
                         id: control.id,
-                        label: control.nextElementSibling.textContent,
+                        label: control.label,
                         weight: weight,
-                        action: actionText
+                        action: actionText,
+                        tab: control.tab
                     });
                 } else {
                     achievedComplianceWeight += weight;
                 }
+                
+                // Save state to localStorage to persist across tab switches
+                if (controlElement) {
+                    localStorage.setItem(control.id, controlElement.checked);
+                }
             });
 
-            let complianceScore = 0;
-            if (totalRiskWeight > 0) {
-                complianceScore = Math.round((achievedComplianceWeight / totalRiskWeight) * 100);
-            }
+            // Calculate Score and Status
+            let complianceScore = (totalRiskWeight > 0) ? Math.round((achievedComplianceWeight / totalRiskWeight) * 100) : 0;
+            let riskStatus, statusColor;
 
-            let riskStatus = '';
-            let statusColor = '';
-            if (complianceScore >= 85) {
-                riskStatus = 'Optimal - Audit Ready';
-                statusColor = 'green';
-            } else if (complianceScore >= 50) {
-                riskStatus = 'Medium Risk - Minor Gaps';
-                statusColor = 'orange';
-            } else {
-                riskStatus = 'CRITICAL RISK - IMMEDIATE ACTION REQUIRED';
-                statusColor = 'red';
-            }
+            if (complianceScore >= 85) { riskStatus = 'Optimal - Audit Ready'; statusColor = 'green'; } 
+            else if (complianceScore >= 50) { riskStatus = 'Medium Risk - Minor Gaps'; statusColor = 'orange'; } 
+            else { riskStatus = 'CRITICAL RISK - IMMEDIATE ACTION REQUIRED'; statusColor = 'red'; }
 
             document.getElementById('current-score').textContent = complianceScore;
-            const riskStatusElement = document.getElementById('risk-status');
-            riskStatusElement.textContent = riskStatus;
-            riskStatusElement.style.color = statusColor;
+            document.getElementById('risk-status').textContent = riskStatus;
+            document.getElementById('risk-status').style.color = statusColor;
             
+            // Update Remediation Report (Gap List)
             const reportSection = document.getElementById('remediation-report');
             const gapList = document.getElementById('gap-list');
             gapList.innerHTML = ''; 
@@ -379,7 +411,7 @@
                 nonCompliantControls.sort((a, b) => b.weight - a.weight); 
                 nonCompliantControls.forEach(gap => {
                     const gapItem = document.createElement('p');
-                    gapItem.innerHTML = `<strong>[Risk ${gap.weight}] ${gap.label}</strong><br><span style="color: #c82333;">${gap.action}</span>`;
+                    gapItem.innerHTML = `<strong>[Risk ${gap.weight}] [${gap.tab.toUpperCase()}] ${gap.label}</strong><br><span style="color: #c82333;">${gap.action}</span>`;
                     gapList.appendChild(gapItem);
                 });
                 reportSection.style.display = 'block';
@@ -465,9 +497,22 @@
                         </div>
                     </div>
                 `;
+                
+                // 4. Pro-Forma Official Introduction
+                const proFormaIntro = `
+                    <p class="section-title" style="border: none; margin-top: 5px;">OFFICIAL POLICY DOCUMENT PRO-FORMA</p>
+                    <div class="background-section">
+                        <p style="font-weight: bold; color: #007bff;">TO: ${country} Regulatory Authority (NCA/PDPL) & Internal Stakeholders</p>
+                        <p class="arabic-text" style="font-weight: bold; color: #007bff;">إلى: الهيئة التنظيمية في ${country} (NCA/PDPL) والجهات الداخلية المعنية</p>
+                        <hr style="margin: 10px 0;">
+                        <p><strong>SUBJECT:</strong> Implementation Plan for **${content.title_en}**</p>
+                        <p class="arabic-text"><strong>الموضوع:</strong> خطة التنفيذ لـ **${content.title_ar}**</p>
+                        <p style="margin-top: 10px; font-size: 0.9em; font-style: italic;">This document certifies our commitment as a small business to implementing and enforcing the mandatory controls outlined herein to achieve compliance and mitigate organizational risk. The policy is structured to meet **${country}**'s regulatory requirements as determined by the Himyati platform.</p>
+                        <p class="arabic-text" style="font-size: 0.9em; font-style: italic;">تشهد هذه الوثيقة بالتزام شركتنا الصغيرة بتطبيق وتنفيذ الضوابط الإلزامية لتحقيق الامتثال وتخفيف المخاطر التشغيلية. تم إعداد هذه السياسة لتلبية المتطلبات التنظيمية في **${country}**، بالاعتماد على منصة حمايتي.</p>
+                    </div>
+                `;
 
-
-                // 4. Assemble the final professional document preview
+                // 5. Assemble the final professional document preview
                 policyStatus.style.color = 'green';
                 policyStatus.innerHTML = `
                     ✅ **SUCCESS!** Your Custom **${policyType} Enforcement Policy** is ready for **${country}**.<br>
@@ -481,6 +526,8 @@
                         <div style="font-size: 0.5em; color: #6c757d; margin-top: 5px;" class="arabic-text">إصدار الوثيقة ١.٠ - معتمد من الذكاء الاصطناعي لحمايتي - ${new Date().toLocaleDateString('ar-EG')}</div>
                     </div>
 
+                    ${proFormaIntro}
+
                     <p class="section-title">1. Policy Statement & Scope | بيان ونطاق السياسة</p>
                     <p style="margin-left: 20px; font-style: italic;">This policy outlines the mandatory technical and governance controls required to secure organizational data in compliance with the relevant ${country} mandates. <span class="arabic-text" style="display: block;">تحدد هذه السياسة الضوابط الإلزامية المطلوبة لتأمين بيانات المنظمة وفقاً لمتطلبات ${country}.</span></p>
                     
@@ -493,10 +540,25 @@
             }, 3000); 
         }
 
-        // Initial page load function to ensure checklist appears
+        // Initial page load function to ensure the correct tab is active and framework loads
         document.addEventListener('DOMContentLoaded', function() {
-            loadFramework(); 
-            updateTierBenefits(); 
+            // Clear old local storage state that conflicts with new data structures
+            // This is crucial for a major version update to prevent visual bugs
+            // Note: In a real app, this would be handled by versioning the DB schema.
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('control_')) {
+                    localStorage.removeItem(key);
+                }
+            }
+
+            // Set the initial active tab and load the framework for the default country (KSA)
+            const defaultTab = 'it-cyber';
+            setActiveTab(defaultTab);
+            document.getElementById('country-select').value = 'KSA';
+            
+            // Highlight the default tab button
+            document.querySelector(`.tab-button[onclick="setActiveTab('${defaultTab}')"]`).classList.add('active');
         });
     </script>
 </body>
