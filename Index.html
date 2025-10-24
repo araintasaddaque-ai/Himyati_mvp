@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Himyati Official Compliance Dashboard (Smart Policy Generation)</title>
+    <title>Himyati Official Compliance Dashboard (Pakistan Edition)</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         /* CORE UI/UX STYLES */
@@ -133,44 +133,36 @@
             margin-top: 20px;
             font-size: 0.9em;
         }
-        .context-question {
-            background-color: #fff8e1;
-            border: 1px solid #ffc107;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            font-weight: bold;
-        }
-        /* *** CORE TABLE FIXES FOR ALIGNMENT AND CLARITY *** */
+        /* TABLE FIXES FOR ALIGNMENT AND CLARITY */
         .policy-table { 
             width: 100%; 
             border-collapse: collapse; 
             margin-top: 15px; 
-            border: 1px solid #ddd; /* Ensure table boundary is visible */
+            border: 1px solid #ddd; 
         }
         .policy-table th, .policy-table td { 
-            border: 1px solid #eee; /* Light borders for interior cells */
+            border: 1px solid #eee; 
             padding: 10px; 
             vertical-align: top;
             font-size: 0.9em;
         }
         .policy-table th { 
-            background-color: #e9ecef; /* Header color */
+            background-color: #e9ecef; 
             font-weight: 700; 
             color: #333; 
         }
-        .policy-table tr:nth-child(even) { /* Zebra striping for better readability */
+        .policy-table tr:nth-child(even) { 
             background-color: #f7f7f7;
         }
-        /* Specific Column Alignment Rules (The Core Fix) */
-        .policy-table td:nth-child(2n-1) { /* English Content (Aspect & Requirement) */
+        /* Specific Column Alignment Rules */
+        .policy-table td:nth-child(2n-1) { 
              text-align: left;
              direction: ltr;
         }
-        .policy-table td:nth-child(2n) { /* Arabic Content (Aspect & Requirement) */
+        .policy-table td:nth-child(2n) { 
              text-align: right;
              direction: rtl;
-             font-family: 'Tajawal', sans-serif; /* Ensure Arabic font is used */
+             font-family: 'Tajawal', sans-serif; 
         }
     </style>
 </head>
@@ -181,8 +173,9 @@
         <div style="padding: 0 25px; background-color: #e9ecef; border-bottom: 1px solid #ccc;">
             <label for="country-select" style="font-weight: bold;">Select Primary Jurisdiction:</label>
             <select id="country-select" style="width: 100%; padding: 8px; margin-bottom: 15px;" onchange="setActiveTab(currentActiveTab); calculateScore()">
+                <option value="PK" selected>Pakistan (PDPB / PTA / HEC)</option>
+                <option value="KSA">Saudi Arabia (NCA / PDPL)</option>
                 <option value="BH">Bahrain (NCSC / PDPL)</option>
-                <option value="KSA" selected>Saudi Arabia (NCA / PDPL)</option>
                 <option value="QATAR">Qatar (NIA / PDPL)</option>
             </select>
             <p id="tier-benefit-note" style="font-size: 1em; color: #dc3545; font-weight: bold; text-align: center; padding-bottom: 10px;">
@@ -232,12 +225,15 @@
             'it-cyber': [
                 { type: 'Password', label: '🔑 Generate Password Policy', color: '#007bff' },
                 { type: 'MFA', label: '🔒 Generate MFA Enforcement Policy', color: '#007bff' },
-                { type: 'SecConfig', label: '🖥️ Generate Secure Configuration Policy', color: '#007bff' }
+                { type: 'SecConfig', label: '🖥️ Generate Secure Configuration Policy', color: '#007bff' },
+                { type: 'SecureCode', label: '💻 Generate Secure Web Development Policy', color: '#007bff' }
             ],
             'data-admin': [
                 { type: 'Incident', label: '🚨 Generate Incident Response Policy', color: '#dc3545' },
                 { type: 'DataClass', label: '🏷️ Generate Data Classification Policy', color: '#17a2b8' },
-                { type: 'Retention', label: '📄 Generate Data Retention Policy', color: '#ffc107' }
+                { type: 'Retention', label: '📄 Generate Data Retention Policy', color: '#ffc107' },
+                { type: 'AUP', label: '📜 Generate Acceptable Use Policy (AUP)', color: '#ff8c00' },
+                { type: 'ChangeMgt', label: '🔄 Generate Change Management Policy', color: '#ff8c00' }
             ],
             'hr-compliance': [
                 { type: 'Leave', label: '📅 Generate Annual Leave/Attendance Policy', color: '#28a745' },
@@ -250,39 +246,74 @@
         };
 
         const FRAMEWORKS = {
-            'BH': [ // Bahrain: NCSC, PDPL, CBB
+            'PK': [ // Pakistan: PDPB, PTA, SECP, Provincial Labour Law
+                { id: 'control_mfa', label: 'MFA enabled for all admin accounts (e.g., SIS, Email).', weight: 5, policy: true, type: 'Access', tab: 'it-cyber' },
+                { id: 'control_password', label: 'Strong Password Policy (min 12 chars) is enforced.', weight: 4, policy: true, type: 'Access', tab: 'it-cyber' },
+                { id: 'control_securecode', label: 'Mandatory use of secure coding practices (OWASP Top 10).', weight: 4, policy: true, type: 'Technical', tab: 'it-cyber' },
+                { id: 'control_backup', label: 'Critical data is backed up off-site and verified.', weight: 4, policy: false, type: 'Technical', tab: 'it-cyber' },
+                
+                { id: 'control_training', label: 'Annual anti-phishing training completed by staff (PTA/HEC mandate).', weight: 3, policy: false, type: 'Awareness', tab: 'data-admin' },
+                { id: 'control_pdpl_notice', label: 'Formal Privacy Notice is published (PDPB 2023 compliant).', weight: 5, policy: true, type: 'Privacy', tab: 'data-admin' },
+                { id: 'control_incident_plan', label: 'Documented Incident Response Plan exists (PTA/CERT notification).', weight: 5, policy: true, type: 'Governance', tab: 'data-admin' },
+                { id: 'control_aup', label: 'Acceptable Use Policy (AUP) signed by all staff/faculty.', weight: 3, policy: true, type: 'Governance', tab: 'data-admin' },
+                { id: 'control_changemgt', label: 'Formal Change Management process followed for live university systems.', weight: 4, policy: true, type: 'Governance', tab: 'data-admin' },
+                
+                { id: 'control_hr_contracts', label: 'All employment contracts comply with Provincial Labor Law.', weight: 4, policy: false, type: 'HR', tab: 'hr-compliance' },
+                { id: 'control_hr_socialsecurity', label: 'Employee contributions to EOBI/PESSI/ESSI are up to date.', weight: 5, policy: false, type: 'HR', tab: 'hr-compliance' },
+                
+                { id: 'control_finance_audit', label: 'Annual external audit completed (SECP requirement).', weight: 5, policy: false, type: 'Financial', tab: 'financial' },
+                { id: 'control_finance_tax', label: 'FBR Sales Tax and Income Tax records are maintained (7 years).', weight: 4, policy: false, type: 'Financial', tab: 'financial' }
+            ],
+            'BH': [ 
                 { id: 'control_mfa', label: 'MFA enabled for all remote/admin access.', weight: 5, policy: true, type: 'Access', tab: 'it-cyber' },
                 { id: 'control_password', label: 'Strong Password Policy (min 12 chars) is enforced.', weight: 4, policy: true, type: 'Access', tab: 'it-cyber' },
+                { id: 'control_securecode', label: 'Mandatory use of secure coding practices (WebDev).', weight: 4, policy: true, type: 'Technical', tab: 'it-cyber' }, 
                 { id: 'control_backup', label: 'Critical data is backed up off-site (tested).', weight: 4, policy: false, type: 'Technical', tab: 'it-cyber' },
+                
                 { id: 'control_training', label: 'Annual anti-phishing training completed by all staff.', weight: 3, policy: false, type: 'Awareness', tab: 'data-admin' },
                 { id: 'control_pdpl_notice', label: 'Formal Privacy Notice is published (PDPL Ready).', weight: 4, policy: true, type: 'Privacy', tab: 'data-admin' },
                 { id: 'control_incident_plan', label: 'Documented Incident Response Plan exists.', weight: 5, policy: true, type: 'Governance', tab: 'data-admin' },
+                { id: 'control_aup', label: 'Acceptable Use Policy (AUP) signed by all staff.', weight: 3, policy: true, type: 'Governance', tab: 'data-admin' },
+                { id: 'control_changemgt', label: 'Formal Change Management process is followed for live systems.', weight: 4, policy: true, type: 'Governance', tab: 'data-admin' },
+                
                 { id: 'control_hr_contracts', label: 'All employees have signed contracts (Local Labor Law).', weight: 4, policy: false, type: 'HR', tab: 'hr-compliance' },
                 { id: 'control_hr_wps', label: 'WPS records (or equivalent) are maintained for salaries.', weight: 3, policy: false, type: 'HR', tab: 'hr-compliance' },
+                
                 { id: 'control_finance_audit', label: 'Audited Financial Statements (IFRS) are ready for submission.', weight: 5, policy: false, type: 'Financial', tab: 'financial' },
                 { id: 'control_finance_vat', label: 'VAT registration and compliance (10% standard rate).', weight: 3, policy: false, type: 'Financial', tab: 'financial' }
             ],
             'KSA': [ // KSA: NCA Essential Controls (ECC), PDPL
                 { id: 'control_mfa', label: 'MFA for all critical system access (servers, cloud).', weight: 5, policy: true, type: 'Access', tab: 'it-cyber' },
                 { id: 'control_password', label: 'Formal password management/rotation documented (NCA ECC Req).', weight: 4, policy: true, type: 'Access', tab: 'it-cyber' },
+                { id: 'control_securecode', label: 'Mandatory use of secure coding practices (WebDev).', weight: 4, policy: true, type: 'Technical', tab: 'it-cyber' }, 
                 { id: 'control_threat', label: 'Active Intrusion Detection/Prevention System (IDS/IPS) in use.', weight: 5, policy: false, type: 'Technical', tab: 'it-cyber' },
                 { id: 'control_backup', label: 'Daily off-site backups verified and tested quarterly.', weight: 5, policy: false, type: 'Technical', tab: 'it-cyber' }, 
+                
                 { id: 'control_data_class', label: 'Formal Data Classification Policy is documented.', weight: 4, policy: true, type: 'Privacy', tab: 'data-admin' },
                 { id: 'control_incident_plan', label: 'Incident Response Plan (IRT) defined (PDPL 72hr rule).', weight: 5, policy: true, type: 'Governance', tab: 'data-admin' },
+                { id: 'control_aup', label: 'Acceptable Use Policy (AUP) signed by all staff.', weight: 3, policy: true, type: 'Governance', tab: 'data-admin' },
+                { id: 'control_changemgt', label: 'Formal Change Management process is followed for live systems.', weight: 4, policy: true, type: 'Governance', tab: 'data-admin' },
+                
                 { id: 'control_hr_contracts', label: 'All employment contracts are in compliance with Saudi Labor Law.', weight: 4, policy: false, type: 'HR', tab: 'hr-compliance' },
                 { id: 'control_hr_saudization', label: 'Saudization (Nitaqat) compliance target is met (Green/Platinum).', weight: 5, policy: false, type: 'HR', tab: 'hr-compliance' },
+                
                 { id: 'control_finance_audit', label: 'Audited Financial Statements (IFRS/IFRS for SMEs) ready.', weight: 5, policy: false, type: 'Financial', tab: 'financial' },
                 { id: 'control_finance_tax', label: 'Corporate Income Tax (CIT) documents prepared (if applicable).', weight: 4, policy: false, type: 'Financial', tab: 'financial' }
             ],
             'QATAR': [ 
                 { id: 'control_mfa', label: 'MFA is enforced for ALL external service access (Email, VPN).', weight: 4, policy: true, type: 'Access', tab: 'it-cyber' },
                 { id: 'control_password', label: 'Documented procedure for user onboarding/offboarding.', weight: 3, policy: true, type: 'Access', tab: 'it-cyber' },
+                { id: 'control_securecode', label: 'Mandatory use of secure coding practices (WebDev).', weight: 4, policy: true, type: 'Technical', tab: 'it-cyber' }, 
                 { id: 'control_backup', label: 'A tested data recovery plan is documented and stored securely.', weight: 4, policy: false, type: 'Technical', tab: 'it-cyber' },
+                
                 { id: 'control_vendor', label: 'Third-Party Vendor Risk Assessment conducted for cloud providers.', weight: 5, policy: false, type: 'Governance', tab: 'data-admin' },
                 { id: 'control_pdpl_consent', label: 'Formal consent mechanism is used for PII collection.', weight: 4, policy: true, type: 'Privacy', tab: 'data-admin' },
-                { id: 'control_training', label: 'Senior management has received cyber risk training in the last 6 months.', weight: 5, policy: false, type: 'Awareness', tab: 'data-admin' }, 
+                { id: 'control_aup', label: 'Acceptable Use Policy (AUP) signed by all staff.', weight: 3, policy: true, type: 'Governance', tab: 'data-admin' },
+                { id: 'control_changemgt', label: 'Formal Change Management process is followed for live systems.', weight: 4, policy: true, type: 'Governance', tab: 'data-admin' },
+                
                 { id: 'control_hr_contracts', label: 'All employees have residency and work permits (Sponsorship fully legal).', weight: 5, policy: false, type: 'HR', tab: 'hr-compliance' },
                 { id: 'control_hr_onboard', label: 'Clear, documented onboarding/offboarding procedures exist.', weight: 3, policy: false, type: 'HR', tab: 'hr-compliance' },
+                
                 { id: 'control_finance_audit', label: 'Audited Financial Statements (IFRS) submitted to MOCI.', weight: 5, policy: false, type: 'Financial', tab: 'financial' },
                 { id: 'control_finance_tax', label: 'Corporate Tax (10% rate) filing completed (if non-Qatari owned).', weight: 4, policy: false, type: 'Financial', tab: 'financial' }
             ]
@@ -299,7 +330,7 @@
                     { en: "Storage", ar: "التخزين", req_en: "Passwords must be secured using a dedicated manager.", req_ar: "يجب تأمين كلمات المرور باستخدام برنامج إدارة مخصص.", },
                 ],
                 'background': {
-                    'ref_en': "Best Practice: NIST SP 800-63B guidelines and NCA Essential Controls.", 'ref_ar': "أفضل الممارسات: إرشادات NIST SP 800-63B والضوابط الأساسية للهيئة الوطنية للأمن السيبراني (NCA).",
+                    'ref_en': "Best Practice: NIST SP 800-63B guidelines and National Cyber Security Framework (PK).", 'ref_ar': "أفضل الممارسات: إرشادات NIST SP 800-63B والإطار الوطني للأمن السيبراني (باكستان).",
                     'example_en': "Pattern Suggestion: Use a dedicated password vault (e.g., local server or cloud solution) to store hashed credentials.", 'example_ar': "نمط مقترح: استخدام قبو كلمات مرور مخصص (مثل خادم محلي أو حل سحابي) لتخزين بيانات الاعتماد المجزأة."
                 },
                 'context_q': "What is the maximum number of password reuse attempts allowed in your system?", 'context_a_default': "Maximum 5 reuse attempts."
@@ -313,7 +344,7 @@
                     { en: "Non-Compliance", ar: "عدم الامتثال", req_en: "Access will be blocked for non-compliant users after 7 days of notification.", req_ar: "سيتم حظر الوصول للمستخدمين غير الملتزمين بعد ٧ أيام من الإخطار." }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: CIS Controls, Mitigates 80% of targeted attacks (Microsoft).", 'ref_ar': "أفضل الممارسات: ضوابط CIS، تخفف ٨٠٪ من الهجمات المستهدفة (مايكروسوفت).",
+                    'ref_en': "Best Practice: PTA guidelines and Pakistan CERT recommendations.", 'ref_ar': "أفضل الممارسات: إرشادات هيئة تنظيم الاتصالات (PTA) وتوصيات فريق الاستجابة لحوادث الحاسوب الباكستاني (CERT).",
                     'example_en': "Pattern Suggestion: Prioritize implementation on administrative, financial, and external (VPN) access points immediately.", 'example_ar': "نمط مقترح: إعطاء الأولوية للتطبيق الفوري على نقاط الوصول الإدارية والمالية والخارجية (VPN)."
                 },
                 'context_q': "Which MFA method will you prioritize (App Token, SMS, or Hardware Key)?", 'context_a_default': "App Token (e.g., Google Authenticator) for security."
@@ -326,61 +357,100 @@
                     { en: "Service Disablement", ar: "تعطيل الخدمات", req_en: "Disable all unnecessary network services and protocols (e.g., FTP, Telnet).", req_ar: "تعطيل جميع خدمات وبروتوكولات الشبكة غير الضرورية (مثل FTP، Telnet)." }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: CIS Benchmarks and Vendor Hardening Guides (e.g., Microsoft).", 'ref_ar': "أفضل الممارسات: معايير CIS وأدلة تقوية الأنظمة الخاصة بالموردين.",
+                    'ref_en': "Best Practice: HEC IT Policy directives and CERT guidelines.", 'ref_ar': "أفضل الممارسات: توجيهات سياسة تقنية المعلومات لهيئة التعليم العالي (HEC) وإرشادات فريق الاستجابة للحوادث.",
                     'example_en': "Pattern Suggestion: Use automated configuration management tools (e.g., Group Policy/Ansible) to enforce a baseline configuration.", 'example_ar': "نمط مقترح: استخدام أدوات إدارة التكوين المؤتمتة لفرض تكوين أساسي ثابت."
                 },
                 'context_q': "What is the longest acceptable downtime for a critical service during patching?", 'context_a_default': "4 hours maximum downtime."
             },
+            'SecureCode': { // NEW POLICY
+                'title_en': "Secure Web Development and Coding Policy", 'title_ar': "سياسة التطوير الآمن للويب والبرمجة",
+                'details': [
+                    { en: "Vulnerability Mitigation", ar: "تخفيف الثغرات", req_en: "All code must be scanned and hardened against OWASP Top 10 vulnerabilities (SQLi, XSS).", req_ar: "يجب فحص وتقوية جميع الأكواد ضد أخطر ١٠ ثغرات (مثل SQLi، XSS)." },
+                    { en: "Input Validation", ar: "التحقق من المدخلات", req_en: "All user input must be strictly validated, sanitized, and parameterized (WebDev).", req_ar: "يجب التحقق من جميع مدخلات المستخدم وتعقيمها وتحديدها كمعاملات (البرمجة الآمنة)." },
+                    { en: "Error Handling", ar: "معالجة الأخطاء", req_en: "Production errors must be logged internally and never show sensitive technical details to the user.", req_ar: "يجب تسجيل أخطاء الإنتاج داخلياً وعدم إظهار تفاصيل فنية حساسة للمستخدم." }
+                ],
+                'background': {
+                    'ref_en': "Best Practice: OWASP Secure Coding Practices and MUET Jamshoro MIS Department standards.", 'ref_ar': "أفضل الممارسات: ممارسات البرمجة الآمنة لـ OWASP ومعايير قسم نظم المعلومات الإدارية في جامعة MUET جامشورو.",
+                    'example_en': "Pattern Suggestion: Implement a robust input validation library and use prepared statements for all database queries.", 'example_ar': "نمط مقترح: تطبيق مكتبة قوية للتحقق من المدخلات واستخدام عبارات مُعدَّة مسبقاً لجميع استفسارات قاعدة البيانات."
+                },
+                'context_q': "Which web vulnerability (e.g., SQL Injection, XSS) will this policy explicitly prohibit?", 'context_a_default': "SQL Injection and Cross-Site Scripting (XSS)."
+            },
             'Incident': {
                 'title_en': "Mandatory Incident Response & Notification Policy", 'title_ar': "سياسة الاستجابة للحوادث والإبلاغ الإلزامي",
                 'details': [
-                    { en: "Notification Timeline", ar: "إطار الإبلاغ الزمني", req_en: "Report breaches to the regulator within 72 hours of discovery.", req_ar: "الإبلاغ عن الاختراقات للجهة الرقابية خلال ٧٢ ساعة من الاكتشاف." },
+                    { en: "Notification Timeline", ar: "إطار الإبلاغ الزمني", req_en: "Report breaches to the PTA/HEC within 48 hours of discovery.", req_ar: "الإبلاغ عن الاختراقات إلى هيئة تنظيم الاتصالات (PTA) أو هيئة التعليم العالي (HEC) خلال ٤٨ ساعة من الاكتشاف." },
                     { en: "Response Team", ar: "فريق الاستجابة", req_en: "A designated Incident Response Team (IRT) must be established and trained.", req_ar: "يجب إنشاء وتدريب فريق استجابة للحوادث (IRT) مُعيّن." },
-                    { en: "Communication Plan", ar: "خطة الاتصال", req_en: "Pre-approved templates for notifying affected data subjects.", req_ar: "وجود نماذج اتصال مُعتمدة مسبقاً لإخطار أصحاب البيانات المتأثرين." },
+                    { en: "Communication Plan", ar: "خطة الاتصال", req_en: "Pre-approved templates for notifying affected data subjects (PDPB Req).", req_ar: "وجود نماذج اتصال مُعتمدة مسبقاً لإخطار أصحاب البيانات المتأثرين (متطلبات PDPB)." },
                     { en: "Forensics", ar: "التحقيق الجنائي", req_en: "Preservation of all logs and evidence for forensic analysis.", req_ar: "الاحتفاظ بجميع السجلات والأدلة للتحليل الجنائي." }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: NCA NCA-IRP and NCA-ECC-1:2018 (Incident Response and Recovery).", 'ref_ar': "أفضل الممارسات: NCA NCA-IRP و NCA-ECC-1:2018 (الاستجابة والتعافي من الحوادث).",
+                    'ref_en': "Best Practice: PDPB 2023 guidelines and CERT-PK response procedures.", 'ref_ar': "أفضل الممارسات: إرشادات قانون حماية البيانات الشخصية (PDPB 2023) وإجراءات الاستجابة لفريق CERT-PK.",
                     'example_en': "Pattern Suggestion: Conduct a mandatory annual simulated breach test (tabletop exercise) with management.", 'example_ar': "نمط مقترح: إجراء اختبار اختراق سنوي إلزامي محاكاة (تمرين على الطاولة) بمشاركة الإدارة العليا."
                 },
-                'context_q': "Who هو the primary regulatory body to receive the 72-hour breach notification?", 'context_a_default': "National Cybersecurity Authority (NCA)."
+                'context_q': "Who is the primary regulatory body to receive the incident notification (HEC or PTA)?", 'context_a_default': "HEC (Higher Education Commission)."
             },
             'DataClass': {
-                'title_en': "Data Classification and Handling Policy (PDPL Ready)", 'title_ar': "سياسة تصنيف ومعالجة البيانات (جاهزة لـ PDPL)",
+                'title_en': "Data Classification and Handling Policy (PDPB Ready)", 'title_ar': "سياسة تصنيف ومعالجة البيانات (جاهزة لـ PDPB)",
                 'details': [
-                    { en: "Classification Tiers", ar: "مستويات التصنيف", req_en: "Data must be tagged: Public, Internal, Confidential, and Highly Sensitive.", req_ar: "يجب تصنيف البيانات: عامة، داخلية، سرية، وشديدة الحساسية." },
+                    { en: "Classification Tiers", ar: "مستويات التصنيف", req_en: "Data must be tagged: Public, Internal, Confidential, and Sensitive PII.", req_ar: "يجب تصنيف البيانات: عامة، داخلية، سرية، وبيانات تحديد الهوية الشخصية الحساسة." },
                     { en: "Handling of PII", ar: "معالجة البيانات الشخصية", req_en: "PII must be encrypted both in transit and at rest.", req_ar: "يجب تشفير بيانات تحديد الهوية الشخصية (PII) أثناء النقل والتخزين." },
-                    { en: "Access Control", ar: "التحكم بالوصول", req_en: "Access to Sensitive data requires explicit management approval.", req_ar: "يتطلب الوصول إلى البيانات السرية/الحساسة موافقة إدارية صريحة." },
+                    { en: "Access Control", ar: "التحكم بالوصول", req_en: "Access to Sensitive PII requires explicit management approval.", req_ar: "يتطلب الوصول إلى بيانات تحديد الهوية الشخصية الحساسة موافقة إدارية صريحة." },
                     { en: "Disposal Method", ar: "طريقة الإتلاف", req_en: "Secure digital shredding or physical destruction is required.", req_ar: "يتطلب إتلاف رقمي آمن أو إتلاف مادي." }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: PDPL Article 10 (Lawfulness of Processing) and ISO 27001 Annex A.8.2.", 'ref_ar': "أفضل الممارسات: المادة ١٠ من PDPL (مشروعية المعالجة) و الملحق A.8.2 من ISO 27001.",
+                    'ref_en': "Best Practice: PDPB 2023 compliance guidelines and academic data standards.", 'ref_ar': "أفضل الممارسات: إرشادات الامتثال لقانون حماية البيانات الشخصية (PDPB 2023) ومعايير البيانات الأكاديمية.",
                     'example_en': "Pattern Suggestion: Implement Data Loss Prevention (DLP) tools to enforce classification and prevent unauthorized PII movement.", 'example_ar': "نمط مقترح: تطبيق أدوات منع فقدان البيانات (DLP) لفرض التصنيف ومنع نقل بيانات تحديد الهوية الشخصية غير المصرح به."
                 },
-                'context_q': "Do you handle special category data (health, religious affiliation, biometrics)?", 'context_a_default': "Yes, limited health data (employee sick leave)."
+                'context_q': "Do you handle student academic records (which are considered sensitive PII)?", 'context_a_default': "Yes, we handle academic records (transcripts, results)."
             },
             'Retention': {
                 'title_en': "Data Retention and Destruction Policy", 'title_ar': "سياسة الاحتفاظ بالبيانات وإتلافها",
                 'details': [
-                    { en: "Financial Data", ar: "البيانات المالية", req_en: "Minimum 7 years retention as required by FTA/ZATCA.", req_ar: "الاحتفاظ بها لمدة ٧ سنوات كحد أدنى وفقاً لمتطلبات هيئة الزكاة والضريبة والجمارك." },
-                    { en: "Customer PII", ar: "بيانات تحديد الهوية الشخصية للعملاء", req_en: "Destroyed immediately upon withdrawal of consent, unless legally required otherwise.", req_ar: "تُتلف فور سحب الموافقة، ما لم تتطلب القوانين خلاف ذلك." },
+                    { en: "Financial Data", ar: "البيانات المالية", req_en: "Minimum 6 years retention as required by FBR/SECP.", req_ar: "الاحتفاظ بها لمدة ٦ سنوات كحد أدنى وفقاً لمتطلبات FBR/SECP." },
+                    { en: "Customer PII (Student Data)", ar: "بيانات تحديد الهوية الشخصية (بيانات الطلاب)", req_en: "Retain student PII for 5 years after graduation, then archive/destroy.", req_ar: "الاحتفاظ ببيانات الطلاب لمدة ٥ سنوات بعد التخرج، ثم الأرشفة/الإتلاف." },
                     { en: "Employment Records", ar: "سجلات التوظيف", req_en: "Retained for 5 years after the employee's final separation date.", req_ar: "يتم الاحتفاظ بها لمدة ٥ سنوات بعد تاريخ انتهاء خدمة الموظف." }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: PDPL, Financial Reporting Standards, and Local Labour Law.", 'ref_ar': "أفضل الممارسات: قانون حماية البيانات الشخصية، ومعايير التقارير المالية، وقانون العمل المحلي.",
+                    'ref_en': "Best Practice: FBR Income Tax Ordinance and Provincial Labour Law (Sindh/Punjab).", 'ref_ar': "أفضل الممارسات: قانون ضريبة الدخل لهيئة الإيرادات الفيدرالية (FBR) وقانون العمل الإقليمي (السند/البنجاب).",
                     'example_en': "Pattern Suggestion: Implement automated system deletion rules for non-essential data exceeding the 5-year limit.", 'example_ar': "نمط مقترح: تطبيق قواعد حذف النظام المؤتمتة للبيانات غير الضرورية التي تتجاوز الحد الأقصى البالغ ٥ سنوات."
                 },
-                'context_q': "What is the primary legal obligation that dictates your longest data retention period?", 'context_a_default': "Tax compliance (7 years)."
+                'context_q': "What is the primary legal obligation that dictates your longest data retention period?", 'context_a_default': "FBR Tax compliance (6 years)."
+            },
+            'AUP': { 
+                'title_en': "Acceptable Use Policy (AUP) for IT Resources", 'title_ar': "سياسة الاستخدام المقبول لموارد تقنية المعلومات",
+                'details': [
+                    { en: "Primary Use", ar: "الاستخدام الأساسي", req_en: "University IT resources are strictly for work and academic purposes.", req_ar: "موارد تقنية المعلومات مخصصة حصرياً لأغراض العمل والأغراض الأكاديمية." },
+                    { en: "Prohibited Acts", ar: "الأفعال المحظورة", req_en: "Prohibits illegal downloads (copyright) and unauthorized system scanning.", req_ar: "يحظر التنزيلات غير القانونية (حقوق النشر) والمسح غير المصرح به للأنظمة." },
+                    { en: "Account Sharing", ar: "مشاركة الحساب", req_en: "Sharing of any user credentials or privileged access is strictly prohibited.", req_ar: "يُحظر تماماً مشاركة أي بيانات اعتماد للمستخدم أو الوصول المتميز." }
+                ],
+                'background': {
+                    'ref_en': "Best Practice: Prevention of Electronic Crimes Act (PECA) and HEC regulations.", 'ref_ar': "أفضل الممارسات: قانون منع الجرائم الإلكترونية (PECA) ولوائح هيئة التعليم العالي (HEC).",
+                    'example_en': "Pattern Suggestion: Require all new staff and students to sign the AUP acknowledgment form during the onboarding process.", 'example_ar': "نمط مقترح: مطالبة جميع الموظفين والطلاب الجدد بتوقيع نموذج الإقرار بالسياسة (AUP) أثناء عملية التوظيف."
+                },
+                'context_q': "What is the consequence for a first-time violation of the AUP (e.g., Warning/Suspension)?", 'context_a_default': "Verbal warning and account suspension for 24 hours."
+            },
+            'ChangeMgt': { 
+                'title_en': "IT Change Management Policy", 'title_ar': "سياسة إدارة التغييرات في تقنية المعلومات",
+                'details': [
+                    { en: "Change Request", ar: "طلب التغيير", req_en: "All changes to production environments must be logged and documented in the official system.", req_ar: "يجب تسجيل جميع التغييرات في بيئات الإنتاج وتوثيقها في النظام الرسمي." },
+                    { en: "Testing & Staging", ar: "الاختبار والبيئة المرحلية", req_en: "Changes must be successfully tested in a staging environment before approval.", req_ar: "يجب اختبار التغييرات بنجاح في بيئة اختبار مرحلية قبل الموافقة عليها." },
+                    { en: "Rollback Plan", ar: "خطة التراجع", req_en: "A documented back-out/rollback plan is mandatory for every scheduled change.", req_ar: "خطة التراجع/الإلغاء الموثقة إلزامية لكل تغيير مجدول." }
+                ],
+                'background': {
+                    'ref_en': "Best Practice: ITIL Service Operation processes and HEC MIS Governance Framework.", 'ref_ar': "أفضل الممارسات: عمليات تشغيل الخدمة ITIL وإطار حوكمة نظم المعلومات الإدارية (MIS) لهيئة التعليم العالي.",
+                    'example_en': "Pattern Suggestion: Implement an automated code deployment pipeline (CI/CD) that requires two separate approvals before pushing to live.", 'example_ar': "نمط مقترح: تطبيق خط أنابيب نشر الكود المؤتمت (CI/CD) الذي يتطلب موافقتين منفصلتين قبل النشر المباشر."
+                },
+                'context_q': "What is the minimum lead time (in hours) required for a non-critical change request?", 'context_a_default': "48 hours lead time."
             },
             'Leave': {
                 'title_en': "Annual Leave and Attendance Policy", 'title_ar': "سياسة الإجازات السنوية والحضور",
                 'details': [
-                    { en: "Annual Leave Minimum", ar: "الحد الأدنى للإجازة السنوية", req_en: "Minimum 21 days paid leave (standard GCC law) for staff with >1 year service.", req_ar: "حد أدنى ٢١ يوماً إجازة مدفوعة الأجر (قانون العمل الخليجي القياسي) للموظفين الذين أكملوا سنة." },
-                    { en: "Sick Leave Reporting", ar: "الإبلاغ عن الإجازات المرضية", req_en: "Employees must report illness within 24 hours and provide a medical certificate after 3 days.", req_ar: "يجب على الموظفين الإبلاغ عن المرض خلال ٢٤ ساعة وتقديم شهادة طبية بعد ٣ أيام." },
-                    { en: "Hajj/Umrah Leave", ar: "إجازة الحج/العمرة", req_en: "Mandatory one-time 10-15 day paid leave for eligible Muslim staff.", req_ar: "إجازة مدفوعة الأجر إلزامية لمرة واحدة تتراوح بين ١٠-١٥ يوماً للموظفين المسلمين المؤهلين." }
+                    { en: "Annual Leave Minimum", ar: "الحد الأدنى للإجازة السنوية", req_en: "Minimum 14 days paid leave (Provincial Labour Law) for staff with >1 year service.", req_ar: "حد أدنى ١٤ يوماً إجازة مدفوعة الأجر (قانون العمل الإقليمي) للموظفين الذين أكملوا سنة." },
+                    { en: "Sick Leave Reporting", ar: "الإبلاغ عن الإجازات المرضية", req_en: "Employees must report illness within 24 hours and provide a medical certificate after 2 days.", req_ar: "يجب على الموظفين الإبلاغ عن المرض خلال ٢٤ ساعة وتقديم شهادة طبية بعد يومين." },
+                    { en: "Maternity Leave", ar: "إجازة الأمومة", req_en: "Mandatory paid maternity leave as per Provincial Labour Law.", req_ar: "إجازة أمومة مدفوعة الأجر إلزامية وفقاً لقانون العمل الإقليمي." }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: GCC Unified Labour Law and local Ministry of Human Resources regulations.", 'ref_ar': "أفضل الممارسات: قانون العمل الخليجي الموحد وأنظمة وزارة الموارد البشرية المحلية.",
+                    'ref_en': "Best Practice: Provincial Labour Laws (Sindh/Punjab) and HEC HR guidelines.", 'ref_ar': "أفضل الممارسات: قوانين العمل الإقليمية (السند/البنجاب) وإرشادات الموارد البشرية لهيئة التعليم العالي (HEC).",
                     'example_en': "Pattern Suggestion: Use an HRIS system to track all leave accrual and usage to ensure compliance and avoid disputes.", 'example_ar': "نمط مقترح: استخدام نظام معلومات الموارد البشرية لتتبع جميع استحقاقات واستخدام الإجازات لضمان الامتثال وتجنب النزاعات."
                 },
                 'context_q': "What is your company's policy on carrying over unused annual leave (max days)?", 'context_a_default': "Max 5 days can be carried over to the next year."
@@ -389,40 +459,40 @@
                 'title_en': "Employee Code of Conduct Policy", 'title_ar': "سياسة مدونة سلوك الموظفين",
                 'details': [
                     { en: "Confidentiality", ar: "السرية", req_en: "Employees must sign a non-disclosure agreement (NDA) and protect all company IP/Trade Secrets.", req_ar: "يجب على الموظفين توقيع اتفاقية عدم إفصاح وحماية جميع الملكية الفكرية/الأسرار التجارية للشركة." },
-                    { en: "Social Media", ar: "وسائل التواصل الاجتماعي", req_en: "Personal social media use must not compromise the company's reputation or disclose sensitive information.", req_ar: "يجب ألا يضر الاستخدام الشخصي لوسائل التواصل الاجتماعي بسمعة الشركة أو يكشف عن معلومات حساسة." },
-                    { en: "Gifts/Bribes", ar: "الهدايا/الرشاوى", req_en: "Employees must report any gift over a specified local value to HR.", req_ar: "يجب على الموظفين إبلاغ الموارد البشرية عن أي هدية تتجاوز قيمة محلية محددة." }
+                    { en: "Social Media", ar: "وسائل التواصل الاجتماعي", req_en: "Personal social media use must not compromise the university's reputation or disclose sensitive information.", req_ar: "يجب ألا يضر الاستخدام الشخصي لوسائل التواصل الاجتماعي بسمعة الجامعة أو يكشف عن معلومات حساسة." },
+                    { en: "Gifts/Bribes", ar: "الهدايا/الرشاوى", req_en: "Employees must adhere to anti-bribery policies enforced by the university.", req_ar: "يجب على الموظفين الالتزام بسياسات مكافحة الرشوة المطبقة من قبل الجامعة." }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: Anti-Corruption Laws and Corporate Governance Standards (C-level).", 'ref_ar': "أفضل الممارسات: قوانين مكافحة الفساد ومعايير حوكمة الشركات (للمستوى التنفيذي).",
+                    'ref_en': "Best Practice: Pakistan Prevention of Corruption Act and HEC Ethics Guidelines.", 'ref_ar': "أفضل الممارسات: قانون مكافحة الفساد الباكستاني وإرشادات الأخلاقيات لهيئة التعليم العالي (HEC).",
                     'example_en': "Pattern Suggestion: Provide mandatory ethics training focused on local cultural expectations regarding conflicts of interest.", 'example_ar': "نمط مقترح: توفير تدريب إلزامي على الأخلاقيات يركز على التوقعات الثقافية المحلية فيما يتعلق بتضارب المصالح."
                 },
-                'context_q': "What is the monetary limit for gifts that an employee can accept without reporting to HR?", 'context_a_default': "SAR 500 (or equivalent)."
+                'context_q': "What is the monetary limit for gifts that an employee can accept without reporting to HR?", 'context_a_default': "PKR 5,000 (or equivalent)."
             },
             'FinanceDoc': {
                 'title_en': "Financial Record Keeping and Audit Policy", 'title_ar': "سياسة حفظ السجلات المالية والتدقيق",
                 'details': [
-                    { en: "IFRS Standard", ar: "معيار التقارير المالية الدولي", req_en: "Financial statements must comply with IFRS for SMEs or Full IFRS.", req_ar: "يجب أن تتوافق البيانات المالية مع IFRS للمنشآت الصغيرة والمتوسطة أو IFRS الكامل." },
-                    { en: "Retention Period", ar: "فترة الاحتفاظ", req_en: "All accounting records must be kept for a minimum of 7 years.", req_ar: "يجب الاحتفاظ بجميع السجلات المحاسبية لمدة ٧ سنوات كحد أدنى." },
+                    { en: "IFRS Standard", ar: "معيار التقارير المالية الدولي", req_en: "Financial statements must comply with IFRS for SMEs or Full IFRS (SECP Req).", req_ar: "يجب أن تتوافق البيانات المالية مع IFRS للمنشآت الصغيرة والمتوسطة أو IFRS الكامل (متطلبات SECP)." },
+                    { en: "Retention Period", ar: "فترة الاحتفاظ", req_en: "All accounting records must be kept for a minimum of 6 years (FBR Req).", req_ar: "يجب الاحتفاظ بجميع السجلات المحاسبية لمدة ٦ سنوات كحد أدنى (متطلبات FBR)." },
                     { en: "Accrual Basis", ar: "أساس الاستحقاق", req_en: "Accounting records must be maintained using the accrual basis method.", req_ar: "يجب الاحتفاظ بالسجلات المحاسبية باستخدام طريقة أساس الاستحقاق." }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: International Financial Reporting Standards (IFRS) and ZATCA regulations.", 'ref_ar': "أفضل الممارسات: معايير التقارير المالية الدولية (IFRS) وأنظمة هيئة الزكاة والضريبة والجمارك.",
-                    'example_en': "Pattern Suggestion: Automate VAT filing and reconciliation using certified accounting software to minimize manual errors.", 'example_ar': "نمط مقترح: أتمتة إيداع ضريبة القيمة المضافة والمطابقة باستخدام برامج محاسبية معتمدة لتقليل الأخطاء اليدوية."
+                    'ref_en': "Best Practice: International Financial Reporting Standards (IFRS) and FBR Income Tax Ordinance.", 'ref_ar': "أفضل الممارسات: معايير التقارير المالية الدولية (IFRS) وقانون ضريبة الدخل لهيئة الإيرادات الفيدرالية (FBR).",
+                    'example_en': "Pattern Suggestion: Automate Sales Tax filing and reconciliation using certified accounting software.", 'example_ar': "نمط مقترح: أتمتة إيداع ضريبة المبيعات والمطابقة باستخدام برامج محاسبية معتمدة."
                 },
-                'context_q': "What is the end date of your company's fiscal year (e.g., Dec 31st)?", 'context_a_default': "December 31st."
+                'context_q': "What is the end date of your company's fiscal year (e.g., June 30th)?", 'context_a_default': "June 30th."
             },
             'AML': {
                 'title_en': "AML/CFT Reporting and Due Diligence Policy", 'title_ar': "سياسة مكافحة غسل الأموال وتمويل الإرهاب والتبليغ",
                 'details': [
-                    { en: "Customer Due Diligence (CDD)", ar: "العناية الواجبة للعملاء", req_en: "Mandatory verification of customer identity and beneficial ownership for all transactions over local threshold.", req_ar: "التحقق الإلزامي من هوية العميل والملكية المستفيدة لجميع المعاملات التي تتجاوز الحد المحلي." },
-                    { en: "Suspicious Activity Report (SAR)", ar: "تقرير النشاط المشبوه", req_en: "Any suspicious transaction must be reported to the Financial Intelligence Unit (FIU) immediately.", req_ar: "يجب إبلاغ وحدة المعلومات المالية فوراً عن أي معاملة مشبوهة." },
+                    { en: "Customer Due Diligence (CDD)", ar: "العناية الواجبة للعملاء", req_en: "Mandatory verification of identity and beneficial ownership for all transactions over local threshold.", req_ar: "التحقق الإلزامي من الهوية والملكية المستفيدة لجميع المعاملات التي تتجاوز الحد المحلي." },
+                    { en: "Suspicious Activity Report (SAR)", ar: "تقرير النشاط المشبوه", req_en: "Any suspicious transaction must be reported to the Financial Monitoring Unit (FMU) immediately.", req_ar: "يجب إبلاغ وحدة المراقبة المالية (FMU) فوراً عن أي معاملة مشبوهة." },
                     { en: "Training", ar: "التدريب", req_en: "Mandatory annual training for all employees handling customer funds or transactions.", req_ar: "تدريب سنوي إلزامي لجميع الموظفين الذين يتعاملون مع أموال العملاء أو معاملاتهم." }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: FATF recommendations and local Financial Intelligence Unit (FIU) mandates.", 'ref_ar': "أفضل الممارسات: توصيات FATF وتفويضات وحدة المعلومات المالية المحلية.",
+                    'ref_en': "Best Practice: FATF recommendations and local Financial Monitoring Unit (FMU) mandates.", 'ref_ar': "أفضل الممارسات: توصيات FATF وتفويضات وحدة المراقبة المالية (FMU) المحلية.",
                     'example_en': "Pattern Suggestion: Implement automated transaction monitoring software that flags large or unusual transfers.", 'example_ar': "نمط مقترح: تطبيق برامج آلية لمراقبة المعاملات التي تحدد التحويلات الكبيرة أو غير العادية."
                 },
-                'context_q': "What is your primary system for submitting Suspicious Activity Reports (e.g., goAML)?", 'context_a_default': "goAML portal."
+                'context_q': "What is your primary system for submitting Suspicious Activity Reports (e.g., FMU Portal)?", 'context_a_default': "FMU Portal."
             }
         };
 
@@ -656,13 +726,13 @@
                 const proFormaIntro = `
                     <p class="section-title" style="border: none; margin-top: 5px;">OFFICIAL POLICY DOCUMENT PRO-FORMA</p>
                     <div class="background-section">
-                        <p style="font-weight: bold; color: #007bff;">TO: ${country} Regulatory Authority (NCA/PDPL) & Internal Stakeholders</p>
-                        <p class="arabic-text" style="font-weight: bold; color: #007bff;">إلى: الهيئة التنظيمية في ${country} (NCA/PDPL) والجهات الداخلية المعنية</p>
+                        <p style="font-weight: bold; color: #007bff;">TO: ${country} Regulatory Authority (PTA/HEC/FBR) & Internal Stakeholders</p>
+                        <p class="arabic-text" style="font-weight: bold; color: #007bff;">إلى: الهيئة التنظيمية في ${country} (PTA/HEC/FBR) والجهات الداخلية المعنية</p>
                         <hr style="margin: 10px 0;">
                         <p><strong>SUBJECT:</strong> Implementation Plan for **${content.title_en}**</p>
                         <p class="arabic-text"><strong>الموضوع:</strong> خطة التنفيذ لـ **${content.title_ar}**</p>
-                        <p style="margin-top: 10px; font-size: 0.9em; font-style: italic;">This document certifies our commitment as a small business to implementing and enforcing the mandatory controls outlined herein to achieve compliance and mitigate organizational risk. The policy is structured to meet **${country}**'s regulatory requirements as determined by the Himyati platform.</p>
-                        <p class="arabic-text" style="font-size: 0.9em; font-style: italic;">تشهد هذه الوثيقة بالتزام شركتنا الصغيرة بتطبيق وتنفيذ الضوابط الإلزامية لتحقيق الامتثال وتخفيف المخاطر التشغيلية. تم إعداد هذه السياسة لتلبية المتطلبات التنظيمية في **${country}**، بالاعتماد على منصة حمايتي.</p>
+                        <p style="margin-top: 10px; font-size: 0.9em; font-style: italic;">This document certifies our commitment as an organization to implementing and enforcing the mandatory controls outlined herein to achieve compliance and mitigate organizational risk. The policy is structured to meet **${country}**'s regulatory requirements as determined by the Himyati platform.</p>
+                        <p class="arabic-text" style="font-size: 0.9em; font-style: italic;">تشهد هذه الوثيقة بالتزام منظمتنا بتطبيق وتنفيذ الضوابط الإلزامية لتحقيق الامتثال وتخفيف المخاطر التشغيلية. تم إعداد هذه السياسة لتلبية المتطلبات التنظيمية في **${country}**، بالاعتماد على منصة حمايتي.</p>
                     </div>
                 `;
 
@@ -703,10 +773,10 @@
                 }
             }
 
-            // Set the initial active tab and load the framework for the default country (KSA)
+            // Set the initial active tab and load the framework for the default country (PK)
             const defaultTab = 'it-cyber';
-            // Set the initial country selection (KSA is default in HTML)
-            document.getElementById('country-select').value = 'KSA';
+            // Set the initial country selection (PK is default in HTML)
+            document.getElementById('country-select').value = 'PK';
             
             // Initial call to set the default tab and load controls/buttons
             setActiveTab(defaultTab);
