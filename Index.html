@@ -82,10 +82,36 @@
              text-align: right;
              direction: rtl;
         }
-        .arabic-note {
-             /* Ensures proper separation of English and Arabic lines */
-            display: block;
-            margin-top: 5px;
+        .section-title {
+            color: #004085; 
+            font-size: 1.2em; 
+            margin-top: 30px; 
+            border-bottom: 1px solid #004085;
+            padding-bottom: 5px;
+            font-weight: bold;
+        }
+        .signature-block {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px dashed #ccc;
+            display: flex;
+            justify-content: space-between;
+        }
+        .signature-col {
+            width: 48%;
+            text-align: center;
+            padding: 10px;
+        }
+        .signature-line {
+            height: 1px;
+            background-color: #333;
+            margin: 15px 0;
+        }
+        .background-section {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -179,7 +205,13 @@
                     { en: "Complexity", ar: "التعقيد", req_en: "Must include Uppercase, Lowercase, Number, and Symbol.", req_ar: "يجب أن تتضمن أحرفاً كبيرة وصغيرة وأرقاماً ورموزاً." },
                     { en: "Rotation", ar: "التغيير الدوري", req_en: "Required every 90 days for privileged accounts.", req_ar: "مطلوب كل ٩٠ يوماً للحسابات ذات الامتيازات." },
                     { en: "Storage", ar: "التخزين", req_en: "Passwords must be secured using a dedicated manager.", req_ar: "يجب تأمين كلمات المرور باستخدام برنامج إدارة مخصص." }
-                ]
+                ],
+                'background': {
+                    'ref_en': "Best Practice: NIST SP 800-63B guidelines and NCA Essential Controls.",
+                    'ref_ar': "أفضل الممارسات: إرشادات NIST SP 800-63B والضوابط الأساسية للهيئة الوطنية للأمن السيبراني (NCA).",
+                    'example_en': "Pattern Suggestion: Use a dedicated password vault (e.g., local server or cloud solution) to store hashed credentials.",
+                    'example_ar': "نمط مقترح: استخدام قبو كلمات مرور مخصص (مثل خادم محلي أو حل سحابي) لتخزين بيانات الاعتماد المجزأة."
+                }
             },
             'MFA': {
                 'title_en': "Multi-Factor Authentication (MFA) Enforcement Policy",
@@ -189,10 +221,16 @@
                     { en: "Exemptions", ar: "الاستثناءات", req_en: "No exceptions are permitted for administrative or executive accounts.", req_ar: "لا يُسمح بأي استثناءات للحسابات الإدارية أو التنفيذية." },
                     { en: "Method", ar: "طريقة التطبيق", req_en: "Must use authenticator apps or hardware tokens.", req_ar: "يجب استخدام تطبيقات المصادقة أو رموز الأجهزة الصلبة." },
                     { en: "Non-Compliance", ar: "عدم الامتثال", req_en: "Access will be blocked for non-compliant users after 7 days of notification.", req_ar: "سيتم حظر الوصول للمستخدمين غير الملتزمين بعد ٧ أيام من الإخطار." }
-                ]
+                ],
+                'background': {
+                    'ref_en': "Best Practice: CIS Controls, Mitigates 80% of targeted attacks (Microsoft).",
+                    'ref_ar': "أفضل الممارسات: ضوابط CIS، تخفف ٨٠٪ من الهجمات المستهدفة (مايكروسوفت).",
+                    'example_en': "Pattern Suggestion: Prioritize implementation on administrative, financial, and external (VPN) access points immediately.",
+                    'example_ar': "نمط مقترح: إعطاء الأولوية للتطبيق الفوري على نقاط الوصول الإدارية والمالية والخارجية (VPN)."
+                }
             },
             
-            // --- NEW: INCIDENT RESPONSE POLICY ---
+            // --- INCIDENT RESPONSE POLICY ---
             'Incident': {
                 'title_en': "Mandatory Incident Response & Notification Policy",
                 'title_ar': "سياسة الاستجابة للحوادث والإبلاغ الإلزامي",
@@ -201,10 +239,16 @@
                     { en: "Response Team", ar: "فريق الاستجابة", req_en: "A designated Incident Response Team (IRT) must be established and trained.", req_ar: "يجب إنشاء وتدريب فريق استجابة للحوادث (IRT) مُعيّن." },
                     { en: "Communication Plan", ar: "خطة الاتصال", req_en: "Pre-approved templates for notifying affected data subjects.", req_ar: "وجود نماذج اتصال مُعتمدة مسبقاً لإخطار أصحاب البيانات المتأثرين." },
                     { en: "Forensics", ar: "التحقيق الجنائي", req_en: "Preservation of all logs and evidence for forensic analysis.", req_ar: "الاحتفاظ بجميع السجلات والأدلة للتحليل الجنائي." }
-                ]
+                ],
+                'background': {
+                    'ref_en': "Best Practice: NCA NCA-IRP and NCA-ECC-1:2018 (Incident Response and Recovery).",
+                    'ref_ar': "أفضل الممارسات: NCA NCA-IRP و NCA-ECC-1:2018 (الاستجابة والتعافي من الحوادث).",
+                    'example_en': "Pattern Suggestion: Conduct a mandatory annual simulated breach test (tabletop exercise) with management.",
+                    'example_ar': "نمط مقترح: إجراء اختبار اختراق سنوي إلزامي محاكاة (تمرين على الطاولة) بمشاركة الإدارة العليا."
+                }
             },
             
-            // --- NEW: DATA CLASSIFICATION POLICY ---
+            // --- DATA CLASSIFICATION POLICY ---
             'DataClass': {
                 'title_en': "Data Classification and Handling Policy (PDPL Ready)",
                 'title_ar': "سياسة تصنيف ومعالجة البيانات (جاهزة لـ PDPL)",
@@ -213,15 +257,20 @@
                     { en: "Handling of PII", ar: "معالجة البيانات الشخصية", req_en: "PII must be encrypted both in transit and at rest.", req_ar: "يجب تشفير بيانات تحديد الهوية الشخصية (PII) أثناء النقل والتخزين." },
                     { en: "Access Control", ar: "التحكم بالوصول", req_en: "Access to Sensitive data requires explicit management approval.", req_ar: "يتطلب الوصول إلى البيانات السرية/الحساسة موافقة إدارية صريحة." },
                     { en: "Disposal Method", ar: "طريقة الإتلاف", req_en: "Secure digital shredding or physical destruction is required.", req_ar: "يتطلب إتلاف رقمي آمن أو إتلاف مادي." }
-                ]
+                ],
+                'background': {
+                    'ref_en': "Best Practice: PDPL Article 10 (Lawfulness of Processing) and ISO 27001 Annex A.8.2.",
+                    'ref_ar': "أفضل الممارسات: المادة ١٠ من PDPL (مشروعية المعالجة) و الملحق A.8.2 من ISO 27001.",
+                    'example_en': "Pattern Suggestion: Implement Data Loss Prevention (DLP) tools to enforce classification and prevent unauthorized PII movement.",
+                    'example_ar': "نمط مقترح: تطبيق أدوات منع فقدان البيانات (DLP) لفرض التصنيف ومنع نقل بيانات تحديد الهوية الشخصية غير المصرح به."
+                }
             }
         };
 
         // --- 3. UI UPDATE FUNCTIONS (TIER-LESS) ---
 
-        // The function updateTierBenefits is simplified as Tiers are removed
         function updateTierBenefits() {
-            // Note is now fixed as 'FREE POLICY GENERATION'
+            // No tiers, so this is just a placeholder to run calculateScore
             calculateScore(); 
         }
 
@@ -262,7 +311,6 @@
 
         function calculateScore() {
             const country = document.getElementById('country-select').value;
-            // Logic is now universal (always FREE mode)
             let totalRiskWeight = 0;
             let achievedComplianceWeight = 0;
             let nonCompliantControls = [];
@@ -358,6 +406,7 @@
                 
                 // 1. Build the professional table structure
                 let tableHTML = `
+                    <p class="section-title">2.1 Core Requirements | المتطلبات الأساسية</p>
                     <table class="policy-table">
                         <thead>
                             <tr>
@@ -386,29 +435,58 @@
                     </table>
                 `;
                 
-                // 2. Assemble the final professional document preview
+                // 2. Build the Background and Reference Section
+                const backgroundHTML = `
+                    <p class="section-title">3. Background, References, and Suggested Patterns | الخلفية والمراجع والأنماط المقترحة</p>
+                    <div class="background-section">
+                        <p><strong>Reference / Mandate:</strong> ${content.background.ref_en}</p>
+                        <p class="arabic-text"><strong>المرجع / المندوب:</strong> ${content.background.ref_ar}</p>
+                        <hr style="margin: 10px 0; border-top: 1px dotted #ccc;">
+                        <p><strong>Suggested Implementation Pattern:</strong> ${content.background.example_en}</p>
+                        <p class="arabic-text"><strong>نمط التنفيذ المقترح:</strong> ${content.background.example_ar}</p>
+                    </div>
+                `;
+
+                // 3. Build the Signature Block
+                const signatureHTML = `
+                    <p class="section-title">4. Approvals and Authorization | الموافقات والتفويض</p>
+                    <div class="signature-block">
+                        <div class="signature-col arabic-text">
+                            <strong>Approved By (الموافقة من):</strong><br>
+                            Chief Executive Officer (الرئيس التنفيذي)
+                            <div class="signature-line"></div>
+                            Date (التاريخ):
+                        </div>
+                        <div class="signature-col arabic-text">
+                            <strong>Endorsed By (اعتماد):</strong><br>
+                            Head of Information Security (رئيس أمن المعلومات)
+                            <div class="signature-line"></div>
+                            Date (التاريخ):
+                        </div>
+                    </div>
+                `;
+
+
+                // 4. Assemble the final professional document preview
                 policyStatus.style.color = 'green';
                 policyStatus.innerHTML = `
                     ✅ **SUCCESS!** Your Custom **${policyType} Enforcement Policy** is ready for **${country}**.<br>
                     <a href="#" style="color: #007bff; font-weight: bold;">[DOWNLOAD: Policy-${policyType}-v1.0-AR.pdf - SIMULATED PDF]</a>
                 `;
 
-                // The policy content uses the 'arabic-text' class to enforce font and RTL
+                // Main Policy Content
                 policyPreview.innerHTML = `
                     <div class="policy-header">
                         ${content.title_en} | <span class="arabic-text">${content.title_ar}</span>
                         <div style="font-size: 0.5em; color: #6c757d; margin-top: 5px;" class="arabic-text">إصدار الوثيقة ١.٠ - معتمد من الذكاء الاصطناعي لحمايتي - ${new Date().toLocaleDateString('ar-EG')}</div>
                     </div>
-                    
-                    <p><strong>1. Objective (الهدف):</strong></p>
-                    <p style="margin-left: 20px; font-style: italic;">This policy outlines the mandatory technical and governance controls required to secure organizational data in compliance with the relevant ${country} mandates. <span class="arabic-text" style="display: block;">تحدد هذه السياسة الضوابط الإلزامية المطلوبة لتأمين بيانات المنظمة وفقاً لمتطلبات ${country}.</span></p>
 
-                    <p style="font-weight: bold; margin-top: 20px;">2. Core Requirements (المتطلبات الأساسية):</p>
-                    ${tableHTML}
+                    <p class="section-title">1. Policy Statement & Scope | بيان ونطاق السياسة</p>
+                    <p style="margin-left: 20px; font-style: italic;">This policy outlines the mandatory technical and governance controls required to secure organizational data in compliance with the relevant ${country} mandates. <span class="arabic-text" style="display: block;">تحدد هذه السياسة الضوابط الإلزامية المطلوبة لتأمين بيانات المنظمة وفقاً لمتطلبات ${country}.</span></p>
                     
-                    <div style="margin-top: 30px; text-align: right; font-style: italic; color: #004085; border-top: 1px solid #ddd; padding-top: 10px;" class="arabic-text">
-                        *هذه الوثيقة جاهزة للتوقيع والاعتماد الرسمي من إدارة شركتكم.*
-                    </div>
+                    ${tableHTML}
+                    ${backgroundHTML}
+                    ${signatureHTML}
                 `;
                 policyPreview.style.display = 'block';
 
