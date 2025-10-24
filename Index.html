@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Himyati Compliance Score Engine - FREE Policy Testing MVP</title>
+    <title>Himyati Compliance Score Engine - FREE Policy Testing MVP (ARABIC)</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         /* BASE STYLES - ENGLISH/GENERAL */
@@ -36,7 +36,7 @@
         #risk-status { font-weight: bold; font-size: 1.2em; }
         #current-score { font-size: 3em !important; font-weight: 800 !important; display: block; }
         
-        /* PROFESSIONAL POLICY STYLES - URDU ENHANCEMENT */
+        /* PROFESSIONAL POLICY STYLES - ARABIC ENHANCEMENT */
         .policy-output { 
             background-color: #ffffff; 
             border: 2px solid #007bff; 
@@ -55,9 +55,9 @@
             padding-bottom: 15px;
             font-weight: 800;
         }
-        .urdu-text { 
-            /* Targeting Urdu content for Right-to-Left (RTL) alignment */
-            font-family: 'Tahoma', 'Arial', 'Jameel Noori Nastaleeq', sans-serif; 
+        .arabic-text { 
+            /* Targeting Arabic content for Right-to-Left (RTL) alignment */
+            font-family: 'Tajawal', 'Droid Arabic Naskh', 'Tahoma', sans-serif; 
             direction: rtl; 
             text-align: right; 
         }
@@ -78,9 +78,14 @@
              text-align: left;
              direction: ltr;
         }
-        .policy-table td:nth-child(2n) { /* Urdu Content */
+        .policy-table td:nth-child(2n) { /* Arabic Content */
              text-align: right;
              direction: rtl;
+        }
+        .arabic-note {
+             /* Ensures proper separation of English and Arabic lines */
+            display: block;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -168,53 +173,53 @@
         const POLICY_CONTENT = {
             'Password': {
                 'title_en': "Mandatory Password Policy",
-                'title_ur': "لازمی پاس ورڈ پالیسی",
+                'title_ar': "سياسة كلمات المرور الإلزامية",
                 'details': [
-                    { en: "Minimum Length", ur: "کم از کم لمبائی", req_en: "12 characters minimum (Recommended: 16)", req_ur: "کم از کم ١٢ حروف (تجویز کردہ: ١٦)" },
-                    { en: "Complexity", ur: "پیچیدگی", req_en: "Must include Uppercase, Lowercase, Number, and Symbol.", req_ur: "بڑے، چھوٹے حروف، نمبر اور علامت شامل ہونا ضروری ہے۔" },
-                    { en: "Rotation", ur: "گردش", req_en: "Required every 90 days for privileged accounts.", req_ur: "خصوصی اکاؤنٹس کے لیے ہر ٩٠ دن میں تبدیلی ضروری ہے۔" },
-                    { en: "Storage", ur: "ذخیرہ", req_en: "Passwords must be secured using a dedicated manager.", req_ur: "پاس ورڈز کو ایک مخصوص مینیجر کے ذریعے محفوظ کیا جانا چاہیے۔" }
+                    { en: "Minimum Length", ar: "الحد الأدنى للطول", req_en: "12 characters minimum (Recommended: 16)", req_ar: "١٢ حرف كحد أدنى (الموصى به: ١٦)" },
+                    { en: "Complexity", ar: "التعقيد", req_en: "Must include Uppercase, Lowercase, Number, and Symbol.", req_ar: "يجب أن تتضمن أحرفاً كبيرة وصغيرة وأرقاماً ورموزاً." },
+                    { en: "Rotation", ar: "التغيير الدوري", req_en: "Required every 90 days for privileged accounts.", req_ar: "مطلوب كل ٩٠ يوماً للحسابات ذات الامتيازات." },
+                    { en: "Storage", ar: "التخزين", req_en: "Passwords must be secured using a dedicated manager.", req_ar: "يجب تأمين كلمات المرور باستخدام برنامج إدارة مخصص." }
                 ]
             },
             'MFA': {
                 'title_en': "Multi-Factor Authentication (MFA) Enforcement Policy",
-                'title_ur': "متعدد عنصر کی توثیق (MFA) نافذ کرنے کی پالیسی",
+                'title_ar': "سياسة تطبيق المصادقة متعددة العوامل",
                 'details': [
-                    { en: "Scope", ur: "دائرہ کار", req_en: "Mandatory for all access to cloud services (Email, VPN, Accounting).", req_ur: "تمام کلاؤڈ سروسز تک رسائی کے لیے لازمی (ای میل، وی پی این، اکاؤنٹنگ)۔" },
-                    { en: "Exemptions", ur: "استثنیات", req_en: "No exceptions are permitted for administrative or executive accounts.", req_ur: "انتظامی یا ایگزیکٹو اکاؤنٹس کے لیے کوئی استثناء نہیں ہے۔" },
-                    { en: "Method", ur: "طریقہ", req_en: "Must use authenticator apps or hardware tokens.", req_ur: "تصدیق کنندہ ایپس یا ہارڈ ویئر ٹوکن استعمال کرنا ضروری ہے۔" },
-                    { en: "Non-Compliance", ur: "عدم تعمیل", req_en: "Access will be blocked for non-compliant users after 7 days of notification.", req_ur: "اطلاع کے ٧ دن بعد عدم تعمیل کرنے والے صارفین کے لیے رسائی بلاک کر دی جائے گی۔" }
+                    { en: "Scope", ar: "النطاق", req_en: "Mandatory for all access to cloud services (Email, VPN, Accounting).", req_ar: "إلزامي لجميع الوصول عن بعد والخدمات السحابية (البريد الإلكتروني، الحسابات)." },
+                    { en: "Exemptions", ar: "الاستثناءات", req_en: "No exceptions are permitted for administrative or executive accounts.", req_ar: "لا يُسمح بأي استثناءات للحسابات الإدارية أو التنفيذية." },
+                    { en: "Method", ar: "طريقة التطبيق", req_en: "Must use authenticator apps or hardware tokens.", req_ar: "يجب استخدام تطبيقات المصادقة أو رموز الأجهزة الصلبة." },
+                    { en: "Non-Compliance", ar: "عدم الامتثال", req_en: "Access will be blocked for non-compliant users after 7 days of notification.", req_ar: "سيتم حظر الوصول للمستخدمين غير الملتزمين بعد ٧ أيام من الإخطار." }
                 ]
             },
             
             // --- NEW: INCIDENT RESPONSE POLICY ---
             'Incident': {
                 'title_en': "Mandatory Incident Response & Notification Policy",
-                'title_ur': "لازمی واقعہ ریسپانس اور اطلاع کی پالیسی",
+                'title_ar': "سياسة الاستجابة للحوادث والإبلاغ الإلزامي",
                 'details': [
-                    { en: "Notification Timeline", ur: "اطلاع کی ٹائم لائن", req_en: "Report breaches to the regulator within 72 hours of discovery.", req_ur: "دریافت کے ٧٢ گھنٹوں کے اندر ریگولیٹر کو خلاف ورزیوں کی اطلاع دیں۔" },
-                    { en: "Response Team", ur: "ریسپانس ٹیم", req_en: "A designated Incident Response Team (IRT) must be established and trained.", req_ur: "ایک نامزد واقعہ ریسپانس ٹیم (IRT) قائم اور تربیت یافتہ ہونی چاہیے۔" },
-                    { en: "Communication Plan", ur: "کمیونیکیشن پلان", req_en: "Pre-approved templates for notifying affected data subjects.", req_ur: "متاثرہ ڈیٹا مضامین کو مطلع کرنے کے لیے پہلے سے منظور شدہ ٹیمپلیٹس۔" },
-                    { en: "Forensics", ur: "فرانزک", req_en: "Preservation of all logs and evidence for forensic analysis.", req_ur: "فرانزک تجزیہ کے لیے تمام لاگز اور ثبوتوں کا تحفظ۔" }
+                    { en: "Notification Timeline", ar: "إطار الإبلاغ الزمني", req_en: "Report breaches to the regulator within 72 hours of discovery.", req_ar: "الإبلاغ عن الاختراقات للجهة الرقابية خلال ٧٢ ساعة من الاكتشاف." },
+                    { en: "Response Team", ar: "فريق الاستجابة", req_en: "A designated Incident Response Team (IRT) must be established and trained.", req_ar: "يجب إنشاء وتدريب فريق استجابة للحوادث (IRT) مُعيّن." },
+                    { en: "Communication Plan", ar: "خطة الاتصال", req_en: "Pre-approved templates for notifying affected data subjects.", req_ar: "وجود نماذج اتصال مُعتمدة مسبقاً لإخطار أصحاب البيانات المتأثرين." },
+                    { en: "Forensics", ar: "التحقيق الجنائي", req_en: "Preservation of all logs and evidence for forensic analysis.", req_ar: "الاحتفاظ بجميع السجلات والأدلة للتحليل الجنائي." }
                 ]
             },
             
             // --- NEW: DATA CLASSIFICATION POLICY ---
             'DataClass': {
                 'title_en': "Data Classification and Handling Policy (PDPL Ready)",
-                'title_ur': "ڈیٹا کلاسیفیکیشن اور ہینڈلنگ پالیسی (PDPL کے لیے تیار)",
+                'title_ar': "سياسة تصنيف ومعالجة البيانات (جاهزة لـ PDPL)",
                 'details': [
-                    { en: "Classification Tiers", ur: "کلاسیفیکیشن کی سطحیں", req_en: "Data must be tagged: Public, Internal, Confidential, and Highly Sensitive.", req_ur: "ڈیٹا کو ٹیگ کیا جانا چاہیے: عوامی، اندرونی، رازدارانہ، اور انتہائی حساس۔" },
-                    { en: "Handling of PII", ur: "PII کی ہینڈلنگ", req_en: "PII must be encrypted both in transit and at rest.", req_ur: "PII کو ٹرانزٹ اور آرام دونوں حالتوں میں انکرپٹ کیا جانا چاہیے۔" },
-                    { en: "Access Control", ur: "رسائی کا کنٹرول", req_en: "Access to Sensitive data requires explicit management approval.", req_ur: "حساس ڈیٹا تک رسائی کے لیے واضح انتظامی منظوری ضروری ہے۔" },
-                    { en: "Disposal Method", ur: "ضائع کرنے کا طریقہ", req_en: "Secure digital shredding or physical destruction is required.", req_ur: "محفوظ ڈیجیٹل ٹکڑے یا جسمانی تباہی کی ضرورت ہے۔" }
+                    { en: "Classification Tiers", ar: "مستويات التصنيف", req_en: "Data must be tagged: Public, Internal, Confidential, and Highly Sensitive.", req_ar: "يجب تصنيف البيانات: عامة، داخلية، سرية، وشديدة الحساسية." },
+                    { en: "Handling of PII", ar: "معالجة البيانات الشخصية", req_en: "PII must be encrypted both in transit and at rest.", req_ar: "يجب تشفير بيانات تحديد الهوية الشخصية (PII) أثناء النقل والتخزين." },
+                    { en: "Access Control", ar: "التحكم بالوصول", req_en: "Access to Sensitive data requires explicit management approval.", req_ar: "يتطلب الوصول إلى البيانات السرية/الحساسة موافقة إدارية صريحة." },
+                    { en: "Disposal Method", ar: "طريقة الإتلاف", req_en: "Secure digital shredding or physical destruction is required.", req_ar: "يتطلب إتلاف رقمي آمن أو إتلاف مادي." }
                 ]
             }
         };
 
         // --- 3. UI UPDATE FUNCTIONS (TIER-LESS) ---
 
-        // The function updateTierBenefits is simplified to just update the note and calculate score
+        // The function updateTierBenefits is simplified as Tiers are removed
         function updateTierBenefits() {
             // Note is now fixed as 'FREE POLICY GENERATION'
             calculateScore(); 
@@ -257,7 +262,7 @@
 
         function calculateScore() {
             const country = document.getElementById('country-select').value;
-            // Removed tier calculation, logic is now universal (always FREE mode)
+            // Logic is now universal (always FREE mode)
             let totalRiskWeight = 0;
             let achievedComplianceWeight = 0;
             let nonCompliantControls = [];
@@ -357,9 +362,9 @@
                         <thead>
                             <tr>
                                 <th style="width: 20%;">Control Aspect (EN)</th>
-                                <th class="urdu-text" style="width: 25%;">متعلقہ پہلو (UR)</th>
+                                <th class="arabic-text" style="width: 25%;">المتعلق بالتحكم (AR)</th>
                                 <th style="width: 30%;">Requirement (EN)</th>
-                                <th class="urdu-text">ضروری تقاضا (UR)</th>
+                                <th class="arabic-text">المتطلب الأساسي (AR)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -369,9 +374,9 @@
                     tableHTML += `
                         <tr>
                             <td>${detail.en}</td>
-                            <td class="urdu-text">${detail.ur}</td>
+                            <td class="arabic-text">${detail.ar}</td>
                             <td>${detail.req_en}</td>
-                            <td class="urdu-text">${detail.req_ur}</td>
+                            <td class="arabic-text">${detail.req_ar}</td>
                         </tr>
                     `;
                 });
@@ -385,24 +390,24 @@
                 policyStatus.style.color = 'green';
                 policyStatus.innerHTML = `
                     ✅ **SUCCESS!** Your Custom **${policyType} Enforcement Policy** is ready for **${country}**.<br>
-                    <a href="#" style="color: #007bff; font-weight: bold;">[DOWNLOAD: Policy-${policyType}-v1.0-UR.pdf - SIMULATED PDF]</a>
+                    <a href="#" style="color: #007bff; font-weight: bold;">[DOWNLOAD: Policy-${policyType}-v1.0-AR.pdf - SIMULATED PDF]</a>
                 `;
 
-                // The policy content uses the 'urdu-text' class to enforce font and RTL
+                // The policy content uses the 'arabic-text' class to enforce font and RTL
                 policyPreview.innerHTML = `
                     <div class="policy-header">
-                        ${content.title_en} | <span class="urdu-text">${content.title_ur}</span>
-                        <div style="font-size: 0.5em; color: #6c757d; margin-top: 5px;" class="urdu-text">دستاویز کا ورژن ١.٠ - حمايتي مصنوعی ذہانت سے منظور شدہ - ${new Date().toLocaleDateString('ur-PK')}</div>
+                        ${content.title_en} | <span class="arabic-text">${content.title_ar}</span>
+                        <div style="font-size: 0.5em; color: #6c757d; margin-top: 5px;" class="arabic-text">إصدار الوثيقة ١.٠ - معتمد من الذكاء الاصطناعي لحمايتي - ${new Date().toLocaleDateString('ar-EG')}</div>
                     </div>
                     
-                    <p><strong>1. Objective (مقصد):</strong></p>
-                    <p style="margin-left: 20px; font-style: italic;">This policy outlines the mandatory technical and governance controls required to secure organizational data in compliance with the relevant ${country} mandates. <span class="urdu-text" style="display: block;">یہ پالیسی متعلقہ ${country} کے مینڈیٹ کی تعمیل میں تنظیمی ڈیٹا کو محفوظ بنانے کے لیے درکار لازمی تکنیکی اور گورننس کنٹرولز کا خاکہ پیش کرتی ہے۔</span></p>
+                    <p><strong>1. Objective (الهدف):</strong></p>
+                    <p style="margin-left: 20px; font-style: italic;">This policy outlines the mandatory technical and governance controls required to secure organizational data in compliance with the relevant ${country} mandates. <span class="arabic-text" style="display: block;">تحدد هذه السياسة الضوابط الإلزامية المطلوبة لتأمين بيانات المنظمة وفقاً لمتطلبات ${country}.</span></p>
 
-                    <p style="font-weight: bold; margin-top: 20px;">2. Core Requirements (بنیادی تقاضے):</p>
+                    <p style="font-weight: bold; margin-top: 20px;">2. Core Requirements (المتطلبات الأساسية):</p>
                     ${tableHTML}
                     
-                    <div style="margin-top: 30px; text-align: right; font-style: italic; color: #004085; border-top: 1px solid #ddd; padding-top: 10px;" class="urdu-text">
-                        *یہ دستاویز آپ کی کمپنی کی انتظامیہ کی طرف سے باضابطہ دستخط اور منظوری کے لیے تیار ہے۔*
+                    <div style="margin-top: 30px; text-align: right; font-style: italic; color: #004085; border-top: 1px solid #ddd; padding-top: 10px;" class="arabic-text">
+                        *هذه الوثيقة جاهزة للتوقيع والاعتماد الرسمي من إدارة شركتكم.*
                     </div>
                 `;
                 policyPreview.style.display = 'block';
