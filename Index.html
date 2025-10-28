@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Himyati Policy Generation Wizard (Pakistan Edition)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         /* CORE UI/UX STYLES */
         body { 
@@ -47,11 +47,12 @@
             font-size: 1.5em;
         }
         
-        /* RTL TEXT STYLES (Urdu/Arabic) */
+        /* RTL TEXT STYLES (Urdu/Arabic) - FONT FIX IS HERE */
         .rtl-text { 
-            font-family: 'Jameel Noori Nastaleeq', 'Tajawal', 'Droid Arabic Naskh', 'Tahoma', sans-serif; 
+            font-family: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Tajawal', 'Droid Arabic Naskh', 'Tahoma', sans-serif; 
             direction: rtl; 
             text-align: right; 
+            font-size: 1.05em; /* Increased size for Nastaliq readability */
         }
 
         /* POLICY OUTPUT STYLES */
@@ -142,7 +143,7 @@
         .policy-table td:nth-child(2n) { 
              text-align: right;
              direction: rtl;
-             font-family: 'Tajawal', sans-serif; 
+             font-family: 'Noto Nastaliq Urdu', 'Tajawal', sans-serif; /* Ensure RTL font is used in tables */
         }
     </style>
 </head>
@@ -275,28 +276,29 @@
             'Issue Date': 'تاریخ اجراء',
             'Policy Statement': 'تحدد هذه السياسة الضوابط الإلزامية المطلوبة لتأمين بيانات المنظمة وفقاً لمتطلبات',
             'Policy Statement_ur': 'یہ پالیسی متعلقہ قومی مینڈیٹس کی تعمیل میں تنظیمی ڈیٹا کو محفوظ بنانے کے لیے ضروری تکنیکی اور گورننس کنٹرولز کا خاکہ پیش کرتی ہے۔',
+        };
 
-            // Dynamic Content mapping for PK (Policy details and backgrounds)
-            'ref_ar_PK': 'أفضل الممارسات: إرشادات NIST SP 800-63B والإطار الوطني للأمن السيبراني (باكستان).',
-            'ref_ur_PK': 'بہترین طریقہ کار: NIST SP 800-63B گائیڈ لائنز اور قومی سائبر سیکیورٹی فریم ورک (پاکستان)۔',
-            'example_ar_PK': 'نمط مقترح: استخدام قبو كلمات مرور مخصص (مثل خادم محلي أو حل سحابي) لتخزين بيانات الاعتماد المجزأة).',
-            'example_ur_PK': 'تجویز کردہ طریقہ کار: ہیش شدہ اسناد کو ذخیرہ کرنے کے لیے ایک مخصوص پاس ورڈ والٹ (جیسے مقامی سرور یا کلاؤڈ سلوشن) استعمال کریں۔',
-
-            // Generic Arabic fallback (used for GCC only)
-            'ref_ar_GCC': 'أفضل الممارسات:',
-            'example_ar_GCC': 'نمط مقترح:',
+        const ARABIC_TEXT = {
+            'Policy Statement & Scope': 'بيان ونطاق السياسة',
+            'Core Requirements': 'المتطلبات الأساسية',
+            'Background, References, and Suggested Patterns': 'الخلفية والمراجع والأنماط المقترحة',
+            'Approvals and Authorization': 'الموافقات والتفويض',
+            'Control Aspect': 'المتعلق بالتحكم',
+            'Basic Requirement': 'المتطلب الأساسي',
+            'Approved By': 'الموافقة من',
+            'Endorsed By': 'اعتماد',
+            'Chief Executive Officer': 'الرئيس التنفيذي',
+            'Head of Information Security': 'رئيس أمن المعلومات',
+            'Date': 'التاريخ',
+            'Intro Certificate': 'تشهد هذه الوثيقة بالتزام منظمتنا بتطبيق وتنفيذ الضوابط الإلزامية لتحقيق الامتثال وتخفيف المخاطر التشغيلية. تم إعداد هذه السياسة لتلبية المتطلبات التنظيمية في',
+            'Intro Struct': '، بالاعتماد على منصة حمايتي.',
             'Policy Statement_ar': 'تحدد هذه السياسة الضوابط الإلزامية المطلوبة لتأمين بيانات المنظمة وفقاً لمتطلبات',
         };
 
-        function getRTLText(key, country, type) {
-            if (country === 'PK') {
-                if (type === 'ref') return URDU_TEXT['ref_ur_PK'];
-                if (type === 'example') return URDU_TEXT['example_ur_PK'];
-                if (key === 'Policy Statement') return URDU_TEXT['Policy Statement_ur'];
-                return URDU_TEXT[key] || key;
-            } else {
-                return type === 'ref' ? URDU_TEXT['ref_ar_GCC'] : URDU_TEXT[key] || key;
-            }
+        function getLocalizedText(key, langCode) {
+            if (langCode === 'ur') return URDU_TEXT[key] || key;
+            if (langCode === 'ar') return ARABIC_TEXT[key] || key;
+            return key; // Default to English key if not found
         }
 
         const POLICY_MAPPING = {
@@ -331,7 +333,7 @@
             { id: 'financial', title_en: 'Financial & Tax Policies', title_ur: 'مالیاتی اور ٹیکس پالیسیاں', policies: POLICY_MAPPING['financial'] }
         ];
 
-        // Policy content mapping (using the previous extensive object, omitted here for brevity but assumed present)
+        // Policy content mapping (Arabic translations are professional versions for GCC)
         const POLICY_CONTENT = {
             'Password': {
                 'title_en': "Mandatory Password Policy", 
@@ -344,11 +346,11 @@
                     { en: "Storage", ar_content: "التخزين", ur_content: "ذخیرہ اندوزی", req_en: "Passwords must be secured using a dedicated manager.", req_ar: "يجب تأمين كلمات المرور باستخدام برنامج إدارة مخصص.", req_ur: "پاس ورڈز کو ایک مخصوص مینیجر کے ذریعے محفوظ کیا جانا چاہیے۔" },
                 ],
                 'background': {
-                    'ref_en': "Best Practice: NIST SP 800-63B guidelines and National Cyber Security Framework (PK).", 
-                    'ref_ar': "أفضل الممارسات: إرشادات NIST SP 800-63B والإطار الوطني للأمن السيبراني (باكستان).", 
+                    'ref_en': "Best Practice: NIST SP 800-63B guidelines and National Cyber Security Framework (PK/GCC).", 
+                    'ref_ar': "أفضل الممارسات: إرشادات NIST SP 800-63B والضوابط الأساسية للأمن السيبراني.", 
                     'ref_ur': "بہترین طریقہ کار: NIST SP 800-63B گائیڈ لائنز اور قومی سائبر سیکیورٹی فریم ورک (پاکستان)۔",
                     'example_en': "Pattern Suggestion: Use a dedicated password vault (e.g., local server or cloud solution) to store hashed credentials.", 
-                    'example_ar': "نمط مقترح: استخدام قبو كلمات مرور مخصص (مثل خادم محلي أو حل سحابي) لتخزين بيانات الاعتماد المجزأة).",
+                    'example_ar': "نمط مقترح: استخدام قبو كلمات مرور مخصص (مثل خادم محلي أو حل سحابي) لتخزين بيانات الاعتماد المجزأة.",
                     'example_ur': "تجویز کردہ طریقہ کار: ہیش شدہ اسناد کو ذخیرہ کرنے کے لیے ایک مخصوص پاس ورڈ والٹ (جیسے مقامی سرور یا کلاؤڈ سلوشن) استعمال کریں۔"
                 },
                 'context_q': "What is the maximum number of password reuse attempts allowed in your system?", 'context_a_default': "Maximum 5 reuse attempts."
@@ -364,8 +366,8 @@
                     { en: "Non-Compliance", ar_content: "عدم الامتثال", ur_content: "عدم تعمیل", req_en: "Access will be blocked for non-compliant users after 7 days of notification.", req_ar: "سيتم حظر الوصول للمستخدمين غير الملتزمين بعد ٧ أيام من الإخطار.", req_ur: "نوٹیفکیشن کے ٧ دن بعد عدم تعمیل کرنے والے صارفین کی رسائی روک دی جائے گی۔" }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: PTA guidelines and Pakistan CERT recommendations.", 
-                    'ref_ar': "أفضل الممارسات: إرشادات هيئة تنظيم الاتصالات (PTA) وتوصيات فريق الاستجابة لحوادث الحاسوب الباكستاني (CERT).", 
+                    'ref_en': "Best Practice: PTA guidelines and Pakistan CERT recommendations/GCC Regulatory Frameworks.", 
+                    'ref_ar': "أفضل الممارسات: إرشادات هيئة تنظيم الاتصالات (PTA) وتوصيات فريق الاستجابة لحوادث الحاسوب الباكستاني (CERT)/أطر عمل دول مجلس التعاون الخليجي التنظيمية.", 
                     'ref_ur': "بہترین طریقہ کار: پی ٹی اے گائیڈ لائنز اور پاکستان CERT سفارشات۔",
                     'example_en': "Pattern Suggestion: Prioritize implementation on administrative, financial, and external (VPN) access points immediately.", 
                     'example_ar': "نمط مقترح: إعطاء الأولوية للتطبيق الفوري على نقاط الوصول الإدارية والمالية والخارجية (VPN).",
@@ -403,7 +405,7 @@
                 ],
                 'background': {
                     'ref_en': "Best Practice: OWASP Secure Coding Practices and MUET Jamshoro MIS Department standards.", 
-                    'ref_ar': "أفضل الممارسات: ممارسات البرمجة الآمنة لـ OWASP ومعايير قسم نظم المعلومات الإدارية في جامعة MUET جامشورو.", 
+                    'ref_ar': "أفضل الممارسات: ممارسات البرمجة الآمنة لـ OWASP ومعايير قسم نظم المعلومات الإدارية في الجامعة.", 
                     'ref_ur': "بہترین طریقہ کار: اوواسپی کی محفوظ کوڈنگ پریکٹسز اور MUET جامشورو MIS ڈیپارٹمنٹ کے معیارات۔",
                     'example_en': "Pattern Suggestion: Implement a robust input validation library and use prepared statements for all database queries.", 
                     'example_ar': "نمط مقترح: تطبيق مكتبة قوية للتحقق من المدخلات واستخدام عبارات مُعدَّة مسبقاً لجميع استفسارات قاعدة البيانات.",
@@ -422,8 +424,8 @@
                     { en: "Forensics", ar_content: "التحقيق الجنائي", ur_content: "فرانزکس", req_en: "Preservation of all logs and evidence for forensic analysis.", req_ar: "الاحتفاظ بجميع السجلات والأدلة للتحقيق الجنائي.", req_ur: "فرانزک تجزیہ کے لیے تمام لاگز اور شواہد کو محفوظ رکھنا۔" }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: PDPB 2023 guidelines and CERT-PK response procedures.", 
-                    'ref_ar': "أفضل الممارسات: إرشادات قانون حماية البيانات الشخصية (PDPB 2023) وإجراءات الاستجابة لفريق CERT-PK.", 
+                    'ref_en': "Best Practice: PDPB 2023 guidelines and CERT-PK response procedures/GCC Data Law.", 
+                    'ref_ar': "أفضل الممارسات: إرشادات قانون حماية البيانات الشخصية لدول مجلس التعاون الخليجي (PDPL) وإجراءات الاستجابة للحوادث.", 
                     'ref_ur': "بہترین طریقہ کار: پی ڈی پی بی ٢٠٢٣ گائیڈ لائنز اور CERT-PK ریسپانس کے طریقہ کار۔",
                     'example_en': "Pattern Suggestion: Conduct a mandatory annual simulated breach test (tabletop exercise) with management.", 
                     'example_ar': "نمط مقترح: إجراء اختبار اختراق سنوي إلزامي محاكاة (تمرين على الطاولة) بمشاركة الإدارة العليا.",
@@ -433,7 +435,7 @@
             },
             'DataClass': {
                 'title_en': "Data Classification and Handling Policy (PDPB Ready)", 
-                'title_ar': "سياسة تصنيف ومعالجة البيانات (جاهزة لـ PDPB)", 
+                'title_ar': "سياسة تصنيف ومعالجة البيانات (جاهزة لـ PDPL)", 
                 'title_ur': "ڈیٹا کلاسیفیکیشن اور ہینڈلنگ پالیسی (PDPB کے لیے تیار)",
                 'details': [
                     { en: "Classification Tiers", ar_content: "مستويات التصنيف", ur_content: "کلاسیفیکیشن کے درجات", req_en: "Data must be tagged: Public, Internal, Confidential, and Sensitive PII.", req_ar: "يجب تصنيف البيانات: عامة، داخلية، سرية، وبيانات تحديد الهوية الشخصية الحساسة.", req_ur: "ڈیٹا کو ٹیگ کیا جانا چاہیے: عوامی، اندرونی، خفیہ، اور حساس PII۔" },
@@ -442,8 +444,8 @@
                     { en: "Disposal Method", ar_content: "طريقة الإتلاف", ur_content: "تصرف کا طریقہ", req_en: "Secure digital shredding or physical destruction is required.", req_ar: "يتطلب إتلاف رقمي آمن أو إتلاف مادي.", req_ur: "محفوظ ڈیجیٹل ٹکڑے ٹکڑے کرنا یا جسمانی تباہی ضروری ہے۔" }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: PDPB 2023 compliance guidelines and academic data standards.", 
-                    'ref_ar': "أفضل الممارسات: إرشادات الامتثال لقانون حماية البيانات الشخصية (PDPB 2023) ومعايير البيانات الأكاديمية.", 
+                    'ref_en': "Best Practice: PDPB 2023 compliance guidelines and academic data standards (GCC Data Law).", 
+                    'ref_ar': "أفضل الممارسات: إرشادات الامتثال لقانون حماية البيانات الشخصية (PDPL) لدول مجلس التعاون الخليجي ومعايير البيانات الأكاديمية.", 
                     'ref_ur': "بہترین طریقہ کار: پی ڈی پی بی ٢٠٢٣ تعمیل گائیڈ لائنز اور تعلیمی ڈیٹا کے معیارات۔",
                     'example_en': "Pattern Suggestion: Implement Data Loss Prevention (DLP) tools to enforce classification and prevent unauthorized PII movement.", 
                     'example_ar': "نمط مقترح: تطبيق أدوات منع فقدان البيانات (DLP) لفرض التصنيف ومنع نقل بيانات تحديد الهوية الشخصية غير المصرح به.",
@@ -456,16 +458,16 @@
                 'title_ar': "سياسة الاحتفاظ بالبيانات وإتلافها", 
                 'title_ur': "ڈیٹا ریٹینشن اور تباہی کی پالیسی",
                 'details': [
-                    { en: "Financial Data", ar_content: "البيانات المالية", ur_content: "مالیاتی ڈیٹا", req_en: "Minimum 6 years retention as required by FBR/SECP.", req_ar: "الاحتفاظ بها لمدة ٦ سنوات كحد أدنى وفقاً لمتطلبات FBR/SECP.", req_ur: "FBR/SECP کے تقاضے کے مطابق کم از کم ٦ سال تک برقرار رکھنا۔" },
+                    { en: "Financial Data", ar_content: "البيانات المالية", ur_content: "مالیاتی ڈیٹا", req_en: "Minimum 6 years retention as required by FBR/SECP (or GCC Tax Authority).", req_ar: "الاحتفاظ بها لمدة ٧ سنوات كحد أدنى وفقاً لمتطلبات هيئة الضرائب المحلية (٧ سنوات في دول مجلس التعاون الخليجي).", req_ur: "FBR/SECP کے تقاضے کے مطابق کم از کم ٦ سال تک برقرار رکھنا۔" },
                     { en: "Customer PII (Student Data)", ar_content: "بيانات تحديد الهوية الشخصية (بيانات الطلاب)", ur_content: "کسٹمر PII (طالب علم کا ڈیٹا)", req_en: "Retain student PII for 5 years after graduation, then archive/destroy.", req_ar: "الاحتفاظ ببيانات الطلاب لمدة ٥ سنوات بعد التخرج، ثم الأرشفة/الإتلاف.", req_ur: "طالب علم PII کو گریجویشن کے بعد ٥ سال تک برقرار رکھیں، پھر محفوظ کریں/تباہ کریں۔" },
                     { en: "Employment Records", ar_content: "سجلات التوظيف", ur_content: "ملازمت کے ریکارڈ", req_en: "Retained for 5 years after the employee's final separation date.", req_ar: "يتم الاحتفاظ بها لمدة ٥ سنوات بعد تاريخ انتهاء خدمة الموظف.", req_ur: "ملازم کی حتمی علیحدگی کی تاریخ کے بعد ٥ سال تک برقرار رکھا جائے۔" }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: FBR Income Tax Ordinance and Provincial Labour Law (Sindh/Punjab).", 
-                    'ref_ar': "أفضل الممارسات: قانون ضريبة الدخل لهيئة الإيرادات الفيدرالية (FBR) وقانون العمل الإقليمي (السند/البنجاب).", 
+                    'ref_en': "Best Practice: FBR Income Tax Ordinance and Provincial Labour Law (Sindh/Punjab) / GCC Tax and Labour Laws.", 
+                    'ref_ar': "أفضل الممارسات: قانون العمل والضرائب المحلي (المملكة العربية السعودية/الإمارات العربية المتحدة/البحرين/قطر).", 
                     'ref_ur': "بہترین طریقہ کار: FBR انکم ٹیکس آرڈیننس اور صوبائی لیبر قانون (سندھ/پنجاب)۔",
-                    'example_en': "Pattern Suggestion: Implement automated system deletion rules for non-essential data exceeding the 5-year limit.", 
-                    'example_ar': "نمط مقترح: تطبيق قواعد حذف النظام المؤتمتة للبيانات غير الضرورية التي تتجاوز الحد الأقصى البالغ ٥ سنوات.",
+                    'example_en': "Pattern Suggestion: Implement automated system deletion rules for non-essential data exceeding the maximum limit.", 
+                    'example_ar': "نمط مقترح: تطبيق قواعد حذف النظام المؤتمتة للبيانات غير الضرورية التي تتجاوز الحد الأقصى.",
                     'example_ur': "تجویز کردہ طریقہ کار: ٥ سال کی حد سے تجاوز کرنے والے غیر ضروری ڈیٹا کے لیے خودکار سسٹم حذف کرنے کے قواعد نافذ کریں۔"
                 },
                 'context_q': "What is the primary legal obligation that dictates your longest data retention period?", 'context_a_default': "FBR Tax compliance (6 years)."
@@ -480,8 +482,8 @@
                     { en: "Account Sharing", ar_content: "مشاركة الحساب", ur_content: "اکاؤنٹ کا اشتراک", req_en: "Sharing of any user credentials or privileged access is strictly prohibited.", req_ar: "يُحظر تماماً مشاركة أي بيانات اعتماد للمستخدم أو الوصول المتميز.", req_ur: "کسی بھی صارف کی اسناد یا خصوصی رسائی کا اشتراک سختی سے ممنوع ہے۔" }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: Prevention of Electronic Crimes Act (PECA) and HEC regulations.", 
-                    'ref_ar': "أفضل الممارسات: قانون منع الجرائم الإلكترونية (PECA) ولوائح هيئة التعليم العالي (HEC).", 
+                    'ref_en': "Best Practice: Prevention of Electronic Crimes Act (PECA) and HEC regulations / GCC Cyber Law.", 
+                    'ref_ar': "أفضل الممارسات: قانون مكافحة الجرائم الإلكترونية المحلي (PECA) أو قانون مكافحة الجرائم السيبرانية الخليجي.", 
                     'ref_ur': "بہترین طریقہ کار: الیکٹرانک جرائم کی روک تھام کا ایکٹ (PECA) اور HEC کے ضوابط۔",
                     'example_en': "Pattern Suggestion: Require all new staff and students to sign the AUP acknowledgment form during the onboarding process.", 
                     'example_ar': "نمط مقترح: مطالبة جميع الموظفين والطلاب الجدد بتوقيع نموذج الإقرار بالسياسة (AUP) أثناء عملية التوظيف.",
@@ -499,8 +501,8 @@
                     { en: "Rollback Plan", ar_content: "خطة التراجع", ur_content: "رول بیک منصوبہ", req_en: "A documented back-out/rollback plan is mandatory for every scheduled change.", req_ar: "خطة التراجع/الإلغاء الموثقة إلزامية لكل تغيير مجدول.", req_ur: "ہر شیڈول تبدیلی کے لیے ایک دستاویزی بیک آؤٹ/رول بیک منصوبہ لازمی ہے۔" }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: ITIL Service Operation processes and HEC MIS Governance Framework.", 
-                    'ref_ar': "أفضل الممارسات: عمليات تشغيل الخدمة ITIL وإطار حوكمة نظم المعلومات الإدارية (MIS) لهيئة التعليم العالي.", 
+                    'ref_en': "Best Practice: ITIL Service Operation processes and HEC MIS Governance Framework / GCC Governance.", 
+                    'ref_ar': "أفضل الممارسات: عمليات تشغيل الخدمة ITIL وأطر حوكمة تكنولوجيا المعلومات الخليجية.", 
                     'ref_ur': "بہترین طریقہ کار: آئی ٹی آئی ایل سروس آپریشن کے عمل اور ایچ ای سی ایم آئی ایس گورننس فریم ورک۔",
                     'example_en': "Pattern Suggestion: Implement an automated code deployment pipeline (CI/CD) that requires two separate approvals before pushing to live.", 
                     'example_ar': "نمط مقترح: تطبيق خط أنابيب نشر الكود المؤتمت (CI/CD) الذي يتطلب موافقتين منفصلتين قبل النشر المباشر.",
@@ -513,13 +515,13 @@
                 'title_ar': "سياسة الإجازات السنوية والحضور", 
                 'title_ur': "سالانہ چھٹی اور حاضری پالیسی",
                 'details': [
-                    { en: "Annual Leave Minimum", ar_content: "الحد الأدنى للإجازة السنوية", ur_content: "سالانہ چھٹی کی کم از کم حد", req_en: "Minimum 14 days paid leave (Provincial Labour Law) for staff with >1 year service.", req_ar: "حد أدنى ١٤ يوماً إجازة مدفوعة الأجر (قانون العمل الإقليمي) للموظفين الذين أكملوا سنة.", req_ur: "١ سال سے زیادہ سروس والے عملے کے لیے کم از کم ١٤ دن کی تنخواہ دار چھٹی (صوبائی لیبر قانون)۔" },
+                    { en: "Annual Leave Minimum", ar_content: "الحد الأدنى للإجازة السنوية", ur_content: "سالانہ چھٹی کی کم از کم حد", req_en: "Minimum 14 days paid leave (Provincial Labour Law) for staff with >1 year service.", req_ar: "حد أدنى ٢١ يوماً إجازة مدفوعة الأجر (قانون العمل الخليجي) للموظفين الذين أكملوا سنة.", req_ur: "١ سال سے زیادہ سروس والے عملے کے لیے کم از کم ١٤ دن کی تنخواہ دار چھٹی (صوبائی لیبر قانون)۔" },
                     { en: "Sick Leave Reporting", ar_content: "الإبلاغ عن الإجازات المرضية", ur_content: "بیماری کی چھٹی کی رپورٹنگ", req_en: "Employees must report illness within 24 hours and provide a medical certificate after 2 days.", req_ar: "يجب على الموظفين الإبلاغ عن المرض خلال ٢٤ ساعة وتقديم شهادة طبية بعد يومين.", req_ur: "ملازمین کو ٢٤ گھنٹوں کے اندر بیماری کی اطلاع دینی چاہیے اور ٢ دن کے بعد میڈیکل سرٹیفکیٹ فراہم کرنا چاہیے۔" },
-                    { en: "Maternity Leave", ar_content: "إجازة الأمومة", ur_content: "زچگی کی چھٹی", req_en: "Mandatory paid maternity leave as per Provincial Labour Law.", req_ar: "إجازة أمومة مدفوعة الأجر إلزامية وفقاً لقانون العمل الإقليمي.", req_ur: "صوبائی لیبر قانون کے مطابق لازمی تنخواہ دار زچگی کی چھٹی۔" }
+                    { en: "Maternity Leave", ar_content: "إجازة الأمومة", ur_content: "زچگی کی چھٹی", req_en: "Mandatory paid maternity leave as per Provincial Labour Law.", req_ar: "إجازة أمومة مدفوعة الأجر إلزامية وفقاً لقانون العمل المحلي.", req_ur: "صوبائی لیبر قانون کے مطابق لازمی تنخواہ دار زچگی کی چھٹی۔" }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: Provincial Labour Laws (Sindh/Punjab) and HEC HR guidelines.", 
-                    'ref_ar': "أفضل الممارسات: قوانين العمل الإقليمية (السند/البنجاب) وإرشادات الموارد البشرية لهيئة التعليم العالي (HEC).", 
+                    'ref_en': "Best Practice: Provincial Labour Laws (Sindh/Punjab) and HEC HR guidelines / GCC Labour Laws.", 
+                    'ref_ar': "أفضل الممارسات: قانون العمل الموحد لدول مجلس التعاون الخليجي وأنظمة الموارد البشرية المحلية.", 
                     'ref_ur': "بہترین طریقہ کار: صوبائی لیبر قوانین (سندھ/پنجاب) اور ایچ ای سی ایچ آر گائیڈ لائنز۔",
                     'example_en': "Pattern Suggestion: Use an HRIS system to track all leave accrual and usage to ensure compliance and avoid disputes.", 
                     'example_ar': "نمط مقترح: استخدام نظام معلومات الموارد البشرية لتتبع جميع استحقاقات واستخدام الإجازات لضمان الامتثال وتجنب النزاعات.",
@@ -537,8 +539,8 @@
                     { en: "Gifts/Bribes", ar_content: "الهدايا/الرشاوى", ur_content: "تحفے/رشوتیں", req_en: "Employees must adhere to anti-bribery policies enforced by the university.", req_ar: "يجب على الموظفين الالتزام بسياسات مكافحة الرشوة المطبقة من قبل الجامعة.", req_ur: "ملازمین کو یونیورسٹی کی طرف سے نافذ کردہ انسداد رشوت ستانی کی پالیسیوں پر عمل کرنا چاہیے۔" }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: Pakistan Prevention of Corruption Act and HEC Ethics Guidelines.", 
-                    'ref_ar': "أفضل الممارسات: قانون مكافحة الفساد الباكستاني وإرشادات الأخلاقيات لهيئة التعليم العالي (HEC).", 
+                    'ref_en': "Best Practice: Pakistan Prevention of Corruption Act and HEC Ethics Guidelines / GCC Anti-Corruption Law.", 
+                    'ref_ar': "أفضل الممارسات: قوانين مكافحة الفساد المحلية لدول مجلس التعاون الخليجي وإرشادات السلوك المؤسسي.", 
                     'ref_ur': "بہترین طریقہ کار: پاکستان میں کرپشن کی روک تھام کا ایکٹ اور ایچ ای سی کے اخلاقی رہنما اصول۔",
                     'example_en': "Pattern Suggestion: Provide mandatory ethics training focused on local cultural expectations regarding conflicts of interest.", 
                     'example_ar': "نمط مقترح: توفير تدريب إلزامي على الأخلاقيات يركز على التوقعات الثقافية المحلية فيما يتعلق بتضارب المصالح.",
@@ -551,13 +553,13 @@
                 'title_ar': "سياسة حفظ السجلات المالية والتدقيق", 
                 'title_ur': "مالیاتی ریکارڈ رکھنے اور آڈٹ پالیسی",
                 'details': [
-                    { en: "IFRS Standard", ar_content: "معيار التقارير المالية الدولي", ur_content: "IFRS معیار", req_en: "Financial statements must comply with IFRS for SMEs or Full IFRS (SECP Req).", req_ar: "يجب أن تتوافق البيانات المالية مع IFRS للمنشآت الصغيرة والمتوسطة أو IFRS الكامل (متطلبات SECP).", req_ur: "مالیاتی بیانات کو IFRS for SMEs یا مکمل IFRS (SECP تقاضا) کی تعمیل کرنی چاہیے۔" },
-                    { en: "Retention Period", ar_content: "فترة الاحتفاظ", ur_content: "برقرار رکھنے کی مدت", req_en: "All accounting records must be kept for a minimum of 6 years (FBR Req).", req_ar: "يجب الاحتفاظ بجميع السجلات المحاسبية لمدة ٦ سنوات كحد أدنى (متطلبات FBR).", req_ur: "تمام اکاؤنٹنگ ریکارڈ کو کم از کم ٦ سال تک برقرار رکھا جانا چاہیے (FBR تقاضا)۔" },
+                    { en: "IFRS Standard", ar_content: "معيار التقارير المالية الدولي", ur_content: "IFRS معیار", req_en: "Financial statements must comply with IFRS for SMEs or Full IFRS (SECP Req).", req_ar: "يجب أن تتوافق البيانات المالية مع IFRS للمنشآت الصغيرة والمتوسطة أو IFRS الكامل (متطلبات SECP/GCC).", req_ur: "مالیاتی بیانات کو IFRS for SMEs یا مکمل IFRS (SECP تقاضا) کی تعمیل کرنی چاہیے۔" },
+                    { en: "Retention Period", ar_content: "فترة الاحتفاظ", ur_content: "برقرار رکھنے کی مدت", req_en: "All accounting records must be kept for a minimum of 6 years (FBR Req).", req_ar: "يجب الاحتفاظ بجميع السجلات المحاسبية لمدة ٧ سنوات كحد أدنى (متطلبات الضرائب الخليجية).", req_ur: "تمام اکاؤنٹنگ ریکارڈ کو کم از کم ٦ سال تک برقرار رکھا جانا چاہیے (FBR تقاضا)۔" },
                     { en: "Accrual Basis", ar_content: "أساس الاستحقاق", ur_content: "ایکرول بنیاد", req_en: "Accounting records must be maintained using the accrual basis method.", req_ar: "يجب الاحتفاظ بالسجلات المحاسبية باستخدام طريقة أساس الاستحقاق.", req_ur: "اکاؤنٹنگ ریکارڈز کو ایکرول کی بنیاد پر برقرار رکھا جانا چاہیے۔" }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: International Financial Reporting Standards (IFRS) and FBR Income Tax Ordinance.", 
-                    'ref_ar': "أفضل الممارسات: معايير التقارير المالية الدولية (IFRS) وقانون ضريبة الدخل لهيئة الإيرادات الفيدرالية (FBR).", 
+                    'ref_en': "Best Practice: International Financial Reporting Standards (IFRS) and FBR Income Tax Ordinance / GCC Tax Law.", 
+                    'ref_ar': "أفضل الممارسات: معايير التقارير المالية الدولية (IFRS) وقوانين الضرائب المحلية لدول مجلس التعاون الخليجي.", 
                     'ref_ur': "بہترین طریقہ کار: بین الاقوامی مالیاتی رپورٹنگ کے معیارات (IFRS) اور FBR انکم ٹیکس آرڈیننس۔",
                     'example_en': "Pattern Suggestion: Automate Sales Tax filing and reconciliation using certified accounting software.", 
                     'example_ar': "نمط مقترح: أتمتة إيداع ضريبة المبيعات والمطابقة باستخدام برامج محاسبية معتمدة.",
@@ -575,8 +577,8 @@
                     { en: "Training", ar_content: "التدريب", ur_content: "تربیت", req_en: "Mandatory annual training for all employees handling customer funds or transactions.", req_ar: "تدريب سنوي إلزامي لجميع الموظفين الذين يتعاملون مع أموال العملاء أو معاملاتهم.", req_ur: "کسٹمر فنڈز یا لین دین کو سنبھالنے والے تمام ملازمین کے لیے لازمی سالانہ تربیت۔" }
                 ],
                 'background': {
-                    'ref_en': "Best Practice: FATF recommendations and local Financial Monitoring Unit (FMU) mandates.", 
-                    'ref_ar': "أفضل الممارسات: توصيات FATF وتفويضات وحدة المراقبة المالية (FMU) المحلية.", 
+                    'ref_en': "Best Practice: FATF recommendations and local Financial Monitoring Unit (FMU) mandates (GCC FIU).", 
+                    'ref_ar': "أفضل الممارسات: توصيات FATF وتفويضات وحدة المراقبة المالية (FMU) المحلية لدول مجلس التعاون الخليجي.", 
                     'ref_ur': "بہترین طریقہ کار: ایف اے ٹی ایف کی سفارشات اور مقامی فنانشل مانیٹرنگ یونٹ (ایف ایم یو) کے مینڈیٹس۔",
                     'example_en': "Pattern Suggestion: Implement automated transaction monitoring software that flags large or unusual transfers.", 
                     'example_ar': "نمط مقترح: تطبيق برامج آلية لمراقبة المعاملات التي تحدد التحويلات الكبيرة أو غير العادية.",
@@ -608,8 +610,8 @@
             
             POLICY_CATEGORIES.forEach(category => {
                 const isPK = currentCountry === 'PK';
-                const langTitle = isPK ? category.title_ur : category.title_en;
-                
+                const langTitle = isPK ? category.title_ur : category.title_en; // Title stays English for GCC categories for clarity
+
                 let categoryHTML = `<h3 style="grid-column: 1 / -1; color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 5px; margin-top: 15px;">${langTitle}</h3>`;
                 
                 category.policies.forEach(policy => {
@@ -651,7 +653,7 @@
             const isPK = country === 'PK';
             const langCode = isPK ? 'ur' : 'ar';
             const langTitle = content['title_' + langCode];
-            const countryText = country === 'PK' ? 'Pakistan (PTA/HEC/FBR)' : country + ' (NCA/PDPL)';
+            const countryText = document.getElementById('country-select').options[document.getElementById('country-select').selectedIndex].text;
 
 
             // 1. Ask Contextual Question (SIMULATION via Prompt)
@@ -671,16 +673,20 @@
             // Simulated network delay using setTimeout (3 seconds)
             setTimeout(() => {
                 
+                // --- Language Selection Logic ---
+                const rtlClass = 'rtl-text';
+                const localizedText = (key) => isPK ? URDU_TEXT[key] : ARABIC_TEXT[key];
+                
                 // 2. Build the professional table structure
                 let tableHTML = `
-                    <p class="section-title">2.1 Core Requirements | ${isPK ? URDU_TEXT['Core Requirements'] : 'المتطلبات الأساسية'}</p>
+                    <p class="section-title">2.1 Core Requirements | ${localizedText('Core Requirements')}</p>
                     <table class="policy-table">
                         <thead>
                             <tr>
                                 <th style="width: 20%;">Control Aspect (EN)</th>
-                                <th class="rtl-text" style="width: 25%;">${isPK ? URDU_TEXT['Control Aspect'] : 'المتعلق بالتحكم'} (${langCode.toUpperCase()})</th>
+                                <th class="${rtlClass}" style="width: 25%;">${localizedText('Control Aspect')} (${langCode.toUpperCase()})</th>
                                 <th style="width: 30%;">Requirement (EN)</th>
-                                <th class="rtl-text">${isPK ? URDU_TEXT['Basic Requirement'] : 'المتطلب الأساسي'} (${langCode.toUpperCase()})</th>
+                                <th class="${rtlClass}">${localizedText('Basic Requirement')} (${langCode.toUpperCase()})</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -693,9 +699,9 @@
                     tableHTML += `
                         <tr>
                             <td>${detail.en}</td>
-                            <td class="rtl-text">${contentLang}</td>
+                            <td class="${rtlClass}">${contentLang}</td>
                             <td>${detail.req_en}</td>
-                            <td class="rtl-text">${reqLang}</td>
+                            <td class="${rtlClass}">${reqLang}</td>
                         </tr>
                     `;
                 });
@@ -706,49 +712,56 @@
                 `;
                 
                 // 3. Build the Background and Reference Section
+                const refLangContent = content.background['ref_' + langCode];
+                const exampleLangContent = content.background['example_' + langCode];
+
                 const backgroundHTML = `
-                    <p class="section-title">3. Background, References, and Suggested Patterns | ${isPK ? URDU_TEXT['Background, References, and Suggested Patterns'] : 'الخلفية والمراجع والأنماط المقترحة'}</p>
+                    <p class="section-title">3. Background, References, and Suggested Patterns | ${localizedText('Background, References, and Suggested Patterns')}</p>
                     <div class="background-section">
                         <p><strong>CONTEXTUAL INPUT:</strong> <span style="color: #dc3545; font-weight: bold;">${content.context_q}</span> ➡️ **Answer Used:** ${contextAnswer}</p>
                         <hr style="margin: 10px 0;">
                         <p><strong>Reference / Mandate:</strong> ${content.background.ref_en}</p>
-                        <p class="rtl-text"><strong>${isPK ? 'حوالہ / مینڈیٹ' : 'المرجع / المندوب'}:</strong> ${content.background['ref_' + langCode]}</p>
+                        <p class="${rtlClass}"><strong>${isPK ? 'حوالہ / مینڈیٹ' : 'المرجع / المندوب'}:</strong> ${refLangContent}</p>
                         <hr style="margin: 10px 0; border-top: 1px dotted #ccc;">
                         <p><strong>Suggested Implementation Pattern:</strong> ${content.background.example_en}</p>
-                        <p class="rtl-text"><strong>${isPK ? 'تجویز کردہ طریقہ کار' : 'نمط التنفيذ المقترح'}:</strong> ${content.background['example_' + langCode]}</p>
+                        <p class="${rtlClass}"><strong>${isPK ? 'تجویز کردہ طریقہ کار' : 'نمط التنفيذ المقترح'}:</strong> ${exampleLangContent}</p>
                     </div>
                 `;
 
                 // 4. Build the Signature Block
                 const signatureHTML = `
-                    <p class="section-title">4. Approvals and Authorization | ${isPK ? URDU_TEXT['Approvals and Authorization'] : 'الموافقات والتفويض'}</p>
+                    <p class="section-title">4. Approvals and Authorization | ${localizedText('Approvals and Authorization')}</p>
                     <div class="signature-block">
-                        <div class="signature-col rtl-text">
-                            <strong>${isPK ? URDU_TEXT['Approved By'] : 'الموافقة من'}:</strong><br>
-                            ${isPK ? URDU_TEXT['Chief Executive Officer'] : 'الرئيس التنفيذي'} (Chief Executive Officer)
+                        <div class="signature-col ${rtlClass}">
+                            <strong>${localizedText('Approved By')}:</strong><br>
+                            ${localizedText('Chief Executive Officer')} (Chief Executive Officer)
                             <div class="signature-line"></div>
-                            ${isPK ? URDU_TEXT['Date'] : 'التاريخ'}:
+                            ${localizedText('Date')}:
                         </div>
-                        <div class="signature-col rtl-text">
-                            <strong>${isPK ? URDU_TEXT['Endorsed By'] : 'اعتماد'}:</strong><br>
-                            ${isPK ? URDU_TEXT['Head of Information Security'] : 'رئيس أمن المعلومات'} (Head of Information Security)
+                        <div class="signature-col ${rtlClass}">
+                            <strong>${localizedText('Endorsed By')}:</strong><br>
+                            ${localizedText('Head of Information Security')} (Head of Information Security)
                             <div class="signature-line"></div>
-                            ${isPK ? URDU_TEXT['Date'] : 'التاريخ'}:
+                            ${localizedText('Date')}:
                         </div>
                     </div>
                 `;
                 
                 // 5. Pro-Forma Official Introduction
+                const introCertificateText = isPK ? URDU_TEXT['Intro Certificate'] : ARABIC_TEXT['Intro Certificate'];
+                const introStructText = isPK ? URDU_TEXT['Intro Struct'] : ARABIC_TEXT['Intro Struct'];
+                const policyStatementLang = isPK ? URDU_TEXT['Policy Statement_ur'] : ARABIC_TEXT['Policy Statement_ar'] + country + '.';
+
                 const proFormaIntro = `
                     <p class="section-title" style="border: none; margin-top: 5px;">OFFICIAL POLICY DOCUMENT PRO-FORMA</p>
                     <div class="background-section">
                         <p style="font-weight: bold; color: #007bff;">TO: ${countryText} Regulatory Authority & Internal Stakeholders</p>
-                        <p class="rtl-text" style="font-weight: bold; color: #007bff;">${isPK ? URDU_TEXT['TO: Reg Authority'] : 'إلى: الهيئة التنظيمية في [Country] والجهات الداخلية المعنية'}</p>
+                        <p class="${rtlClass}" style="font-weight: bold; color: #007bff;">${isPK ? URDU_TEXT['TO: Reg Authority'] : 'إلى: الهيئة التنظيمية في ' + country + ' والجهات الداخلية المعنية'}</p>
                         <hr style="margin: 10px 0;">
                         <p><strong>SUBJECT:</strong> Implementation Plan for **${content.title_en}**</p>
-                        <p class="rtl-text"><strong>${isPK ? 'عنوان: نفاذ کا منصوبہ برائے' : 'الموضوع: خطة التنفيذ لـ'}:</strong> **${langTitle}**</p>
+                        <p class="${rtlClass}"><strong>${isPK ? 'عنوان: نفاذ کا منصوبہ برائے' : 'الموضوع: خطة التنفيذ لـ'}:</strong> **${langTitle}**</p>
                         <p style="margin-top: 10px; font-size: 0.9em; font-style: italic;">This document certifies our commitment as an organization to implementing and enforcing the mandatory controls outlined herein to achieve compliance and mitigate organizational risk. The policy is structured to meet **${country}**'s regulatory requirements as determined by the Himyati platform.</p>
-                        <p class="rtl-text" style="font-size: 0.9em; font-style: italic;">${isPK ? URDU_TEXT['Intro Certificate'] : 'تشهد هذه الوثيقة بالتزام منظمتنا بتطبيق وتنفيذ الضوابط الإلزامية لتحقيق الامتثال وتخفيف المخاطر التشغيلية. تم إعداد هذه السياسة لتلبية المتطلبات التنظيمية في'} **${country}**'s ${isPK ? URDU_TEXT['Intro Struct'] : '، بالاعتماد على منصة حمايتي.'}</p>
+                        <p class="${rtlClass}" style="font-size: 0.9em; font-style: italic;">${introCertificateText} **${country}**'s ${introStructText}</p>
                     </div>
                 `;
 
@@ -764,14 +777,14 @@
 
                 policyPreview.innerHTML = `
                     <div class="policy-header" style="text-align: center; color: #004085; font-size: 1.8em; margin-bottom: 10px; border-bottom: 4px double #007bff; padding-bottom: 15px; font-weight: 800;">
-                        ${content.title_en} | <span class="rtl-text">${langTitle}</span>
-                        <div style="font-size: 0.5em; color: #6c757d; margin-top: 5px;" class="rtl-text">${isPK ? 'اجراء کے ١.٠ - حمیتی آرٹیفیشل انٹیلیجنس کے ذریعہ تصدیق شدہ -' : 'إصدار الوثيقة ١.٠ - معتمد من الذكاء الاصطناعي لحمايتي -'} ${new Date().toLocaleDateString('ur-PK')}</div>
+                        ${content.title_en} | <span class="${rtlClass}">${langTitle}</span>
+                        <div style="font-size: 0.5em; color: #6c757d; margin-top: 5px;" class="${rtlClass}">${isPK ? 'اجراء کے ١.٠ - حمیتی آرٹیفیشل انٹیلیجنس کے ذریعہ تصدیق شدہ -' : 'إصدار الوثيقة ١.٠ - معتمد من الذكاء الاصطناعي لحمايتي -'} ${new Date().toLocaleDateString(isPK ? 'ur-PK' : 'ar-EG')}</div>
                     </div>
 
                     ${proFormaIntro}
 
-                    <p class="section-title">1. Policy Statement & Scope | ${isPK ? URDU_TEXT['Policy Statement & Scope'] : 'بيان ونطاق السياسة'}</p>
-                    <p style="margin-left: 20px; font-style: italic;">This policy outlines the mandatory technical and governance controls required to secure organizational data in compliance with the relevant ${country} mandates. <span class="rtl-text" style="display: block;">${isPK ? URDU_TEXT['Policy Statement_ur'] : URDU_TEXT['Policy Statement_ar'] + country + '.'}</span></p>
+                    <p class="section-title">1. Policy Statement & Scope | ${localizedText('Policy Statement & Scope')}</p>
+                    <p style="margin-left: 20px; font-style: italic;">This policy outlines the mandatory technical and governance controls required to secure organizational data in compliance with the relevant ${country} mandates. <span class="${rtlClass}" style="display: block;">${policyStatementLang}</span></p>
                     
                     ${tableHTML}
                     ${backgroundHTML}
